@@ -3,29 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserGroup;
-use Illuminate\Contracts\Session\Session;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Menu;
 use DataTables;
 
-class UserGroupController extends Controller
+class MenuController extends Controller
 {
-    /**
+      /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        $menus = Menu::orderBy('id', 'asc')->paginate(10);
 
-        $user_groups = UserGroup::orderBy('id', 'desc')->paginate(10);
-        return view('user_group.index', compact('user_groups'));
+        
+        return view('user.index', compact('menus'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = UserGroup::latest()->get();
+            $data = Menu::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -33,7 +32,7 @@ class UserGroupController extends Controller
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
                     id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
@@ -61,10 +60,13 @@ class UserGroupController extends Controller
     public function store(Request $request)
     {
         $data = [
-            'name' => $request->name
+            'name' => $request->name,
+            'menuparent_id' => $request->menuparent_id,
+            'url' => $request->url,
+            'icon' => $request->icon
         ];
 
-        $save = UserGroup::insert($data);
+        $save = Menu::insert($data);
 
         // redirect
         if ($save) {
@@ -109,10 +111,13 @@ class UserGroupController extends Controller
         // dd('masuk yupdate');
         // dd($request->all());
         $data = [
-            'name' => $request->name
+            'name' => $request->name,
+            'menuparent_id' => $request->menuparent_id,
+            'url' => $request->url,
+            'icon' => $request->icon
         ];
 
-        $save = UserGroup::where('id', $request->id)->update($data);
+        $save = Menu::where('id', $request->id)->update($data);
 
         // redirect
         if ($save) {
@@ -134,7 +139,7 @@ class UserGroupController extends Controller
         // dd('masuk delete',$id);
         // dd($id);
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = UserGroup::where('id', $id)->Delete(); 
+        $delete = Menu::where('id', $id)->Delete(); 
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);

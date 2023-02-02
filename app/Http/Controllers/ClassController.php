@@ -15,7 +15,6 @@ class ClassController extends Controller
     public function index()
     {
         $classes = Classes::orderBy('id','desc')->paginate(10);
-        dd($classes);
         return view('class.index', compact('classes'));
     }
 
@@ -130,9 +129,10 @@ class ClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($idEncrypted)
     {
          // delete
+        $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
          $class = classes::find($id);
          $class->delete();
          return redirect()->route('class.index')->with('success','Class has been deleted successfully');

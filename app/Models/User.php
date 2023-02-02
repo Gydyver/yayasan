@@ -27,6 +27,9 @@ class User extends Authenticatable
         'phone',
         'username',
         'password',
+        'monthly_fee',
+        'gender',
+        'birth_date',
         'created_at',
         'updated_at',
     ];

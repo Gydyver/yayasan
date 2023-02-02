@@ -32,7 +32,7 @@ class ChapterController extends Controller
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
                     id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
@@ -129,10 +129,11 @@ class ChapterController extends Controller
      * @param  int  $id
     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($idEncrypted)
     {
         // dd('masuk delete',$id);
         // dd($id);
+        $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
         $delete = Chapter::where('id', $id)->Delete(); 
         // redirect
         if ($delete) {
