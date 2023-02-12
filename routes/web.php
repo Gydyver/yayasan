@@ -25,6 +25,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/layout', function () {
+    return view('app/layout');
+});
 // Route::get('/users', function (Request $request) {
 //     // ...
 // });
@@ -97,6 +100,17 @@ Route::controller(UserGroupController::class)->group(function () {
     Route::get('/usergroup/show', 'show')->name('usergroup.show');
     Route::get('/usergroup/edit', 'edit')->name('usergroup.edit');
     Route::post('/usergroup/update', 'update')->name('usergroup.update');
+});
+
+
+Route::controller(UserAccessController::class)->group(function () {
+    Route::get('/useraccess', 'index')->name('useraccess.index');
+    Route::get('useraccess/list', 'getDatatable')->name('useraccess.list');
+    Route::get('/useraccess/destroy/{id}', 'destroy')->name('useraccess.destroy');
+    Route::post('/useraccess/create', 'store')->name('useraccess.store');
+    Route::get('/useraccess/show', 'show')->name('useraccess.show');
+    Route::get('/useraccess/edit', 'edit')->name('useraccess.edit');
+    Route::post('/useraccess/update', 'update')->name('useraccess.update');
 });
 
 Route::controller(GradeController::class)->group(function () {
