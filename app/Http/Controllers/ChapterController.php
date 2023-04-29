@@ -59,7 +59,6 @@ class ChapterController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);die;
         $data = [
             'name' => $request->name
         ];

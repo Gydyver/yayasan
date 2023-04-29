@@ -24,4 +24,14 @@ class Paymnet extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    public function billing() {
+        return $this->belongsTo('App\Models\Billing');
+    }
+    public function payment_details() {
+        return $this->hasMany('App\Models\Payment_Detail');
+    }
+    public function payment_others() {
+        return $this->hasMany('App\Models\Payment_Others');
+    }
 }

@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        // QC before re-migrate 29 April 2023
         Schema::create('class_type', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);

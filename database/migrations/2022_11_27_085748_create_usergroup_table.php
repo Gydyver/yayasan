@@ -15,6 +15,7 @@ return new class extends Migration
     {
         //Master
         //Data User Group
+        //QC before re-migrate 29 April 2023
         Schema::create('usergroup', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);

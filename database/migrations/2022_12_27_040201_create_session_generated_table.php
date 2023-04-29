@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         //The reason why the teacher_id is placed here, because it is possible that a teacher being subtituted by other other when the main teacher can't teach at the time
+        // QC before re-migrate 29 April 2023
         Schema::create('session_generated', function (Blueprint $table) {
             $table->id();
             // $table->foreign('session_id')->references('id')->on('session');

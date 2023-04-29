@@ -15,6 +15,7 @@ return new class extends Migration
     {
         // Master
         // Data Session
+        // QC before re-migrate 29 April 2023
         Schema::create('session', function (Blueprint $table) {
             $table->id();
             $table->integer('class_id');

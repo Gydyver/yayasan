@@ -15,11 +15,12 @@ return new class extends Migration
     {
         // Master
         // Penghubung Antara Chapter dan Point Aspect
+        // QC before re-migrate 29 April 2023
         Schema::create('chapter_point_aspect', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
             $table->integer('chapter_id');
             $table->integer('point_aspect_id');
+            $table->string('name', 50);
             // $table->foreign('chapter_id')->references('id')->on('chapter');
             // $table->foreign('point_aspect_id')->references('id')->on('point_aspect');
             $table->softDeletes($column = 'deleted_at', $precision = 0);

@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">
-        <h3 class="card-title">DataTable with default features</h3>
+    <div class="card-header d-flex">
+        <h3 class="card-title ">User G</h3>
         <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
         </div>
@@ -146,7 +146,7 @@
                         text: 'User Group Deleted successfully!',
                         icon: 'success'
                     }).then(function() {
-                        window.location.href = "{{ url('user_group/destroy/') }}/" + id;
+                        window.location.href = "{{ url('usergroup/destroy/') }}/" + id;
                     });
                 } else {
                     swal("Cancelled", "Your data is safe :)", "error");

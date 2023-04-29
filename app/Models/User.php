@@ -50,6 +50,14 @@ class User extends Authenticatable
     ];
     protected $dates = ['deleted_at'];
 
+
+    public function billings() {
+        return $this->hasMany('App\Models\Billing');
+    }
+    
+    public function payment_details() {
+        return $this->hasMany('App\Models\Payment_Detail');
+    }
     // /**
     //  * The attributes that should be cast.
     //  *

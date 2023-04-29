@@ -15,6 +15,7 @@ return new class extends Migration
     {
         //Master
         //Data User Peserta Didik and Staff
+        //QC before re-migrate 29 April 2023
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name', 30);

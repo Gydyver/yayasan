@@ -1,101 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('app/layout')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Laravel 9 CRUD Tutorial Example</title>
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >    
-    
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script> -->
-
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-
-    <link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-</head>
-
-<body>
-    <div class="container mt-2">
-        <!-- Button trigger modal -->
-        Launch demo modal
-        </button>
-        <div class="row">
-            <div class="col-lg-12 margin-tb">
-                <div class="pull-left">
-                    <h2>Laravel 9 CRUD Example Tutorial</h2>
-                </div>
-                <div class="pull-right mb-2">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
-                </div>
+@section('content')
+    <div class="card">
+        <div class="card-header d-flex">
+            <h3 class="card-title">Class Type</h3>
+            <div class="pull-right mb-2">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
             </div>
         </div>
-        @if (Session::has('success'))
-        <div class="alert alert-success" role="alert">
-            <strong>Success</strong> {{ Session::get('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (Session::has('error'))
-        <div class="alert alert-success" role="alert">
-            <strong>Error</strong> {{ Session::get('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        <!-- <table id="tabel_data" class="table table-striped table-bordered" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th width="280px">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table> -->
-        <!-- <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th width="280px">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($class_types as $class_type)
-                <tr>
-                    <td>{{ $class_type->id }}</td>
-                    <td>{{ $class_type->name }}</td>
-                    <td>
-                        <button onclick="confirmData(<? //= $class_type->id ?>)">Delete</button>
-                        <button type="button" class="btn btn-sm btn-icon btn-primary" data-toggle="modal" onclick="updateData(this);"
-                        id="btnEdit" data-target="#ModalUpdate" data-item="{{json_encode($class_type)}}">Update</button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody> 
-        </table> -->
-        <table class="table table-bordered yajra-datatable">
-            <thead>
-                <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th width="280px">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="card-body">
+            @if (Session::has('success'))
+            <div class="alert alert-success" role="alert">
+                <strong>Success</strong> {{ Session::get('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+            @if (Session::has('error'))
+            <div class="alert alert-success" role="alert">
+                <strong>Error</strong> {{ Session::get('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+            <!-- <table id="tabel_data" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th width="280px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table> -->
+            <!-- <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th width="280px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($class_types as $class_type)
+                    <tr>
+                        <td>{{ $class_type->id }}</td>
+                        <td>{{ $class_type->name }}</td>
+                        <td>
+                            <button onclick="confirmData(<? //= $class_type->id ?>)">Delete</button>
+                            <button type="button" class="btn btn-sm btn-icon btn-primary" data-toggle="modal" onclick="updateData(this);"
+                            id="btnEdit" data-target="#ModalUpdate" data-item="{{json_encode($class_type)}}">Update</button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody> 
+            </table> -->
+            <table class="table table-bordered yajra-datatable">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th width="280px">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
 
+        </div>
     </div>
 
     <!-- Modal Add -->
@@ -130,7 +105,6 @@
         </div>
     </div>
 
-    
     <!-- Modal Update -->
     <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -163,16 +137,9 @@
             </form>
         </div>
     </div>
+@endsection
 
-</body>
-
-</html>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+@section('script')
 <script>
     $(document).ready(function(){
     
@@ -242,3 +209,4 @@
     //     $('#myInput').trigger('focus')
     // })
 </script>
+@endsection

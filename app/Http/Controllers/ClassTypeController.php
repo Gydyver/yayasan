@@ -108,8 +108,6 @@ class ClassTypeController extends Controller
      */
     public function update(Request $request)
     {
-        // dd('masuk yupdate');
-        // dd($request->all());
         $data = [
             'name' => $request->name
         ];

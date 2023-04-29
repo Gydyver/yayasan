@@ -1,54 +1,48 @@
 @extends('app/layout')
+
 @section('content')
-    <div class="container mt-2">
-            <!-- Button trigger modal -->
-            Launch demo modal
-            </button>
-            <div class="row">
-                <div class="col-lg-12 margin-tb">
-                    <div class="pull-left">
-                        <h2>Laravel 9 CRUD Example Tutorial</h2>
-                    </div>
-                    <div class="pull-right mb-2">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
-                    </div>
-                </div>
-            </div>
-            @if (Session::has('success'))
-            <div class="alert alert-success" role="alert">
-                <strong>Success</strong> {{ Session::get('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-            @if (Session::has('error'))
-            <div class="alert alert-success" role="alert">
-                <strong>Error</strong> {{ Session::get('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-        
-            <table class="table table-bordered yajra-datatable">
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>Name</th>
-                        <th width="280px">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-
+<div class="card">
+    <div class="card-header d-flex">
+        <h3 class="card-title">Menu</h3>
+        <div class="pull-right mb-2">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
         </div>
-
+    </div>
+    <div class="card-body">
+        @if (Session::has('success'))
+        <div class="alert alert-success" role="alert">
+            <strong>Success</strong> {{ Session::get('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+        @if (Session::has('error'))
+        <div class="alert alert-success" role="alert">
+            <strong>Error</strong> {{ Session::get('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+    
+        <table class="table table-bordered yajra-datatable">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th width="280px">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
         <!-- Modal Add -->
         <div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <form action="{{ route('Menu.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-content">
@@ -109,7 +103,7 @@
         <!-- Modal Update -->
         <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <form action="{{ route('Menu.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('menu.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="modal-content">
@@ -120,7 +114,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <input type="hidden" id="Menu_id" name="id"> 
+                            <input type="hidden" id="menu_id" name="id"> 
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
@@ -168,6 +162,7 @@
         </div>
     </div>
 @endsection
+@section('script')
 <script>
     $(document).ready(function(){
     
@@ -226,9 +221,9 @@
         console.log(item);
 
         // item = JSON.parse(item)
-        // $('#formEdit').attr('action', '{{ route('Menugroup.edit') }}');
-        // $('#formEdit').attr('action', '{{ route('Menugroup.edit') }}');
-        $('#formEdit #id').val(item.id);
+        // $('#formEdit').attr('action', '{{ route('menu.edit') }}');
+        // $('#formEdit').attr('action', '{{ route('menu.edit') }}');
+        $('#formEdit #menu_id').val(item.id);
         $('#formEdit #name').val(item.name);
         $('#formEdit #menuparent_id').val(item.menuparent_id);
         $('#formEdit #url').val(item.url);
@@ -240,3 +235,4 @@
     //     $('#myInput').trigger('focus')
     // })
 </script>
+@endsection

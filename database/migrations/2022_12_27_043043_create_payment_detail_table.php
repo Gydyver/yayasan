@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        // QC before re-migrate 29 April 2023
         Schema::create('payment_detail', function (Blueprint $table) {
             $table->id();
             // $table->foreign('payment_id')->references('id')->on('payment');

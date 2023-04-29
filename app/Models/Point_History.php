@@ -17,7 +17,7 @@ class Point_History extends Model
         'student_id',
         'session_generated_id',
         'chapter_point_aspect_id',
-        'point_aspect_id',
+        'grade_id',
         'point',
         'teacher_notes',
         'created_at',

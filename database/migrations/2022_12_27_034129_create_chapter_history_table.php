@@ -19,6 +19,8 @@ return new class extends Migration
         // In the other hand, the end_date of previous data will be the same as start_date in the latest data
 
         // The data in this table, will be used to see each student timeperiod on a chapter and also make it possible to change chapter inside semester
+        
+        // QC before re-migrate 29 April 2023
         Schema::create('chapter_history', function (Blueprint $table) {
             $table->id();
             $table->integer('student_id');

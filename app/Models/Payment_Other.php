@@ -20,4 +20,8 @@ class Payment_Other extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    public function payment() {
+        return $this->belongsTo('App\Models\Payment');
+    }
 }

@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
+        // QC before re-migrate 29 April 2023
         Schema::create('useraccess', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
             $table->integer('usergroup_id');
             $table->integer('menu_id');
+            $table->string('name',50);
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

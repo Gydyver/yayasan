@@ -8,6 +8,7 @@ use App\Http\Controllers\ClassTypeController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PointAspectController;
 
 /*
@@ -72,6 +73,17 @@ Route::get('signout', 'App\Http\Controllers\CustomAuthController@signOut')->name
 
 // Route::group(['namespace' => '/class_type'], function() {
     
+Route::controller(ClassController::class)->group(function () {
+    Route::get('/class', 'index')->name('class.index');
+    Route::get('/class/list', 'getDatatable')->name('class.list');
+    Route::get('/class/destroy/{id}', 'destroy')->name('class.destroy');
+    Route::post('/class/create', 'store')->name('class.store');
+    Route::get('/class/show', 'show')->name('class.show');
+    Route::get('/class/edit', 'edit')->name('class.edit');
+    Route::post('/class/update', 'update')->name('class.update');
+});
+    
+
 Route::controller(ClassTypeController::class)->group(function () {
     Route::get('/class_type', 'index')->name('class_type.index');
     Route::get('/class_type/list', 'getDatatable')->name('class_type.list');
@@ -143,3 +155,26 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/edit', 'edit')->name('user.edit');
     Route::post('/user/update', 'update')->name('user.update');
 });
+
+Route::controller(MenuController::class)->group(function () {
+    Route::get('/menu', 'index')->name('menu.index');
+    Route::get('menu/list', 'getDatatable')->name('menu.list');
+    Route::get('/menu/show/{id}', 'show')->name('menu.show');
+    Route::get('/menu/destroy/{id}', 'destroy')->name('menu.destroy');
+    Route::post('/menu/create', 'store')->name('menu.store');
+    Route::get('/menu/show', 'show')->name('menu.show');
+    Route::get('/menu/edit', 'edit')->name('menu.edit');
+    Route::post('/menu/update', 'update')->name('menu.update');
+});
+
+
+Route::controller(UploadPayReceiptController::class)->group(function () {
+    Route::get('/payment_receipt', 'index')->name('payment_receipt.index');
+    Route::get('/payment_receipt/list', 'getDatatable')->name('payment_receipt.list');
+    Route::get('/payment_receipt/destroy/{id}', 'destroy')->name('payment_receipt.destroy');
+    Route::post('/payment_receipt/create', 'store')->name('payment_receipt.store');
+    Route::get('/payment_receipt/show', 'show')->name('payment_receipt.show');
+    Route::get('/payment_receipt/edit', 'edit')->name('payment_receipt.edit');
+    Route::post('/payment_receipt/update', 'update')->name('payment_receipt.update');
+});
+

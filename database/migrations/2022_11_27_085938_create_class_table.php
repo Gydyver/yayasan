@@ -17,9 +17,12 @@ return new class extends Migration
         //Data Kelas
         // Always added every 6 months
         // The closed class would not be able to be changed, only become an history
+        // QC before re-migrate 29 April 2023
         Schema::create('class', function (Blueprint $table) {
             $table->id();
-            
+            $table->integer('teacher_id');
+            $table->integer('chapter_id');
+            $table->integer('class_type_id');
             // $table->unsignedInteger('teacher_id');
             // $table->unsignedInteger('chapter_id');
             // $table->unsignedInteger('class_type_id');
@@ -27,9 +30,7 @@ return new class extends Migration
             // $table->foreign('teacher_id')->references('id')->on('users');
             // $table->foreign('chapter_id')->references('id')->on('chapter');
             // $table->foreign('class_type_id')->references('id')->on('class_type');
-            $table->integer('teacher_id');
-            $table->integer('chapter_id');
-            $table->integer('class_type_id');
+         
             $table->boolean('closed');
             $table->date('class_start');
             $table->date('class_end');

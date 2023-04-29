@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        // QC before re-migrate 29 April 2023
         Schema::create('payment', function (Blueprint $table) {
             $table->id();
             $table->integer('billing_id');

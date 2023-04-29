@@ -25,6 +25,7 @@ return new class extends Migration
         // - Jilid II Dewasa
         // - Jilid III Dewasa
         // - Al-Quran Dewasa
+        // QC before re-migrate 29 April 2023
         Schema::create('chapter', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);

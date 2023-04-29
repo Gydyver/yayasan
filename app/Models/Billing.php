@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Classes extends Model
+class Billing extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -23,4 +23,8 @@ class Classes extends Model
         'updated_at',
     ];
    	protected $dates = ['deleted_at'];
+
+    public function student() {
+        return $this->belongsTo('App\Models\User');
+    }
 }

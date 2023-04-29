@@ -17,7 +17,7 @@ class Menu extends Model
         'name',
         'url',
         'icon',
-        //'menuparent_id',
+        'menuparent_id',
         'created_at',
         'updated_at',
     ];

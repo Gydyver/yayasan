@@ -25,6 +25,9 @@
   <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/summernote/summernote-bs4.min.css')}}">
+  <!-- sweetalert -->
+  <link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -931,9 +934,14 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('templates/adminlte-3.2.0/dist/js/pages/dashboard.js')}}"></script>
 <!-- Masih bentrok nih jquery dengan jquery datatable -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
-<!-- <script src="{{asset('templates/adminlte-3.2.0/plugins/datatables/jquery.dataTables.min.js')}}"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.1/jquery.dataTables.js"></script> -->
+
+<!-- https://ajax.aspnetcdn.com/ajax/jquery.ui/1.11.4/jquery-ui.js -->
+<script src="{{asset('templates/adminlte-3.2.0/plugins/jquery/jquery.js')}}"></script>
+<script src="{{asset('templates/adminlte-3.2.0/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('templates/adminlte-3.2.0/plugins/jquery-validation/jquery.validate.js')}}"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script> -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
 <!-- Datatables -->
