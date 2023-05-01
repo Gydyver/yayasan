@@ -42,7 +42,7 @@ class ClassController extends Controller
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
                     id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <a href='user/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    <a href='class/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
                     <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
                     ";
                     return $actionBtn;
@@ -99,9 +99,11 @@ class ClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($idEncrypted)
     {
         //
+        $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        dd($decrypted);
     }
 
     /**
@@ -122,7 +124,7 @@ class ClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $data = [
             'name' => $request->name,
@@ -155,7 +157,7 @@ class ClassController extends Controller
     {
          // delete
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-         $class = classes::find($id);
+         $class = Classes::find($id);
          $class->delete();
          return redirect()->route('class.index')->with('success','Class has been deleted successfully');
  

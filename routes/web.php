@@ -75,10 +75,10 @@ Route::get('signout', 'App\Http\Controllers\CustomAuthController@signOut')->name
     
 Route::controller(ClassController::class)->group(function () {
     Route::get('/class', 'index')->name('class.index');
-    Route::get('/class/list', 'getDatatable')->name('class.list');
+    Route::get('/classes/list', 'getDatatable')->name('class.list');
     Route::get('/class/destroy/{id}', 'destroy')->name('class.destroy');
     Route::post('/class/create', 'store')->name('class.store');
-    Route::get('/class/show', 'show')->name('class.show');
+    Route::get('/class/show/{idEncrypted}', 'show')->name('class.show');
     Route::get('/class/edit', 'edit')->name('class.edit');
     Route::post('/class/update', 'update')->name('class.update');
 });
@@ -115,15 +115,15 @@ Route::controller(UserGroupController::class)->group(function () {
 });
 
 
-Route::controller(UserAccessController::class)->group(function () {
-    Route::get('/useraccess', 'index')->name('useraccess.index');
-    Route::get('useraccess/list', 'getDatatable')->name('useraccess.list');
-    Route::get('/useraccess/destroy/{id}', 'destroy')->name('useraccess.destroy');
-    Route::post('/useraccess/create', 'store')->name('useraccess.store');
-    Route::get('/useraccess/show', 'show')->name('useraccess.show');
-    Route::get('/useraccess/edit', 'edit')->name('useraccess.edit');
-    Route::post('/useraccess/update', 'update')->name('useraccess.update');
-});
+// Route::controller(UserAccessController::class)->group(function () {
+//     Route::get('/useraccess', 'index')->name('useraccess.index');
+//     Route::get('useraccess/list', 'getDatatable')->name('useraccess.list');
+//     Route::get('/useraccess/destroy/{id}', 'destroy')->name('useraccess.destroy');
+//     Route::post('/useraccess/create', 'store')->name('useraccess.store');
+//     Route::get('/useraccess/show', 'show')->name('useraccess.show');
+//     Route::get('/useraccess/edit', 'edit')->name('useraccess.edit');
+//     Route::post('/useraccess/update', 'update')->name('useraccess.update');
+// });
 
 Route::controller(GradeController::class)->group(function () {
     Route::get('/grade', 'index')->name('grade.index');
@@ -168,13 +168,13 @@ Route::controller(MenuController::class)->group(function () {
 });
 
 
-Route::controller(UploadPayReceiptController::class)->group(function () {
-    Route::get('/payment_receipt', 'index')->name('payment_receipt.index');
-    Route::get('/payment_receipt/list', 'getDatatable')->name('payment_receipt.list');
-    Route::get('/payment_receipt/destroy/{id}', 'destroy')->name('payment_receipt.destroy');
-    Route::post('/payment_receipt/create', 'store')->name('payment_receipt.store');
-    Route::get('/payment_receipt/show', 'show')->name('payment_receipt.show');
-    Route::get('/payment_receipt/edit', 'edit')->name('payment_receipt.edit');
-    Route::post('/payment_receipt/update', 'update')->name('payment_receipt.update');
-});
+// Route::controller(UploadPayReceiptController::class)->group(function () {
+//     Route::get('/payment_receipt', 'index')->name('payment_receipt.index');
+//     Route::get('/payment_receipt/list', 'getDatatable')->name('payment_receipt.list');
+//     Route::get('/payment_receipt/destroy/{id}', 'destroy')->name('payment_receipt.destroy');
+//     Route::post('/payment_receipt/create', 'store')->name('payment_receipt.store');
+//     Route::get('/payment_receipt/show', 'show')->name('payment_receipt.show');
+//     Route::get('/payment_receipt/edit', 'edit')->name('payment_receipt.edit');
+//     Route::post('/payment_receipt/update', 'update')->name('payment_receipt.update');
+// });
 

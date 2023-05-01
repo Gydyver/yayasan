@@ -160,8 +160,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Teacher:</strong>
-                                <select class="form-control select2" style="width: 100%;" name="teacher_id" id="teacher_id">
-                                    <option></option>
+                                <select class="form-control select2edit" style="width: 100%;" name="teacher_id" id="teacher_id">
                                     @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                     @endforeach
@@ -173,8 +172,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Chapter:</strong>
-                                <select class="form-control select2" style="width: 100%;" name="chapter_id" id="chapter_id">
-                                    <option></option>
+                                <select class="form-control select2edit" style="width: 100%;" name="chapter_id" id="chapter_id">
                                     @foreach ($chapters as $chapter)
                                     <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
                                     @endforeach
@@ -186,8 +184,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Class_type:</strong>
-                                <select class="form-control select2" style="width: 100%;" name="class_type_id" id="class_type_id">
-                                    <option></option>
+                                <select class="form-control select2edit" style="width: 100%;" name="class_type_id" id="class_type_id">
                                     @foreach ($class_types as $class_type)
                                     <option value="{{ $class_type->id }}">{{ $class_type->name }}</option>
                                     @endforeach
@@ -200,7 +197,7 @@
                             <div class="form-group">
                                 <label>Date:</label>
                                 <div class="input-group date" id="class_start_div" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#class_start_div" name="class_start" id="class_end">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#class_start_div" name="class_start" id="class_start">
                                     <div class="input-group-append" data-target="#class_start_div" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -292,12 +289,14 @@
     function updateData(button) {
         // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
         var item = $(button).data('item');
+        console.log(item)
         $('#formEdit #class_id').val(item.id);
         $('#formEdit #name').val(item.name);
-        $('#formEdit #teacher_id').val(item.teacher_id);
-        $('#formEdit #chapter_id').val(item.chapter_id);
-        $('#formEdit #class_type_id').val(item.class_type_id);
+        $('#chapter_id').val(item.chapter_id).select2();
+        $('#class_type_id').val(item.class_type_id).select2();
+        $('#teacher_id').val(item.teacher_id).select2();
         $('#formEdit #class_start').val(item.class_start);
+        
     }
 
 
