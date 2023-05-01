@@ -43,7 +43,7 @@ Route::get('/layout', function () {
 //     Route::post('/orders', 'store');
 // });
 
-Route::resource('class', 'App\Http\Controllers\ClassController');
+// Route::resource('class', 'App\Http\Controllers\ClassController');
 
 // Route::resource('class_type', 'App\Http\Controllers\ClassTypeController');
 
@@ -75,7 +75,7 @@ Route::get('signout', 'App\Http\Controllers\CustomAuthController@signOut')->name
     
 Route::controller(ClassController::class)->group(function () {
     Route::get('/class', 'index')->name('class.index');
-    Route::get('/classes/list', 'getDatatable')->name('class.list');
+    Route::get('/class/list', 'getDatatable')->name('class.list');
     Route::get('/class/destroy/{id}', 'destroy')->name('class.destroy');
     Route::post('/class/create', 'store')->name('class.store');
     Route::get('/class/show/{idEncrypted}', 'show')->name('class.show');
