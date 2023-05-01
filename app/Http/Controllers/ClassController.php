@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\User;
 
+use DataTables;
 class ClassController extends Controller
 {
     /**
@@ -22,6 +23,33 @@ class ClassController extends Controller
         $chapters = Chapter::orderBy('name','asc')->get();
         $class_types = class_type::orderBy('name','asc')->get();
         return view('class.index', compact('classes','teachers','chapters','class_types'));
+    }
+
+    public function getDatatable(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Classes::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    // dd(json_encode($row->name));
+                    // $actionBtn = "
+                    // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                    // id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+                    // <a href='user/show/".Crypt::encryptString($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
+                    // ";
+                    $actionBtn = "
+                    <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+                    <a href='user/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    ";
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     /**
@@ -63,33 +91,6 @@ class ClassController extends Controller
 
             return redirect()->back()->with(["error" => " Tambah Data Failed"]);
         }
-
-        // validate
-        // read more on validation at http://laravel.com/docs/validation
-        // $rules = array(
-        //     'name'       => 'required',
-        //     'email'      => 'required|email',
-        //     'shark_level' => 'required|numeric'
-        // );
-        // $validator = Validator::make(Input::all(), $rules);
-
-        // // process the login
-        // if ($validator->fails()) {
-        //     return Redirect::to('sharks/create')
-        //         ->withErrors($validator)
-        //         ->withInput(Input::except('password'));
-        // } else {
-        //     // store
-        //     $shark = new shark;
-        //     $shark->name       = Input::get('name');
-        //     $shark->email      = Input::get('email');
-        //     $shark->shark_level = Input::get('shark_level');
-        //     $shark->save();
-
-        //     // redirect
-        //     Session::flash('message', 'Successfully created shark!');
-        //     return Redirect::to('sharks');
-        // }
     }
 
     /**
@@ -123,31 +124,24 @@ class ClassController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validate
-        // read more on validation at http://laravel.com/docs/validation
-        $rules = array(
-            'name'       => 'required',
-            'email'      => 'required|email',
-            'shark_level' => 'required|numeric'
-        );
-        $validator = Validator::make(Input::all(), $rules);
+        $data = [
+            'name' => $request->name,
+            'teacher_id' => $request->teacher_id,
+            'chapter_id' => $request->chapter_id,
+            'chapter_id' => $request->chapter_id,
+            'class_type_id' => $request->class_type_id,
+            'class_start' => $request->class_start,
+            'updated_at' => date('Y-m-d')
+        ];
 
-        // process the login
-        if ($validator->fails()) {
-            return Redirect::to('sharks/' . $id . '/edit')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+        $save = Classes::where('id', $request->id)->update($data);
+
+        // redirect
+        if ($save) {
+            return redirect()->back()->with(["success" => "Update Data"]);
         } else {
-            // store
-            $shark = shark::find($id);
-            $shark->name       = Input::get('name');
-            $shark->email      = Input::get('email');
-            $shark->shark_level = Input::get('shark_level');
-            $shark->save();
 
-            // redirect
-            Session::flash('message', 'Successfully updated shark!');
-            return Redirect::to('sharks');
+            return redirect()->back()->with(["error" => " Update Data Failed"]);
         }
     }
 
