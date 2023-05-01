@@ -76,6 +76,7 @@
                             <div class="form-group">
                                 <strong>Teacher:</strong>
                                 <select class="form-control select2" style="width: 100%;" name="teacher_id">
+                                    <option></option>
                                     @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                     @endforeach
@@ -88,6 +89,7 @@
                             <div class="form-group">
                                 <strong>Chapter:</strong>
                                 <select class="form-control select2" style="width: 100%;" name="chapter_id">
+                                    <option></option>
                                     @foreach ($chapters as $chapter)
                                     <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
                                     @endforeach
@@ -100,6 +102,7 @@
                             <div class="form-group">
                                 <strong>Class_type:</strong>
                                 <select class="form-control select2" style="width: 100%;" name="class_type_id">
+                                    <option></option>
                                     @foreach ($class_types as $class_type)
                                     <option value="{{ $class_type->id }}">{{ $class_type->name }}</option>
                                     @endforeach
@@ -112,7 +115,7 @@
                             <div class="form-group">
                                 <label>Date:</label>
                                 <div class="input-group date" id="class_start_create" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#class_start_create">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#class_start_create" name="class_start">
                                     <div class="input-group-append" data-target="#class_start_create" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -167,10 +170,12 @@
 @section('script')
 <script>
     $(document).ready(function(){    
-        $('.select2').select2()
+        $('.select2').select2({
+            placeholder: "Please select data"
+        })
 
         $('#class_start_create').datetimepicker({
-            format: 'L'
+            format: 'YYYY-MM-DD'
         });
     
         var table = $('.yajra-datatable').DataTable({

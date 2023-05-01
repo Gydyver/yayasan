@@ -20,20 +20,20 @@ return new class extends Migration
         // QC before re-migrate 29 April 2023
         Schema::create('class', function (Blueprint $table) {
             $table->id();
+            $table->integer('class_type_id');
             $table->integer('teacher_id');
             $table->integer('chapter_id');
-            $table->integer('class_type_id');
             // $table->unsignedInteger('teacher_id');
             // $table->unsignedInteger('chapter_id');
             // $table->unsignedInteger('class_type_id');
-            $table->string('name', 50);
+            $table->string('name', 50); //belum ada di classdiagram
             // $table->foreign('teacher_id')->references('id')->on('users');
             // $table->foreign('chapter_id')->references('id')->on('chapter');
             // $table->foreign('class_type_id')->references('id')->on('class_type');
          
-            $table->boolean('closed');
+            $table->boolean('closed')->default(false);
             $table->date('class_start');
-            $table->date('class_end');
+            $table->date('class_end')->nullable();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

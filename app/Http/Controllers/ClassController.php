@@ -18,9 +18,9 @@ class ClassController extends Controller
     public function index()
     {
         $classes = Classes::orderBy('id','desc')->paginate(10);
-        $teachers = User::orderBy('name','asc');
-        $chapters = Chapter::orderBy('name','asc');
-        $class_types = class_type::orderBy('name','asc');
+        $teachers = User::orderBy('name','asc')->get();
+        $chapters = Chapter::orderBy('name','asc')->get();
+        $class_types = class_type::orderBy('name','asc')->get();
         return view('class.index', compact('classes','teachers','chapters','class_types'));
     }
 
@@ -42,6 +42,28 @@ class ClassController extends Controller
      */
     public function store(Request $request)
     {
+        $data = [
+            'name' => $request->name,
+            'teacher_id' => $request->teacher_id,
+            'chapter_id' => $request->chapter_id,
+            'chapter_id' => $request->chapter_id,
+            'class_type_id' => $request->class_type_id,
+            'class_start' => $request->class_start,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d')
+        ];
+        // dd($data);
+
+        $save = Classes::insert($data);
+
+        // redirect
+        if ($save) {
+            return redirect()->back()->with(["success" => "Tambah Data"]);
+        } else {
+
+            return redirect()->back()->with(["error" => " Tambah Data Failed"]);
+        }
+
         // validate
         // read more on validation at http://laravel.com/docs/validation
         // $rules = array(
