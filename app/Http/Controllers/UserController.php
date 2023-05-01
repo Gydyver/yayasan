@@ -73,8 +73,12 @@ class UserController extends Controller
             'usergroup_id' => $request->usergroup_id,
             'phone' => $request->phone,
             'username' => $request->username,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
             'password' => $request->password,
+            'monthly_fee' => $request->monthly_fee
         ];
+        // dd($data);
 
         $save = User::insert($data);
 
@@ -122,13 +126,26 @@ class UserController extends Controller
     {
         // dd('masuk yupdate');
         // dd($request->all());
-        $data = [
-            'name' => $request->name,
-            'usergroup_id' => $request->usergroup_id,
-            'phone' => $request->phone,
-            'username' => $request->username,
-            'password' => $request->password,
-        ];
+        if($request->password == ""){
+            $data = [
+                'name' => $request->name,
+                'usergroup_id' => $request->usergroup_id,
+                'phone' => $request->phone,
+                'username' => $request->username,
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+            ];
+        }else {
+            $data = [
+                'name' => $request->name,
+                'usergroup_id' => $request->usergroup_id,
+                'phone' => $request->phone,
+                'username' => $request->username,
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+                'password' => $request->password,
+            ];
+        }
 
         $save = User::where('id', $request->id)->update($data);
 

@@ -60,7 +60,15 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Name:</strong>
-                                <input type="text" name="name" class="form-control" placeholder="User">
+                                <input type="text" name="name" class="form-control" placeholder="Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Username:</strong>
+                                <input type="text" name="username" class="form-control" placeholder="Username">
                             </div>
                         </div>
                     </div>
@@ -80,7 +88,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Phone:</strong>
-                                <input type="text" name="name" class="form-control" placeholder="User">
+                                <input type="text" name="phone" class="form-control" placeholder="User">
                             </div>
                         </div>
                     </div>
@@ -114,8 +122,13 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <strong>Birth Date:</strong>
-                                <input  name="birth_date" type="datetime-local">
+                                <label>Date:</label>
+                                <div class="input-group date" id="birth_date_create" data-target-input="nearest">
+                                    <input name="birth_date" type="text" class="form-control datetimepicker-input" data-target="#birth_date_create">
+                                    <div class="input-group-append" data-target="#birth_date_create" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,6 +163,14 @@
                             <div class="form-group">
                                 <strong>Name:</strong>
                                 <input type="text" name="name" id="name" class="form-control" placeholder="User">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Username:</strong>
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Username">
                             </div>
                         </div>
                     </div>
@@ -203,8 +224,13 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <strong>Birth Date:</strong>
-                                <input  name="birth_date" id="birth_date" type="datetime-local">
+                                <label>Date:</label>
+                                <div class="input-group date" id="birth_date_div" data-target-input="nearest">
+                                    <input name="birth_date" type="text" class="form-control datetimepicker-input" id="birth_date" data-target="#birth_date_div">
+                                    <div class="input-group-append" data-target="#birth_date_div" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -224,6 +250,14 @@
 <script>
     $(document).ready(function(){
     
+        $('#birth_date_create').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+
+        $('#birth_date_div').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
@@ -278,6 +312,7 @@
         // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
         $('#formEdit #user_id').val(item.id);
         $('#formEdit #name').val(item.name);
+        $('#formEdit #username').val(item.username);
         $('#formEdit #usergroup_id').val(item.usergroup_id);
         $('#formEdit #phone').val(item.phone);
         // $('#formEdit #password').val(item.password);

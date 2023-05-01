@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
+use App\Models\class_type;
 use Illuminate\Http\Request;
 use App\Models\Classes;
+use App\Models\User;
 
 class ClassController extends Controller
 {
@@ -15,7 +18,10 @@ class ClassController extends Controller
     public function index()
     {
         $classes = Classes::orderBy('id','desc')->paginate(10);
-        return view('class.index', compact('classes'));
+        $teachers = User::orderBy('name','asc');
+        $chapters = Chapter::orderBy('name','asc');
+        $class_types = class_type::orderBy('name','asc');
+        return view('class.index', compact('classes','teachers','chapters','class_types'));
     }
 
     /**

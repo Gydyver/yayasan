@@ -12,7 +12,10 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+  <!-- <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}"> -->
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/select2/css/select2.min.css')}}">
+  <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{asset('templates/adminlte-3.2.0/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- JQVMap -->
@@ -898,17 +901,19 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
+  
 <!-- jQuery -->
 <script src="{{asset('templates/adminlte-3.2.0/plugins/jquery/jquery.min.js')}}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{asset('templates/adminlte-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- Select2 -->
+<script src="{{asset('templates/adminlte-3.2.0/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('templates/adminlte-3.2.0/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('templates/adminlte-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- ChartJS -->
 <script src="{{asset('templates/adminlte-3.2.0/plugins/chart.js/Chart.min.js')}}"></script>
 <!-- Sparkline -->
@@ -938,11 +943,10 @@
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.1/jquery.dataTables.js"></script> -->
 
 <!-- https://ajax.aspnetcdn.com/ajax/jquery.ui/1.11.4/jquery-ui.js -->
-<script src="{{asset('templates/adminlte-3.2.0/plugins/jquery/jquery.js')}}"></script>
 <script src="{{asset('templates/adminlte-3.2.0/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('templates/adminlte-3.2.0/plugins/jquery-validation/jquery.validate.js')}}"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script> -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
 
 <!-- Datatables -->
 <script src="{{asset('templates/adminlte-3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
