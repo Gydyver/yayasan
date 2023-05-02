@@ -10,6 +10,7 @@ use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PointAspectController;
+use App\Http\Controllers\SessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -179,3 +180,12 @@ Route::controller(MenuController::class)->group(function () {
 //     Route::post('/payment_receipt/update', 'update')->name('payment_receipt.update');
 // });
 
+Route::controller(SessionController::class)->group(function () {
+    Route::get('/session', 'index')->name('session.index');
+    Route::get('/session/list', 'getDatatable')->name('session.list');
+    Route::get('/session/destroy/{id}', 'destroy')->name('session.destroy');
+    Route::post('/session/create', 'store')->name('session.store');
+    Route::get('/session/show/{idEncrypted}', 'show')->name('session.show');
+    Route::get('/session/edit', 'edit')->name('session.edit');
+    Route::post('/session/update', 'update')->name('session.update');
+});
