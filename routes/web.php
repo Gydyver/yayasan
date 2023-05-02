@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
@@ -188,4 +189,14 @@ Route::controller(SessionController::class)->group(function () {
     Route::get('/session/show/{idEncrypted}', 'show')->name('session.show');
     Route::get('/session/edit', 'edit')->name('session.edit');
     Route::post('/session/update', 'update')->name('session.update');
+});
+
+Route::controller(BillingController::class)->group(function () {
+    Route::get('/billing', 'index')->name('billing.index');
+    Route::get('/billing/list', 'getDatatable')->name('billing.list');
+    Route::get('/billing/destroy/{id}', 'destroy')->name('billing.destroy');
+    Route::post('/billing/create', 'store')->name('billing.store');
+    Route::get('/billing/show/{idEncrypted}', 'show')->name('billing.show');
+    Route::get('/billing/edit', 'edit')->name('billing.edit');
+    Route::post('/billing/update', 'update')->name('billing.update');
 });
