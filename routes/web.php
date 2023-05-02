@@ -99,6 +99,7 @@ Route::controller(ChapterController::class)->group(function () {
     Route::get('chapter/list', 'getDatatable')->name('chapter.list');
     Route::get('/chapter/destroy/{id}', 'destroy')->name('chapter.destroy');
     Route::post('/chapter/create', 'store')->name('chapter.store');
+    Route::post('/chapter/addPointAspect', 'addPointAspect')->name('chapter.addPointAspect');
     Route::get('/chapter/show', 'show')->name('chapter.show');
     Route::get('/chapter/edit', 'edit')->name('chapter.edit');
     Route::post('/chapter/update', 'update')->name('chapter.update');

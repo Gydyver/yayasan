@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
             $table->integer('chapter_id');
             $table->integer('point_aspect_id');
-            $table->string('name', 50);
+            // $table->string('name', 50); //name dihilangkan aja, harus diubah di class diagram nya
             // $table->foreign('chapter_id')->references('id')->on('chapter');
             // $table->foreign('point_aspect_id')->references('id')->on('point_aspect');
             $table->softDeletes($column = 'deleted_at', $precision = 0);

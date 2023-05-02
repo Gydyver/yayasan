@@ -139,11 +139,63 @@
     </div>
 </div>
 
+<div class="modal fade" id="ModalAddPointAspect" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('chapter.addPointAspect') }}" id="formAddAspect" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Point Aspect</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="chapter_id_point" name="id"> 
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Name:</strong>
+                                <input type="text" class="form-control" placeholder="Chapter" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Point Aspect:</strong>
+                                <select class="form-control select2" style="width: 100%;" name="point_aspect_id">
+                                    <option></option>
+                                    @foreach ($point_aspects as $point_aspect)
+                                    <option value="{{ $point_aspect->id }}">{{ $point_aspect->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
 @endsection
 
 @section('script')
 <script>
     $(document).ready(function(){
+        $('.select2').select2({
+            placeholder: "Please select data"
+        })
     
         var table = $('.yajra-datatable').DataTable({
             processing: true,
@@ -206,6 +258,17 @@
         $('#formEdit #name').val(item.name);
     }
 
+    function addPointAspect(button) {
+        // $('#formAddAspect .form-group .selectpicker option').removeAttr('selected');
+        var item = ($(button).data('item'));
+        console.log(item);
+
+        // item = JSON.parse(item)
+        $('#formAddAspect #chapter_id_point').val(item.id);
+        $('#formAddAspect #name').val(item.name);
+    }
+
+    
 
     // $('#myModal').on('shown.bs.modal', function () {
     //     $('#myInput').trigger('focus')

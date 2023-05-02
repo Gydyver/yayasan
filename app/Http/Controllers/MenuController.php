@@ -65,7 +65,9 @@ class MenuController extends Controller
             'name' => $request->name,
             'menuparent_id' => $request->menuparent_id,
             'url' => $request->url,
-            'icon' => $request->icon
+            'icon' => $request->icon,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d')
         ];
 
         $save = Menu::insert($data);
@@ -117,7 +119,8 @@ class MenuController extends Controller
             'name' => $request->name,
             'menuparent_id' => $request->menuparent_id,
             'url' => $request->url,
-            'icon' => $request->icon
+            'icon' => $request->icon,
+            'updated_at' => date('Y-m-d')
         ];
         // Print_r($data);die;
         $save = Menu::where('id', $request->id)->update($data);

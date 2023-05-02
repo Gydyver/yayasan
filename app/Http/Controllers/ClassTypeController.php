@@ -30,7 +30,9 @@ class ClassTypeController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    // dd($row);
+                    $dataForUpdate = $row;
+                    // $dataForUpdate['id'] = \EncryptionHelper::instance()->encrypt($row->id);
+                    $dataForUpdate['id_encrypted'] = \EncryptionHelper::instance()->encrypt($row->id);
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
                     id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
@@ -63,7 +65,9 @@ class ClassTypeController extends Controller
     public function store(Request $request)
     {
         $data = [
-            'name' => $request->name
+            'name' => $request->name,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d')
         ];
 
         $save = Class_Type::insert($data);
@@ -109,7 +113,8 @@ class ClassTypeController extends Controller
     public function update(Request $request)
     {
         $data = [
-            'name' => $request->name
+            'name' => $request->name,
+            'updated_at' => date('Y-m-d')
         ];
 
         $save = Class_Type::where('id', $request->id)->update($data);

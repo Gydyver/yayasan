@@ -61,7 +61,9 @@ class UserGroupController extends Controller
     public function store(Request $request)
     {
         $data = [
-            'name' => $request->name
+            'name' => $request->name,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d')
         ];
 
         $save = UserGroup::insert($data);
@@ -109,7 +111,8 @@ class UserGroupController extends Controller
         // dd('masuk yupdate');
         // dd($request->all());
         $data = [
-            'name' => $request->name
+            'name' => $request->name,
+            'updated_at' => date('Y-m-d')
         ];
 
         $save = UserGroup::where('id', $request->id)->update($data);

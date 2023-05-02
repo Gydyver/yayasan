@@ -67,6 +67,8 @@ class GradeController extends Controller
             'highest_poin' => $request->highest_poin,
             'description' => $request->description,
             'notes' => $request->notes,
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d')
         ];
         $save = Grade::insert($data);
 
@@ -118,6 +120,7 @@ class GradeController extends Controller
             'highest_poin' => $request->highest_poin,
             'description' => $request->description,
             'notes' => $request->notes,
+            'updated_at' => date('Y-m-d')
         ];
 
         $save = Grade::where('id', $request->id)->update($data);
