@@ -123,10 +123,23 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <label>Date:</label>
+                                <label>Birth Date:</label>
                                 <div class="input-group date" id="birth_date_create" data-target-input="nearest">
                                     <input name="birth_date" type="text" class="form-control datetimepicker-input" data-target="#birth_date_create">
                                     <div class="input-group-append" data-target="#birth_date_create" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <label>Join Date:</label>
+                                <div class="input-group date" id="join_date_div" data-target-input="nearest">
+                                    <input name="join_date" type="text" class="form-control datetimepicker-input" data-target="#join_date_div">
+                                    <div class="input-group-append" data-target="#join_date_div" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
@@ -225,10 +238,23 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <label>Date:</label>
+                                <label>Birth Date:</label>
                                 <div class="input-group date" id="birth_date_div" data-target-input="nearest">
                                     <input name="birth_date" type="text" class="form-control datetimepicker-input" id="birth_date" data-target="#birth_date_div">
                                     <div class="input-group-append" data-target="#birth_date_div" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <label>Join Date:</label>
+                                <div class="input-group date" id="join_date_div" data-target-input="nearest">
+                                    <input name="join_date" type="text" class="form-control datetimepicker-input" data-target="#join_date_div">
+                                    <div class="input-group-append" data-target="#join_date_div" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
@@ -255,7 +281,7 @@
             format: 'YYYY-MM-DD'
         });
 
-        $('#birth_date_div').datetimepicker({
+        $('#join_date_div').datetimepicker({
             format: 'YYYY-MM-DD'
         });
 
@@ -321,6 +347,7 @@
         $('#formEdit #monthly_fee').val(item.monthly_fee);
         $('#formEdit #gender').val(item.gender);
         $('#formEdit #birth_date').val(item.birth_date);
+        $('#formEdit #join_date').val(item.birth_join_date);
     }
 
 </script>

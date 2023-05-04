@@ -30,6 +30,7 @@ class User extends Authenticatable
         'monthly_fee',
         'gender',
         'birth_date',
+        'join_date',
         'created_at',
         'updated_at',
     ];

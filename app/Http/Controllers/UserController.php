@@ -78,6 +78,7 @@ class UserController extends Controller
             'username' => $request->username,
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
+            'join_date'=> $request->join_date,
             'password' => $request->password,
             'monthly_fee' => $request->monthly_fee
         ];
@@ -137,6 +138,7 @@ class UserController extends Controller
                 'username' => $request->username,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
+                'join_date'=> $request->join_date,
             ];
         }else {
             $data = [
@@ -146,6 +148,7 @@ class UserController extends Controller
                 'username' => $request->username,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
+                'join_date'=> $request->join_date,
                 'password' => $request->password,
             ];
         }

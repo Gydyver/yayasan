@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Billing;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\Session;
@@ -28,6 +29,9 @@ class BillingController extends Controller
             $data = Billing::with('students')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('student_label', function ($data) {
+                    return  $data->students->name;
+                })
                 ->addColumn('action', function($row){
                     // actionBtn standard, billing cuma show aja dulu untuk saat ini
                     // $actionBtn = "
@@ -69,11 +73,19 @@ class BillingController extends Controller
 
     public function generateMonthlyBilling(Request $request)
     {
-        $students = User::where('usergroup_id',3)->get();
+        // $dateMin = strtotime('10/{$request-month}/{$request-year}');
+        $dateMin = '01-'.$request->month.'-'.$request->year;
+        $dateMinfilter = date($dateMin);
+
+
+
+        $students = User::where('usergroup_id',3)->where('join_date' , '<', $dateMinfilter)->get();
+        // dd($students);
+        // 
         $studentNotFound = [];
         foreach($students as $student){
             $billing = Billing::where('month', $request->month)->where('year', $request->year)->where('student_id', $student->id)->get();
-            if(count($billing) >0){
+            if(count($billing) ==0){
                 $billingRow = [
                     'student_id'  =>  $student->id,
                     'billing'  =>  $student->monthly_fee,
@@ -85,6 +97,7 @@ class BillingController extends Controller
                 array_push($studentNotFound, $billingRow);
             }
         }
+        // dd($studentNotFound);
 
         if(count($studentNotFound) > 0){
             Billing::insert($studentNotFound);
