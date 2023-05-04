@@ -19,7 +19,7 @@ class PointAspectController extends Controller
     {
 
         $point_aspects = Point_Aspect::orderBy('id', 'desc')->paginate(10);
-        return view('point_aspect.index', compact('point_aspects'));
+        return view('master.point_aspect.index', compact('point_aspects'));
     }
 
     public function getDatatable(Request $request)

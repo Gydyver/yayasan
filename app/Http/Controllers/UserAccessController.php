@@ -19,7 +19,7 @@ class UserAccessController extends Controller
         $menus = UserAccess::orderBy('id', 'asc')->paginate(10);
 
         
-        return view('user_access.index', compact('menus'));
+        return view('master.user_access.index', compact('menus'));
     }
 
     public function getDatatable(Request $request)

@@ -22,15 +22,23 @@ class ChapterController extends Controller
         $chapters = Chapter::orderBy('id', 'desc')->paginate(10);
         $point_aspects = Point_Aspect::get();
         // dd($point_aspects);
-        return view('chapter.index', compact('chapters','point_aspects'));
+        return view('master.chapter.index', compact('chapters','point_aspects'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Chapter::latest()->get();
+            $data = Chapter::with('chapterPointAspects')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('point_aspects', function ($data) {
+                    $point_aspects = '<ul>';
+                    foreach($data->chapterPointAspects as $dt){
+                        $point_aspects .= '<li>' . $dt->name . '</li>';
+                    }
+                    $point_aspects .= '</ul>';
+                    return  $point_aspects;
+                }) 
                 ->addColumn('action', function($row){
                     // dd(json_encode($row->name));
                     $actionBtn = "
@@ -42,7 +50,7 @@ class ChapterController extends Controller
                     ";
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','point_aspects'])
                 ->make(true);
         }
     }

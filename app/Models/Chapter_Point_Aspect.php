@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChapterPointAspect extends Model
+class Chapter_Point_Aspect extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -21,5 +21,15 @@ class ChapterPointAspect extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    // public function chapters()
+    // {
+    //     return $this->belongsTo(Chapter::class, 'chapter_id', 'id');
+    // }
+
+    // public function pointAspects()
+    // {
+    //     return $this->belongsTo(Point_Aspect::class, 'point_aspect_id', 'id');
+    // }
     
 }

@@ -26,15 +26,18 @@ class SessionController extends Controller
             "Saturday",
             "Sunday"
         ];
-        return view('session.index', compact('classes','days'));
+        return view('master.session.index', compact('classes','days'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Session::latest()->get();
+            $data = Session::with('classes')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('class_label', function ($data) {
+                    return  $data->classes->name;
+                }) 
                 ->addColumn('action', function($row){
                     // dd(json_encode($row->name));
                     // $actionBtn = "

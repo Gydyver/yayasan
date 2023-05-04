@@ -29,22 +29,6 @@
             </tr>
         </thead>
         <tbody>
-            <!-- @foreach ($classes as $class)
-                <tr>
-                    <td>{{ $class->id }}</td>
-                    <td>{{ $class->name }}</td>
-                    <td>{{ $class->email }}</td>
-                    <td>{{ $class->address }}</td>
-                    <td>
-                        <form action="{{ route('class.destroy',$class->id) }}" method="Post">
-                            <a class="btn btn-primary" href="{{ route('class.edit',$class->id) }}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach -->
         </tbody>
     </table>
 </div>
@@ -238,9 +222,9 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'name', name: 'name'},
-                {data: 'teacher_id', name: 'teacher_id'},
-                {data: 'chapter_id', name: 'chapter_id'},
-                {data: 'class_type_id', name: 'class_type_id'},
+                {data: 'teacher_label', name: 'Teacher'},
+                {data: 'chapter_label', name: 'Chapter'},
+                {data: 'class_type_label', name: 'Class Type'},
                 {data: 'closed', name: 'closed'},
                 {data: 'class_start', name: 'class_start'},
                 {data: 'class_end', name: 'class_end'},

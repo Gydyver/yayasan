@@ -32,6 +32,7 @@
                 <tr>
                     <th>S.No</th>
                     <th>Name</th>
+                    <th>User Group</th>
                     <th width="280px">Action</th>
                 </tr>
             </thead>
@@ -264,7 +265,8 @@
             ajax: "{{ route('user.list') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'name'},
+                {data: 'name', name: 'Name'},
+                {data:'usergroup_label', name:'User Group'},
                 {
                     data: 'action', 
                     name: 'action', 

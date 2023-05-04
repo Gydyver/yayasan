@@ -23,8 +23,10 @@ class Billing extends Model
         'updated_at',
     ];
    	protected $dates = ['deleted_at'];
-
-    public function student() {
-        return $this->belongsTo('App\Models\User');
+ 
+    public function students()
+    {
+        return $this->belongsTo(User::class, 'student_id', 'id');
     }
+
 }

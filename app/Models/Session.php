@@ -22,4 +22,11 @@ class Session extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    
+    public function classes()
+    {
+        return $this->belongsTo(Classes::class, 'class_id', 'id');
+    }
+
 }

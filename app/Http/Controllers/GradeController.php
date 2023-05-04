@@ -19,7 +19,7 @@ class GradeController extends Controller
     {
 
         $grades = Grade::orderBy('id', 'desc')->paginate(10);
-        return view('grade.index', compact('grades'));
+        return view('master.grade.index', compact('grades'));
     }
 
     public function getDatatable(Request $request)

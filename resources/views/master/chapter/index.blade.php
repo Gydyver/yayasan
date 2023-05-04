@@ -63,6 +63,7 @@
                 <tr>
                     <th>S.No</th>
                     <th>Name</th>
+                    <th>Point Aspect</th>
                     <th width="280px">Action</th>
                 </tr>
             </thead>
@@ -203,10 +204,11 @@
             ajax: "{{ route('chapter.list') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'name'},
+                {data: 'name', name: 'Name'},
+                {data: 'point_aspects', name: 'Point Aspect'},
                 {
                     data: 'action', 
-                    name: 'action', 
+                    name: 'Action', 
                     orderable: false, 
                     searchable: false
                 },

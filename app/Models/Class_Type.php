@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class class_type extends Model
+class Class_Type extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -19,4 +19,10 @@ class class_type extends Model
         // 'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    public function classes()
+    {
+        // return $this->hasMany('App\Models\Classes');
+        return $this->hasMany(classes::class,  'class_type_id','id');
+    }
 }

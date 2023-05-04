@@ -20,15 +20,18 @@ class UserController extends Controller
         $user_groups = UserGroup::orderBy('id', 'asc')->paginate(10);
 
         
-        return view('user.index', compact('user_groups'));
+        return view('master.user.index', compact('user_groups'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::latest()->get();
+            $data = User::with('usergroups')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('usergroup_label', function ($data) {
+                    return  $data->usergroups->name;
+                }) 
                 ->addColumn('action', function($row){
                     // dd(json_encode($row->name));
                     // $actionBtn = "

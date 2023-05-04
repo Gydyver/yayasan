@@ -24,5 +24,34 @@ class Classes extends Model
         'created_at',
         'updated_at',
     ];
+    
+    public function teachers()
+    {
+        return $this->belongsTo(User::class, 'teacher_id', 'id');
+    }
+
+    public function chapters()
+    {
+        return $this->belongsTo(Chapter::class, 'chapter_id', 'id');
+    }
+
+    public function classTypes()
+    {
+        return $this->belongsTo(Class_Type::class, 'class_type_id', 'id');
+    }
+
+    public function sessions()
+    {
+        // return $this->hasMany('App\Models\Classes');
+        return $this->hasMany(Session::class, 'class_id','id');
+    }
+
+    // public function teacher_id() {
+    //     return $this->belongsTo('App\Models\User');
+    // }
+    // public function chapter_id() {
+    //     return $this->belongsTo('App\Models\Chapter');
+    // }
+
     protected $dates = ['deleted_at'];
 }

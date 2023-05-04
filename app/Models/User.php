@@ -51,12 +51,19 @@ class User extends Authenticatable
     protected $dates = ['deleted_at'];
 
 
-    public function billings() {
-        return $this->hasMany('App\Models\Billing');
+    public function usergroups()
+    {
+        return $this->belongsTo(UserGroup::class, 'usergroup_id', 'id');
     }
-    
-    public function payment_details() {
-        return $this->hasMany('App\Models\Payment_Detail');
+
+    public function classes()
+    {
+        return $this->hasMany(Classes::class,'teacher_id','id');
+    }
+
+    public function billings()
+    {
+        return $this->hasMany(Billing::class,'student_id','id');
     }
     // /**
     //  * The attributes that should be cast.

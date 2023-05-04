@@ -19,7 +19,7 @@ class UserGroupController extends Controller
     {
 
         $user_groups = UserGroup::orderBy('id', 'desc')->paginate(10);
-        return view('user_group.index', compact('user_groups'));
+        return view('master.user_group.index', compact('user_groups'));
     }
 
     public function getDatatable(Request $request)

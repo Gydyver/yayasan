@@ -199,4 +199,6 @@ Route::controller(BillingController::class)->group(function () {
     Route::get('/billing/show/{idEncrypted}', 'show')->name('billing.show');
     Route::get('/billing/edit', 'edit')->name('billing.edit');
     Route::post('/billing/update', 'update')->name('billing.update');
+    Route::post('/billing/generateMonthlyBilling', 'generateMonthlyBilling')->name('billing.generateMonthlyBilling');
+    
 });

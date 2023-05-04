@@ -20,7 +20,7 @@ class MenuController extends Controller
         // print_r($menu_parents);die;
 
         
-        return view('menu.index', compact('menus', 'menu_parents'));
+        return view('master.menu.index', compact('menus', 'menu_parents'));
     }
 
     public function getDatatable(Request $request)

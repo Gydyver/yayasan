@@ -22,15 +22,25 @@ class ClassController extends Controller
         $teachers = User::orderBy('name','asc')->get();
         $chapters = Chapter::orderBy('name','asc')->get();
         $class_types = class_type::orderBy('name','asc')->get();
-        return view('class.index', compact('classes','teachers','chapters','class_types'));
+        return view('master.class.index', compact('classes','teachers','chapters','class_types'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Classes::latest()->get();
+            $data = Classes::with('teachers')->with('chapters')->with('classTypes')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('teacher_label', function ($data) {
+                    return  $data->teachers->name;
+                }) 
+                ->addColumn('chapter_label', function ($data) {
+                    return  $data->chapters->name;
+                })
+                ->addColumn('class_type_label', function ($data) {
+                    return  $data->classTypes->name;
+                })
+
                 ->addColumn('action', function($row){
                     // dd(json_encode($row->name));
                     // $actionBtn = "

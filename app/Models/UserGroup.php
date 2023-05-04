@@ -19,4 +19,14 @@ class UserGroup extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    //1 = Superadmin
+    //2 = Staff/Guru
+    //3 = Peserta Didik
+
+    public function users()
+    {
+        // return $this->hasMany('App\Models\Classes');
+        return $this->hasMany(User::class,  'usergroup_id','id');
+    }
 }

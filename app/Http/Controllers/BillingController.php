@@ -17,13 +17,15 @@ class BillingController extends Controller
      */
     public function index()
     {
-        return view('billing.index');
+        $months = [1,2,3,4,5,6,7,8,9,10,11,12];
+        $years = [2019,2020,2021,2022,2023,2024,2025,2026,2027];
+        return view('master.billing.index', compact('months', 'years'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Billing::latest()->get();
+            $data = Billing::with('students')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -63,6 +65,33 @@ class BillingController extends Controller
     public function store(Request $request)
     {
 
+    }
+
+    public function generateMonthlyBilling(Request $request)
+    {
+        $students = User::where('usergroup_id',3)->get();
+        $studentNotFound = [];
+        foreach($students as $student){
+            $billing = Billing::where('month', $request->month)->where('year', $request->year)->where('student_id', $student->id)->get();
+            if(count($billing) >0){
+                $billingRow = [
+                    'student_id'  =>  $student->id,
+                    'billing'  =>  $student->monthly_fee,
+                    'month'  =>  $request->month,
+                    'year'  =>  $request->year,
+                    'created_at' => date('Y-m-d'),
+                    'updated_at' => date('Y-m-d')
+                ];
+                array_push($studentNotFound, $billingRow);
+            }
+        }
+
+        if(count($studentNotFound) > 0){
+            Billing::insert($studentNotFound);
+            return redirect()->back()->with(["success" => "Semua billing berhasil dibuat"]);
+        }else{
+            return redirect()->back()->with(["error" => "Semua billing sudah terbuat"]);
+        }
     }
 
     /**

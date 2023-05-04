@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Class_Type;
+use App\Models\Billing;
+use App\Models\Payment;
+use App\Models\Payment_Detail;
+use App\Models\Payment_Other;
+use App\Models\Paymnet;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Redirect;
 use DataTables;
 
-class ClassTypeController extends Controller
+class UploadPayReceiptController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,28 +21,42 @@ class ClassTypeController extends Controller
      */
     public function index()
     {
-
-        $class_types = Class_Type::orderBy('id', 'desc')->paginate(10);
-        // dd($class_types);
-        return view('master.class_type.index', compact('class_types'));
+        return view('payment_receipt.index');
     }
 
-    public function getDatatable(Request $request)
+    public function getDatatableBilling(Request $request)
     {
         if ($request->ajax()) {
-            $data = Class_Type::latest()->get();
+            // $data = Billing::join(Payment)::latest()->get();
             return Datatables::of($data)
-                ->addIndexColumn()
+            ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $dataForUpdate = $row;
-                    // $dataForUpdate['id'] = \EncryptionHelper::instance()->encrypt($row->id);
-                    $dataForUpdate['id_encrypted'] = \EncryptionHelper::instance()->encrypt($row->id);
+                    // dd(json_encode($row->name));
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
                     id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
                     ";
-
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+    
+    public function getDatatableHistory(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Payment::latest()->get();
+            return Datatables::of($data)
+            ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    // dd(json_encode($row->name));
+                    $actionBtn = "
+                    <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    ";
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -65,12 +83,10 @@ class ClassTypeController extends Controller
     public function store(Request $request)
     {
         $data = [
-            'name' => $request->name,
-            'created_at' => date('Y-m-d'),
-            'updated_at' => date('Y-m-d')
+            'name' => $request->name
         ];
 
-        $save = Class_Type::insert($data);
+        $save = Point_Aspect::insert($data);
 
         // redirect
         if ($save) {
@@ -112,12 +128,13 @@ class ClassTypeController extends Controller
      */
     public function update(Request $request)
     {
+        // dd('masuk yupdate');
+        // dd($request->all());
         $data = [
-            'name' => $request->name,
-            'updated_at' => date('Y-m-d')
+            'name' => $request->name
         ];
 
-        $save = Class_Type::where('id', $request->id)->update($data);
+        $save = Point_Aspect::where('id', $request->id)->update($data);
 
         // redirect
         if ($save) {
@@ -139,7 +156,7 @@ class ClassTypeController extends Controller
         // dd('masuk delete',$id);
         // dd($id);
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = Class_Type::where('id', $id)->Delete(); 
+        $delete = Point_Aspect::where('id', $id)->Delete(); 
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);

@@ -3,10 +3,10 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex">
-        <h3 class="card-title">Billing</h3>
-        <!-- <div class="pull-right mb-2">
+        <h3 class="card-title">Session</h3>
+        <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
-        </div> -->
+        </div>
     </div>
     <div class="card-body">
     @if ($message = Session::get('success'))
@@ -18,10 +18,10 @@
         <thead>
             <tr>
                 <th>S.No</th>
-                <th>Student</th>
-                <th>Billing</th>
-                <th>Month</th>
-                <th>Year</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Day</th>
+                <th>Time</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -31,9 +31,9 @@
 </div>
 
 <!-- Modal Add -->
-<!-- <div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form action="{{ route('billing.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('session.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="modal-content">
@@ -58,6 +58,9 @@
                                 <strong>Class:</strong>
                                 <select class="form-control select2" style="width: 100%;" name="class_id">
                                     <option></option>
+                                    @foreach ($classes as $class)
+                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -68,6 +71,9 @@
                                 <strong>Day:</strong>
                                 <select class="form-control select2" style="width: 100%;" name="day">
                                     <option></option>
+                                    @foreach ($days as $day)
+                                    <option value="{{ $day }}">{{ $day }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -93,12 +99,12 @@
             </div>
         </form>
     </div>
-</div> -->
+</div>
 
 <!-- Modal Update -->
-<!-- <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form action="{{ route('billing.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('session.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="modal-content">
@@ -124,6 +130,9 @@
                                 <strong>Class:</strong>
                                 <select class="form-control select2edit" style="width: 100%;" name="class_id" id="class_id">
                                     <option></option>
+                                    @foreach ($classes as $class)
+                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -134,6 +143,9 @@
                                 <strong>Day:</strong>
                                 <select class="form-control select2edit" style="width: 100%;" name="day" id="day">
                                     <option></option>
+                                    @foreach ($days as $day)
+                                    <option value="{{ $day }}">{{ $day }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -159,37 +171,37 @@
             </div>
         </form>
     </div>
-</div> -->
+</div>
 @endsection
 
 @section('script')
 <script>
     $(document).ready(function(){    
-        // $('.select2').select2({
-        //     placeholder: "Please select data"
-        // })
+        $('.select2').select2({
+            placeholder: "Please select data"
+        })
 
-        // $('#timepicker_create').datetimepicker({
-        //     format: 'HH:mm'
-        // });
+        $('#timepicker_create').datetimepicker({
+            format: 'HH:mm'
+        });
 
-        // $('#timepicker_div').datetimepicker({
-        //     format: 'HH:mm'
-        // });
+        $('#timepicker_div').datetimepicker({
+            format: 'HH:mm'
+        });
     
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('billing.list') }}",
+            ajax: "{{ route('session.list') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'student_id', name: 'student_id'},
-                {data: 'billing', name: 'billing'},
-                {data: 'month', name: 'month'},
-                {data: 'year', name: 'year'},
+                {data: 'name', name: 'Name'},
+                {data: 'class_label', name: 'Class'},
+                {data: 'day', name: 'Day'},
+                {data: 'time', name: 'Time'},
                 {
                     data: 'action', 
-                    name: 'action', 
+                    name: 'Action', 
                     orderable: false, 
                     searchable: false
                 },
@@ -220,7 +232,7 @@
                     text: 'Class Deleted successfully!',
                     icon: 'success'
                 }).then(function() {
-                    window.location.href = "{{ url('billing/destroy/') }}/" + id;
+                    window.location.href = "{{ url('session/destroy/') }}/" + id;
                 });
             } else {
                 swal("Cancelled", "Your data is safe :)", "error");

@@ -19,4 +19,18 @@ class Point_Aspect extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+
+    // public function chapterPointAspect()
+    // {
+    //     return $this->hasMany(Chapter_Point_Aspect::class, 'point_aspect_id','id');
+    // }
+
+     
+    public function chapterPointAspects()
+    {
+        // return $this->belongsToMany(Regions::class, 'regions_stores', 'stores_id', 'regions_id');
+        return $this->belongsToMany(Chapter::class, 'chapter_point_aspect',  'point_aspect_id','chapter_id');
+        // return $this->hasMany(Chapter_Point_Aspect::class, 'chapter_id','id');
+    }
 }
