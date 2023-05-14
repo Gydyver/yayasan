@@ -18,8 +18,9 @@ class ClassController extends Controller
      */
     public function index()
     {
+        //Changed into Login Auth
         $classes = Classes::orderBy('id','desc')->paginate(10);
-        $teachers = User::orderBy('name','asc')->get();
+        $teachers = User::orderBy('name','asc')->where('usergroup_id',2)->get();
         $chapters = Chapter::orderBy('name','asc')->get();
         $class_types = class_type::orderBy('name','asc')->get();
         return view('master.class.index', compact('classes','teachers','chapters','class_types'));

@@ -4,6 +4,8 @@ use App\Http\Controllers\BillingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\Teacher\ClassController as TeacherClassController;
+use App\Http\Controllers\Teacher\StudentController as TeacherStudentController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\ClassTypeController;
 use App\Http\Controllers\ChapterController;
@@ -201,4 +203,31 @@ Route::controller(BillingController::class)->group(function () {
     Route::post('/billing/update', 'update')->name('billing.update');
     Route::post('/billing/generateMonthlyBilling', 'generateMonthlyBilling')->name('billing.generateMonthlyBilling');
     
+});
+
+Route::controller(TeacherClassController::class)->group(function () {
+    Route::get('/teacher/class', 'index')->name('teacher.class.index');
+    Route::get('/teacher/class/list', 'getDatatable')->name('teacher.class.list');
+    Route::get('/teacher/class/destroy/{id}', 'destroy')->name('teacherclass.destroy');
+    Route::post('/teacher/class/create', 'store')->name('teacherclass.store');
+    Route::get('/teacher/class/session/{idEncrypted}', 'showSession')->name('teacherclass.session');
+    Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacher.classSession.list');
+    
+    Route::get('/teacher/class/show/{idEncrypted}', 'show')->name('teacherclass.show');
+    Route::get('/teacher/class/edit', 'edit')->name('teacherclass.edit');
+    Route::post('/teacher/class/update', 'update')->name('teacherclass.update');
+});
+
+
+Route::controller(TeacherStudentController::class)->group(function () {
+    Route::get('/teacher/student', 'index')->name('teacher.student.index');
+    Route::get('/teacher/student/list', 'getDatatable')->name('teacher.student.list');
+    Route::get('/teacher/class/destroy/{id}', 'destroy')->name('teacherclass.destroy');
+    Route::post('/teacher/class/create', 'store')->name('teacherclass.store');
+    Route::get('/teacher/class/session/{idEncrypted}', 'showSession')->name('teacherclass.session');
+    Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacher.classSession.list');
+    
+    Route::get('/teacher/class/show/{idEncrypted}', 'show')->name('teacherclass.show');
+    Route::get('/teacher/class/edit', 'edit')->name('teacherclass.edit');
+    Route::post('/teacher/class/update', 'update')->name('teacherclass.update');
 });

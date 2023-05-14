@@ -88,6 +88,18 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
+                                <strong>Class:</strong>
+                                <select type="number" name="class_id" class="form-control" >
+                                    @foreach ($classes as $class)
+                                        <option value="{{$class->id}}">{{$class->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
                                 <strong>Phone:</strong>
                                 <input type="text" name="phone" class="form-control" placeholder="User">
                             </div>
@@ -203,6 +215,18 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
+                                <strong>Class:</strong>
+                                <select type="number" name="class_id" id="class_id" class="form-control" placeholder="Lowest Point">
+                                    @foreach ($classes as $class)
+                                        <option value="{{$class->id}}">{{$class->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
                                 <strong>Phone:</strong>
                                 <input type="text" name="phone" id="phone" class="form-control" placeholder="User">
                             </div>
@@ -253,7 +277,7 @@
                             <div class="form-group">
                                 <label>Join Date:</label>
                                 <div class="input-group date" id="join_date_div" data-target-input="nearest">
-                                    <input name="join_date" type="text" class="form-control datetimepicker-input" data-target="#join_date_div">
+                                    <input name="join_date" type="text" id="join_date" class="form-control datetimepicker-input" data-target="#join_date_div">
                                     <div class="input-group-append" data-target="#join_date_div" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -341,13 +365,14 @@
         $('#formEdit #user_id').val(item.id);
         $('#formEdit #name').val(item.name);
         $('#formEdit #username').val(item.username);
+        $('#formEdit #class_id').val(item.class_id);
         $('#formEdit #usergroup_id').val(item.usergroup_id);
         $('#formEdit #phone').val(item.phone);
         // $('#formEdit #password').val(item.password);
         $('#formEdit #monthly_fee').val(item.monthly_fee);
         $('#formEdit #gender').val(item.gender);
         $('#formEdit #birth_date').val(item.birth_date);
-        $('#formEdit #join_date').val(item.birth_join_date);
+        $('#formEdit #join_date').val(item.join_date);
     }
 
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Models\Classes;
 
 use DataTables;
 
@@ -18,9 +19,10 @@ class UserController extends Controller
     public function index()
     {
         $user_groups = UserGroup::orderBy('id', 'asc')->paginate(10);
+        $classes = Classes::orderBy('id', 'asc')->paginate(10);
 
         
-        return view('master.user.index', compact('user_groups'));
+        return view('master.user.index', compact('user_groups','classes'));
     }
 
     public function getDatatable(Request $request)
@@ -134,6 +136,7 @@ class UserController extends Controller
             $data = [
                 'name' => $request->name,
                 'usergroup_id' => $request->usergroup_id,
+                'class_id' => $request->class_id,
                 'phone' => $request->phone,
                 'username' => $request->username,
                 'gender' => $request->gender,
@@ -144,6 +147,7 @@ class UserController extends Controller
             $data = [
                 'name' => $request->name,
                 'usergroup_id' => $request->usergroup_id,
+                'class_id' => $request->class_id,
                 'phone' => $request->phone,
                 'username' => $request->username,
                 'gender' => $request->gender,

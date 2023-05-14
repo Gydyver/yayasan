@@ -30,6 +30,12 @@ class Classes extends Model
         return $this->belongsTo(User::class, 'teacher_id', 'id');
     }
 
+    public function studentClasses()
+    {
+        // return $this->hasMany('App\Models\Classes');
+        return $this->hasMany(User::class,  'usergroup_id','id');
+    }
+
     public function chapters()
     {
         return $this->belongsTo(Chapter::class, 'chapter_id', 'id');

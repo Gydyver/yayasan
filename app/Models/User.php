@@ -24,6 +24,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'usergroup_id',
+        'class_id',
         'phone',
         'username',
         'password',
@@ -60,6 +61,11 @@ class User extends Authenticatable
     public function classes()
     {
         return $this->hasMany(Classes::class,'teacher_id','id');
+    }
+
+    public function studentClasses()
+    {
+        return $this->belongsTo(Classes::class,'class_id','id')->with('teachers');
     }
 
     public function billings()
