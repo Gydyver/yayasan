@@ -17,7 +17,8 @@ class Session extends Model
         'class_id',
         'name',
         'day',
-        'time',
+        'time_start',//belum dirubah di class diagram
+        'time_end',//belum dirubah di class diagram
         'created_at',
         'updated_at',
     ];
@@ -28,5 +29,16 @@ class Session extends Model
     {
         return $this->belongsTo(Classes::class, 'class_id', 'id');
     }
+
+    public function sessionGenerated()
+    {
+        return $this->hasMany(Session_Generated::class, 'session_id', 'id');
+    }
+
+    // public function sessionGenerated()
+    // {
+    //     return $this->belongsTo(Classes::class, 'class_id', 'id');
+    // }
+
 
 }

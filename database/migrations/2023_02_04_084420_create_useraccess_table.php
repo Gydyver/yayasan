@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->integer('usergroup_id');
             $table->integer('menu_id');
-            $table->string('name',50);
+            // $table->string('name',50);//delete dari class diagram
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

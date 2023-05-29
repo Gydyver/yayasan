@@ -84,7 +84,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <strong>Class_type:</strong>
+                                <strong>Class Type:</strong>
                                 <select class="form-control select2" style="width: 100%;" name="class_type_id">
                                     <option></option>
                                     @foreach ($class_types as $class_type)
@@ -269,7 +269,6 @@
         })
 
     }
-
     function updateData(button) {
         // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
         var item = $(button).data('item');

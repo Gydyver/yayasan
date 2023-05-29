@@ -86,7 +86,7 @@ class UserController extends Controller
         ];
         // dd($data);
 
-        $save = User::insert($data);
+        $save = User::create($data);
 
         // redirect
         if ($save) {
@@ -130,8 +130,6 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        // dd('masuk yupdate');
-        // dd($request->all());
         if($request->password == ""){
             $data = [
                 'name' => $request->name,
@@ -153,12 +151,11 @@ class UserController extends Controller
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'join_date'=> $request->join_date,
-                'password' => $request->password,
+                'password' =>  bcrypt($request->password)
             ];
         }
 
         $save = User::where('id', $request->id)->update($data);
-
         // redirect
         if ($save) {
             return redirect()->back()->with(["success" => "Update Data"]);

@@ -32,9 +32,9 @@
   <link data-require="sweet-alert@*" data-semver="0.4.2" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-  <link rel="stylesheet" href="yearpicker.css">
+  <!-- <link rel="stylesheet" href="yearpicker.css"> -->
   <script src="/path/to/cdn/jquery.slim.min.js"></script>
-  <script src="yearpicker.js" async></script>
+  <!-- <script src="yearpicker.js" async></script> -->
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">

@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Classes;
-use App\Models\Session;
+use App\Models\Session as SessionData;
+use App\Models\Session_Generated;
+
+
+use Carbon\Carbon;
 
 use DataTables;
 class SessionController extends Controller
@@ -32,7 +36,7 @@ class SessionController extends Controller
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Session::with('classes')->latest()->get();
+            $data = SessionData::with('classes')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('class_label', function ($data) {
@@ -81,13 +85,14 @@ class SessionController extends Controller
             'name' => $request->name,
             'class_id' => $request->class_id,
             'day' => $request->day,
-            'time' => $request->time,
+            'time_start' => $request->time_start,
+            'time_end' => $request->time_end,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d')
         ];
         // dd($data);
 
-        $save = Session::insert($data);
+        $save = SessionData::insert($data);
 
         // redirect
         if ($save) {
@@ -104,11 +109,14 @@ class SessionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($idEncrypted)
+    public function showSession($idEncrypted)
     {
         //
-        $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        dd($decrypted);
+        $class_id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        
+        $session = Classess::where('id',$class_id )->with('sessions')->get();
+        dd($session);
+        // dd($decrypted);
     }
 
     /**
@@ -135,12 +143,13 @@ class SessionController extends Controller
             'name' => $request->name,
             'class_id' => $request->class_id,
             'day' => $request->day,
-            'time' => $request->time,
+            'time_start' => $request->time_start,
+            'time_end' => $request->time_end,
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d')
         ];
 
-        $save = Session::where('id', $request->id)->update($data);
+        $save = SessionData::where('id', $request->id)->update($data);
 
         // redirect
         if ($save) {
@@ -161,12 +170,108 @@ class SessionController extends Controller
     {
          // delete
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-         $class = Session::find($id);
+         $class = SessionData::find($id);
          $class->delete();
          return redirect()->route('session.index')->with('success','Class has been deleted successfully');
  
          // redirect
-        //  Session::flash('message', 'Successfully deleted the shark!');
+        //  SessionData::flash('message', 'Successfully deleted the shark!');
         //  return Redirect::to('sharks');
+    }
+
+
+    public function generate(Request $request)
+    {
+        $session = SessionData::where('class_id', $request->class_id_gen)->latest()->get();
+        $class = Classes::where('id', $request->class_id_gen)->latest()->get();
+        // dd($session);
+        $dates = [];
+        $day = "MONDAY";
+        foreach($session as $s){
+            $fromDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
+            $toDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
+            
+            if($s->day == 'Sunday'){
+                // Get the first Sunday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::SUNDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Sunday');
+            } else if($s->day == 'Monday'){
+                // Get the first Monday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::MONDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Monday');
+            }else if($s->day == 'Tuesday'){
+                // Get the first Tuesday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::TUESDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Tuesday');
+            }else if($s->day == 'Wednesday'){
+                // Get the first Wednesday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::WEDNESDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Wednesday');
+
+            }else if($s->day == 'Thursday'){
+                // Get the first Thursday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::THURSDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Thursday');
+
+            }else if($s->day == 'Friday'){
+                // Get the first Friday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::MONDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Friday');
+
+            }else if($s->day == 'Saturday'){
+                // Get the first Saturday in the date range
+                $date = $fromDate->dayOfWeek == Carbon::SATURDAY
+                ? $fromDate
+                : $fromDate->copy()->modify('next Saturday');
+            }
+            
+            // Iterate until you have reached the end date adding a week each time
+            while ($date->lt($toDate)) {
+                // dd($date->toDateString());
+                // $date = \Carbon\Carbon::parse('2016-11-01 15:04:19');
+                $startDatetime = Carbon::parse($date->toDateString() . $s->time_start);
+                $endDatetime = Carbon::parse($date->toDateString() . $s->time_end);
+
+                // $dates[] = $date->toDateString(); //nanti ditaro disini nih harusnya yang $data.
+                $data = [
+                    'teacher_id' => $class[0]->teacher_id,
+                    'session_id' => $s->id,
+                    'session_start' => $startDatetime->format("Y-m-d H:i:s"),
+                    'session_end' => $endDatetime->format("Y-m-d H:i:s"),
+                    'created_at' => date('Y-m-d'),
+                    'updated_at' => date('Y-m-d')
+                ];
+                $dates[] = $data;
+                $date->addWeek();
+            }
+        }
+        
+        //DAPET NIH DATA Datesnya di array dates
+        // dd($dates);
+
+        // $data = [
+        //     'teacher_id' => $class->teacher_id,
+        //     'session_id' => $session->id,
+        //     'session_start' => $request->chapter_id,
+        //     'session_end' => $request->class_type_id,
+        //     'created_at' => date('Y-m-d'),
+        //     'updated_at' => date('Y-m-d')
+        // ];
+        // dd($data);
+
+        $save = Session_Generated::insert($dates);
+
+        // redirect
+        if ($save) {
+            return redirect()->back()->with(["success" => "Generate Class"]);
+        } else {
+            return redirect()->back()->with(["error" => "Generate Class Failed"]);
+        }
     }
 }

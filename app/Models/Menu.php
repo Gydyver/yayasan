@@ -22,4 +22,14 @@ class Menu extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+    //each category might have one parent
+    public function parent() {
+        return $this->belongsToOne(static::class, 'menuparent_id');
+    }
+    
+    //each category might have multiple children
+    public function children() {
+        return $this->hasMany(static::class, 'menuparent_id')->orderBy('name', 'asc');
+    }
 }

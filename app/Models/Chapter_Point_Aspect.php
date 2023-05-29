@@ -27,9 +27,13 @@ class Chapter_Point_Aspect extends Model
     //     return $this->belongsTo(Chapter::class, 'chapter_id', 'id');
     // }
 
-    // public function pointAspects()
-    // {
-    //     return $this->belongsTo(Point_Aspect::class, 'point_aspect_id', 'id');
-    // }
+    public function pointAspects()
+    {
+        return $this->belongsTo(Point_Aspect::class, 'point_aspect_id', 'id');
+    }
     
+    public function chapterPointAspectHistory()
+    {
+        return $this->hasMany(Point_History::class, 'point_aspect_id', 'id');
+    }
 }

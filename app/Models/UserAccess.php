@@ -10,7 +10,7 @@ class UserAccess extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'session';
+    protected $table = 'useraccess';
     protected $primaryKey = 'id';
 
     protected $fillable = [

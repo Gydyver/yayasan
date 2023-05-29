@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('teacher_id');
             $table->dateTime('session_start');
             $table->dateTime('session_end');
+            $table->integer('status'); //upcoming, finish, cancelled
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

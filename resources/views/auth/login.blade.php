@@ -16,7 +16,7 @@
                     <div class="card">
                         <h3 class="card-header text-center">Login</h3>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('login.custom') }}">
+                            <form method="POST" action="{{ route('login.perform') }}">
                                 @csrf
                                 <div class="form-group mb-3">
                                     <input type="text" placeholder="Username" id="username" class="form-control" name="username" required autofocus>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserGroup;
+use App\Models\Menu;
 use App\Models\UserAccess;
 use DataTables;
 
@@ -16,11 +17,19 @@ class UserAccessController extends Controller
      */
     public function index()
     {
-        $menus = UserAccess::orderBy('id', 'asc')->paginate(10);
+        $menus = Menu::orderBy('id', 'asc')->get();
+        $usergroups = UserGroup::latest()->get();
 
-        
-        return view('master.user_access.index', compact('menus'));
+        $menusWithChildren = Menu::with('children')->whereNull('menuparent_id')->orderBy('name', 'asc')->get();
+        // dd($menusWithChildren);
+        return view('master.user_access.index', compact('menus','usergroups','menusWithChildren'));
     }
+
+    // function settingMenuandChild($usergroup_id == null){
+    //     $menus = Menu::orderBy('id', 'asc')->get();
+
+    //     $menus = Menu:whereNull('menuparent_id');
+    // }
 
     public function getDatatable(Request $request)
     {
@@ -53,46 +62,16 @@ class UserAccessController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $data = [
-            'usergroup_id' => $request->usergroup_id,
-            'menu_id' => $request->menu_id,
-        ];
-
-        // Bulking data
-        // $data = [
-        //     ['name'=>'Coder 1', 'rep'=>'4096'],
-        //     ['name'=>'Coder 2', 'rep'=>'2048'],
-        //     //...
-        // ];
-
-
-        $save = UserAccess::insert($data);
-
-        // redirect
-        if ($save) {
-            return redirect()->back()->with(["success" => "Tambah Data"]);
-        } else {
-
-            return redirect()->back()->with(["error" => " Tambah Data Failed"]);
-        }
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function detail($id){
+        // dd($id);
+        $access_existing = UserAccess::where('usergroup_id', $id)->get();
+        // dd($access_existing);
+        return  json_encode($access_existing);
     }
 
     /**
@@ -116,16 +95,33 @@ class UserAccessController extends Controller
     public function update(Request $request)
     {
         // dd('masuk yupdate');
-        // dd($request->all());
-        $data = [
-            'usergroup_id' => $request->name,
-            'menu_id' => $request->menuparent_id,
-            'url' => $request->url,
-            'icon' => $request->icon
-        ];
+        $menu_set = [];
 
-        $save = UserAccess::where('id', $request->id)->update($data);
+        $delete = UserAccess::where('usergroup_id',  $request->usergroup_id)->Delete();
+        // $data = UserAccess::where()
+        // dd($delete);
+        if(count($request->access_menu_id_) > 0){
 
+            foreach ($request->access_menu_id_ as $key => $value) {
+                $data = [
+                    'usergroup_id' => $request->usergroup_id,
+                    'menu_id' => $key,
+                    'created_at'=>date('Y-m-d H:i:s'),
+                    'updated_at'=> date('Y-m-d H:i:s')
+                ];  
+                array_push($menu_set,$data);
+            }
+        }
+        
+        // Bulking data
+        // $data = [
+        //     ['name'=>'Coder 1', 'rep'=>'4096'],
+        //     ['name'=>'Coder 2', 'rep'=>'2048'],
+        //     //...
+        // ];
+
+
+        $save = UserAccess::insert($menu_set);
         // redirect
         if ($save) {
             return redirect()->back()->with(["success" => "Update Data"]);

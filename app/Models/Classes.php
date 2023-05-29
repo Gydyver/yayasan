@@ -52,6 +52,12 @@ class Classes extends Model
         return $this->hasMany(Session::class, 'class_id','id');
     }
 
+    // public function sessionWithGeneratedData()
+    // {
+    //     // return $this->hasMany('App\Models\Classes');
+    //     return $this->hasMany(Session::class, 'class_id','id')->with('sessionGenerated');
+    // }
+
     // public function teacher_id() {
     //     return $this->belongsTo('App\Models\User');
     // }

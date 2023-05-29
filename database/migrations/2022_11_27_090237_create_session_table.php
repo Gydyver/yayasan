@@ -22,7 +22,9 @@ return new class extends Migration
             // $table->foreign('class_id')->references('id')->on('class');
             $table->string('name', 50);
             $table->string('day', 50);
-            $table->string('time', 50);
+            // $table->string('time', 50);
+            $table->time('time_start');//belum dirubah di class diagram
+            $table->time('time_end');//belum dirubah di class diagram
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

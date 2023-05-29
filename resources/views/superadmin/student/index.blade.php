@@ -3,7 +3,10 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex">
-        <h3 class="card-title">Class</h3>
+        <h3 class="card-title">Student</h3>
+        <div class="pull-right mb-2">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
+        </div>
     </div>
     <div class="card-body">
     @if ($message = Session::get('success'))
@@ -17,9 +20,10 @@
         <thead>
             <tr>
                 <th>S.No</th>
-                <th>Day</th>
-                <th>Start</th>
-                <th>End</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Gender</th>
+                <th>Age</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -32,21 +36,16 @@
 @section('script')
 <script>
     $(document).ready(function(){    
-
-        var id ="{{request('idEncrypted')}}"
-
-        console.log('id');
-        console.log(id);
-       
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax:"{{ url('teacher/class/session/list') }}" + '/' + id,
+            ajax: "{{ route('superadmin.student.list') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'session_id', name: 'Day'},
-                {data: 'session_start', name: 'Start'},
-                {data: 'session_end', name: 'End'},
+                {data: 'name', name: 'Name'},
+                {data: 'class_label', name: 'Class'},
+                {data: 'gender', name: 'Gender'},
+                {data: 'age', name: 'Age'},
                 {
                     data: 'action', 
                     name: 'action', 
@@ -55,8 +54,6 @@
                 },
             ]
         });
-      
-        
     
     });
 

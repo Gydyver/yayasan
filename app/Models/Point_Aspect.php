@@ -21,10 +21,10 @@ class Point_Aspect extends Model
     protected $dates = ['deleted_at'];
 
 
-    // public function chapterPointAspect()
-    // {
-    //     return $this->hasMany(Chapter_Point_Aspect::class, 'point_aspect_id','id');
-    // }
+    public function chapterPointAspect()
+    {
+        return $this->hasMany(Chapter_Point_Aspect::class, 'point_aspect_id','id');
+    }
 
      
     public function chapterPointAspects()

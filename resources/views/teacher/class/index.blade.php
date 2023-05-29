@@ -4,9 +4,6 @@
 <div class="card">
     <div class="card-header d-flex">
         <h3 class="card-title">Class</h3>
-        <div class="pull-right mb-2">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
-        </div>
     </div>
     <div class="card-body">
     @if ($message = Session::get('success'))

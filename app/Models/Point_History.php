@@ -24,4 +24,20 @@ class Point_History extends Model
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
+
+
+    public function studentPointHistory()
+    {
+        return $this->belongsTo(User::class, 'student_id', 'id');
+    }
+
+    public function pointHistory()
+    {
+        return $this->belongsTo(Session_Generated::class, 'session_generated_id', 'id');
+    }
+
+    public function chapterPointAspectHistory()
+    {
+        return $this->belongsTo(Chapter_Point_Aspect::class, 'chapter_point_aspect_id', 'id');
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\class_type;
 use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\User;
+use App\Models\Session as SessionData;
 
 use DataTables;
 class ClassController extends Controller
@@ -103,6 +104,7 @@ class ClassController extends Controller
             return redirect()->back()->with(["error" => " Tambah Data Failed"]);
         }
     }
+
 
     /**
      * Display the specified resource.
