@@ -65,7 +65,7 @@ Route::get('/layout', function () {
      * Login Routes
      */
     Route::controller(LoginController::class)->group(function () {
-        Route::get('/login', 'show')->name('login.show');
+        Route::get('/login', 'show')->name('login.view');
         Route::post('/login', 'login')->name('login.perform');
 
     });
