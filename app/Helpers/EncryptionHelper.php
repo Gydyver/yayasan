@@ -22,6 +22,7 @@ class EncryptionHelper
             //Define cipher 
             // $cipher = "aes-256-cbc"; 
             $cipher = env('ENCRYPT_CIPHER');
+            // dd($cipher);
 
             //Generate a 256-bit encryption key 
             $encryption_key = env('ENCRYPT_KEY');

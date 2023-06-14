@@ -11,6 +11,8 @@ use App\Models\Chapter_Point_Aspect;
 use App\Models\Point_History;
 use App\Models\Session_Generated;
 use App\Models\Grade;
+use App\Models\Point_Aspect;
+
 use Illuminate\Support\Facades\Auth;
 
 use DataTables;
@@ -102,28 +104,46 @@ class ClassController extends Controller
         return view('teacher.class.classSessionStudent',compact('students','point_aspects','class_info', 'decrypted'));
     }
 
-    public function getDatatableSessionPointHistory($id,Request $request)
+    public function getDatatableSessionPointHistory($idSession,Request $request)
     {
-        dd('kok ga masuk ya');
+        // dd($idSession);
+        // dd('kok ga masuk ya');
         //lagi bingung disini kenapa ga bisa ya?
-        dd('masuk ga sih?');
+        // dd('masuk ga sih?');
         if ($request->ajax()) {
             //Changed into Login Auth
-            $decrypted = \EncryptionHelper::instance()->decrypt($id);
-            dd($decrypted);
-            $data = User::with('studentPointHistory')->where('studentPointHistory.session_id',$decrypted)->latest()->get();
-
-            return Datatables::of($data[0]->sessionGenerated)
+            $decrypted = \EncryptionHelper::instance()->decrypt($idSession);
+            // dd($decrypted);
+            // $data = User::with('studentPointHistory')->where('.session_id',$decrypted)->latest()->get();
+            $data = User::with('studentPointHistory')
+                    ->whereHas('studentPointHistory', function ($query) use ($decrypted) {
+                        $query->where('session_generated_id','=',$decrypted);
+                    })
+                    ->latest()
+                    ->get();
+   
+            return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = "
-                    <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    ";
-                    // <a href='/teacher/class/session/student/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Edit</a>
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
+                ->addColumn('point_history', function ($data) {
+                    // dd($data);
+                    
+                    $point_history = '<ul>';
+                    foreach($data->studentPointHistory as $dt){
+                        $point_aspect = Point_Aspect::where('id', $dt->chapter_point_aspect_id)->get();
+                        $point_history .= '<li>' . $point_aspect[0]->name .' : '. $dt->point .' ('.$dt->teacher_notes.')' . '</li>';
+                    }
+                    $point_history .= '</ul>';
+                    return  $point_history;
+                }) 
+                // ->addColumn('action', function($row){
+                //     $actionBtn = "
+                //     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                //     id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+                //     ";
+                //     // <a href='/teacher/class/session/student/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Edit</a>
+                //     return $actionBtn;
+                // })
+                ->rawColumns(['point_history'])
                 ->make(true);
         }
     }

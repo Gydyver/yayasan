@@ -18,6 +18,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserAccessController;
+use App\Http\Controllers\UploadPayReceiptController;
+
 use App\Http\Controllers\Superadmin\StudentController as SuperadminStudentController;
 use App\Http\Controllers\Superadmin\TeacherController as SuperadminTeacherController;
 
@@ -171,43 +173,32 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('/menu/update', 'update')->name('menu.update');
     });
 
-      
     Route::controller(SuperadminStudentController::class)->group(function () {
         Route::get('/superadmin/student', 'index')->name('superadmin.student.index');
         Route::get('/superadmin/student/list', 'getDatatable')->name('superadmin.student.list');
         Route::get('/superadmin/student/show/{idEncrypted}', 'show')->name('superadmin.student.show');
-        // Route::get('/user/destroy/{id}', 'destroy')->name('user.destroy');
-        // Route::post('/user/create', 'store')->name('user.store');
-        // Route::get('/user/show', 'show')->name('user.show');
-        // Route::get('/user/edit', 'edit')->name('user.edit');
-        // Route::post('/user/update', 'update')->name('user.update');
     });
-
 
     Route::controller(SuperadminTeacherController::class)->group(function () {
         Route::get('/superadmin/teacher', 'index')->name('superadmin.teacher.index');
         Route::get('/superadmin/teacher/list', 'getDatatable')->name('superadmin.teacher.list');
         Route::get('/superadmin/teacher/show/{idEncrypted}', 'show')->name('superadmin.teacher.show');
         Route::get('/superadmin/teacher/show/list/{idEncrypted}', 'getDatatableSession')->name('superadmin.teacher.session.list');
-        // Route::get('/user/show/{id}', 'show')->name('user.show');
-        // Route::get('/user/destroy/{id}', 'destroy')->name('user.destroy');
-        // Route::post('/user/create', 'store')->name('user.store');
-        // Route::get('/user/show', 'show')->name('user.show');
-        // Route::get('/user/edit', 'edit')->name('user.edit');
-        // Route::post('/user/update', 'update')->name('user.update');
     });
     
-
-
-    // Route::controller(UploadPayReceiptController::class)->group(function () {
-    //     Route::get('/payment_receipt', 'index')->name('payment_receipt.index');
-    //     Route::get('/payment_receipt/list', 'getDatatable')->name('payment_receipt.list');
-    //     Route::get('/payment_receipt/destroy/{id}', 'destroy')->name('payment_receipt.destroy');
-    //     Route::post('/payment_receipt/create', 'store')->name('payment_receipt.store');
-    //     Route::get('/payment_receipt/show', 'show')->name('payment_receipt.show');
-    //     Route::get('/payment_receipt/edit', 'edit')->name('payment_receipt.edit');
-    //     Route::post('/payment_receipt/update', 'update')->name('payment_receipt.update');
-    // });
+    Route::controller(UploadPayReceiptController::class)->group(function () {
+        Route::get('/upload_payreceipt', 'index')->name('upload_payreceipt.index');
+        // Route::get('/upload_payreceipt/unpaid/list', 'getDatatableUnpaid')->name('upload_payreceipt.unpaid.list');
+        // Route::get('/upload_payreceipt/paid/list', 'getDatatablePaid')->name('upload_payreceipt.paid.list');
+        Route::get('/upload_payreceipt/list', 'getDatatable')->name('upload_payreceipt.list');
+        Route::get('/upload_payreceipt/destroy/{id}', 'destroy')->name('upload_payreceipt.destroy');
+        Route::post('/upload_payreceipt/uploadFile', 'uploadFile')->name('upload_payreceipt.uploadFile');
+        Route::get('/upload_payreceipt/formUploadBulking', 'formUploadBulking')->name('upload_payreceipt.formUploadFile');
+        Route::post('/upload_payreceipt/uploadFileBulking', 'uploadFileBulking')->name('upload_payreceipt.uploadFileBulking');
+        Route::get('/upload_payreceipt/show', 'show')->name('upload_payreceipt.show');
+        Route::get('/upload_payreceipt/edit', 'edit')->name('upload_payreceipt.edit');
+        Route::post('/upload_payreceipt/update', 'update')->name('upload_payreceipt.update');
+    });
 
     Route::controller(SessionController::class)->group(function () {
         Route::get('/session', 'index')->name('session.index');

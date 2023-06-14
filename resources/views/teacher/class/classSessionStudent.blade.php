@@ -22,7 +22,7 @@
                 <th>S.No</th>
                 <th>Name</th>
                 <th>Point</th>
-                <th width="280px">Action</th>
+                <!-- <th width="280px">Action</th> -->
             </tr>
         </thead>
         <tbody>
@@ -110,24 +110,20 @@
 
         var idSession ="{{request('idEncrypted')}}"
         var idClass ="{{request('idEncryptedClass')}}"
-        console.log('id ini');
-        console.log(idSession)
-        console.log(idClass)
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax:"{{ url('teacher/class/session/point/list') }}" + '/' + idSession,
+            ajax:"{{ url('/teacher/class/session/point/list/') }}" + '/' + idClass,
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'session_id', name: 'Day'},
-                {data: 'session_start', name: 'Start'},
-                {data: 'session_end', name: 'End'},
-                {
-                    data: 'action', 
-                    name: 'action', 
-                    orderable: false, 
-                    searchable: false
-                },
+                {data: 'name', name: 'Day'},
+                {data: 'point_history', name: 'Point History'},
+                // {
+                //     data: 'action', 
+                //     name: 'action', 
+                //     orderable: false, 
+                //     searchable: false
+                // },
             ]
         });
       

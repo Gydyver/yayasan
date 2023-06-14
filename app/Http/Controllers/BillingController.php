@@ -79,7 +79,7 @@ class BillingController extends Controller
 
 
 
-        $students = User::where('usergroup_id',3)->where('join_date' , '<', $dateMinfilter)->get();
+        $students = User::where('usergroup_id',3)->where('join_date' , '<=', $dateMinfilter)->get();
         // dd($students);
         // 
         $studentNotFound = [];
@@ -91,6 +91,7 @@ class BillingController extends Controller
                     'billing'  =>  $student->monthly_fee,
                     'month'  =>  $request->month,
                     'year'  =>  $request->year,
+                    'status'  =>  0,
                     'created_at' => date('Y-m-d'),
                     'updated_at' => date('Y-m-d')
                 ];

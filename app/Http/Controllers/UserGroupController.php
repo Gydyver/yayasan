@@ -26,6 +26,7 @@ class UserGroupController extends Controller
     {
         if ($request->ajax()) {
             $data = UserGroup::latest()->get();
+            // dd($data);
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){

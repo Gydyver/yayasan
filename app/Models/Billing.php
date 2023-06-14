@@ -29,4 +29,13 @@ class Billing extends Model
         return $this->belongsTo(User::class, 'student_id', 'id');
     }
 
+    public function billings()
+    {
+        return $this->hasMany(Payment::class, 'billing_id', 'id')->with('payment_detail');
+    }
+
+    // public function studentBilling()
+    // {
+    //     return $this->belongsTo(Payment_Detail::class, ['student_id', 'month', 'year'], ['student_id', 'month', 'year'])->with('payment');
+    // }
 }

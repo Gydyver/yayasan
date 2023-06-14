@@ -82,6 +82,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Point_History::class, 'student_id', 'id');
     }
+
+
+    public function studentPayment()
+    {
+        return $this->hasMany(Payment_Detail::class,'student_id','id');
+    }
     // /**
     //  * The attributes that should be cast.
     //  *

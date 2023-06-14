@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Paymnet extends Model
+class Payment extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -25,13 +25,13 @@ class Paymnet extends Model
     ];
     protected $dates = ['deleted_at'];
 
-    public function billing() {
-        return $this->belongsTo('App\Models\Billing');
+    public function billings() {
+        return $this->belongsTo(Billing::class, 'billing_id', 'id');
     }
-    public function payment_details() {
-        return $this->hasMany('App\Models\Payment_Detail');
+    public function payment_detail() {
+        return $this->hasMany(Payment_Detail::class, 'payment_id', 'id');
     }
-    public function payment_others() {
-        return $this->hasMany('App\Models\Payment_Others');
-    }
+    // public function payment_others() {
+    //     return $this->hasMany('App\Models\Payment_Others');
+    // }
 }

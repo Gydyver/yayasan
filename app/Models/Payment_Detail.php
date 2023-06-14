@@ -22,11 +22,24 @@ class Payment_Detail extends Model
     ];
     protected $dates = ['deleted_at'];
 
-    public function payment() {
-        return $this->belongsTo('App\Models\Payment');
+    public function payment_detail() {
+        return $this->belongsTo(Payment::class, 'payment_id','id');
     }
     
-    public function student() {
-        return $this->belongsTo('App\Models\User');
+    public function studentPayment() {
+        return $this->belongsTo(User::class, 'student_id','id');
     }
+    
+    // public function studentBilling() {
+    //     return $this->belongsTo(Billing::class, ['student_id', 'month', 'year'], ['id', 'month', 'year']);
+    //     // 'student_id','id'  
+    // }
+
+    //  public function studentBilling() {
+    //     return $this->belongsTo(User::class, 'student_id','id');
+    // }
+    
+    // public function studentBillingwithPayment() {
+    //     return $this->belongsTo(User::class, 'student_id','id');
+    // }
 }

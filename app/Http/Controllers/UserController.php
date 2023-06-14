@@ -107,6 +107,7 @@ class UserController extends Controller
     {
         // $decrypted = Crypt::decryptString($idEncrypted);
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        
         dd($decrypted);
     }
 
