@@ -8,7 +8,7 @@ use DataTables;
 
 class MenuController extends Controller
 {
-      /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -19,7 +19,7 @@ class MenuController extends Controller
         $menu_parents = Menu::orderBy('id', 'asc')->whereNull('menuparent_id')->get();
         // print_r($menu_parents);die;
 
-        
+
         return view('master.menu.index', compact('menus', 'menu_parents'));
     }
 
@@ -29,12 +29,12 @@ class MenuController extends Controller
             $data = Menu::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
@@ -138,14 +138,14 @@ class MenuController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-    * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($idEncrypted)
     {
         // dd('masuk delete',$id);
         // dd($id);
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = Menu::where('id', $id)->Delete(); 
+        $delete = Menu::where('id', $id)->Delete();
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);

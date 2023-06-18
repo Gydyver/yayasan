@@ -55,20 +55,19 @@ Route::get('/layout', function () {
 // Route::get('signout', 'App\Http\Controllers\CustomAuthController@signOut')->name('signout');
 
 // Route::group(['middleware' => ['guest']], function() {
-    /**
-     * Register Routes
-     */
-    // Route::get('/register', 'RegisterController@show')->name('register.show');
-    // Route::post('/register', 'RegisterController@register')->name('register.perform');
+/**
+ * Register Routes
+ */
+// Route::get('/register', 'RegisterController@show')->name('register.show');
+// Route::post('/register', 'RegisterController@register')->name('register.perform');
 
-    /**
-     * Login Routes
-     */
-    Route::controller(LoginController::class)->group(function () {
-        Route::get('/login', 'show')->name('login.view');
-        Route::post('/login', 'login')->name('login.perform');
-
-    });
+/**
+ * Login Routes
+ */
+Route::controller(LoginController::class)->group(function () {
+    Route::get('/login', 'show')->name('login.view');
+    Route::post('/login', 'login')->name('login.perform');
+});
 
 // });
 
@@ -97,9 +96,9 @@ Route::controller(UserGroupController::class)->group(function () {
 
 
 
-Route::group(['middleware' => ['auth']], function() {
-    
-        
+Route::group(['middleware' => ['auth']], function () {
+
+
     Route::controller(ClassController::class)->group(function () {
         Route::get('/class', 'index')->name('class.index');
         Route::get('/class/list', 'getDatatable')->name('class.list');
@@ -108,9 +107,8 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/class/show/{idEncrypted}', 'show')->name('class.show');
         Route::get('/class/edit', 'edit')->name('class.edit');
         Route::post('/class/update', 'update')->name('class.update');
-        
     });
-        
+
 
     Route::controller(ClassTypeController::class)->group(function () {
         Route::get('/class_type', 'index')->name('class_type.index');
@@ -153,13 +151,13 @@ Route::group(['middleware' => ['auth']], function() {
     });
 
     Route::controller(PointAspectController::class)->group(function () {
-        Route::get('/point_aspect','index')->name('point_aspect.index');
-        Route::get('point_aspect/list','getDatatable')->name('point_aspect.list');
-        Route::get('/point_aspect/destroy/{id}','destroy')->name('point_aspect.destroy');
-        Route::post('/point_aspect/create','store')->name('point_aspect.store');
-        Route::get('/point_aspect/show','show')->name('point_aspect.show');
-        Route::get('/point_aspect/edit','edit')->name('point_aspect.edit');
-        Route::post('/point_aspect/update','update')->name('point_aspect.update');
+        Route::get('/point_aspect', 'index')->name('point_aspect.index');
+        Route::get('point_aspect/list', 'getDatatable')->name('point_aspect.list');
+        Route::get('/point_aspect/destroy/{id}', 'destroy')->name('point_aspect.destroy');
+        Route::post('/point_aspect/create', 'store')->name('point_aspect.store');
+        Route::get('/point_aspect/show', 'show')->name('point_aspect.show');
+        Route::get('/point_aspect/edit', 'edit')->name('point_aspect.edit');
+        Route::post('/point_aspect/update', 'update')->name('point_aspect.update');
     });
 
     Route::controller(MenuController::class)->group(function () {
@@ -176,6 +174,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::controller(SuperadminStudentController::class)->group(function () {
         Route::get('/superadmin/student', 'index')->name('superadmin.student.index');
         Route::get('/superadmin/student/list', 'getDatatable')->name('superadmin.student.list');
+        Route::post('/superadmin/student/changeChapter', 'changeChapter')->name('superadmin.student.changeChapter');
         Route::get('/superadmin/student/show/{idEncrypted}', 'show')->name('superadmin.student.show');
     });
 
@@ -185,7 +184,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/superadmin/teacher/show/{idEncrypted}', 'show')->name('superadmin.teacher.show');
         Route::get('/superadmin/teacher/show/list/{idEncrypted}', 'getDatatableSession')->name('superadmin.teacher.session.list');
     });
-    
+
     Route::controller(UploadPayReceiptController::class)->group(function () {
         Route::get('/upload_payreceipt', 'index')->name('upload_payreceipt.index');
         // Route::get('/upload_payreceipt/unpaid/list', 'getDatatableUnpaid')->name('upload_payreceipt.unpaid.list');
@@ -220,7 +219,6 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/billing/edit', 'edit')->name('billing.edit');
         Route::post('/billing/update', 'update')->name('billing.update');
         Route::post('/billing/generateMonthlyBilling', 'generateMonthlyBilling')->name('billing.generateMonthlyBilling');
-        
     });
 
     Route::controller(TeacherClassController::class)->group(function () {
@@ -232,7 +230,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacherclass.Session.list');
         Route::get('/teacher/class/{idEncryptedClass}/session/point/{idEncrypted}', 'showSessionStudent')->name('teacherclass.session.point');
         Route::get('/teacher/class/session/point/list/{idEncrypted}', 'getDatatableSessionPointHistory')->name('teacherclass.Session.point.list');
-        
+
         Route::post('/teacher/class/session/history/point/create', 'createHistoryPoint')->name('teacherclass.session.history.store');
     });
 
@@ -243,7 +241,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('/teacher/class/create', 'store')->name('teacherclass.store');
         Route::get('/teacher/class/session/{idEncrypted}', 'showSession')->name('teacherclass.session');
         // Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacher.classSession.list');
-        
+
         Route::get('/teacher/class/show/{idEncrypted}', 'show')->name('teacherclass.show');
         Route::get('/teacher/class/edit', 'edit')->name('teacherclass.edit');
         Route::post('/teacher/class/update', 'update')->name('teacherclass.update');
@@ -254,4 +252,3 @@ Route::group(['middleware' => ['auth']], function() {
      */
     Route::get('/logout', [LogoutController::class, 'perform'])->name('logout.perform');
 });
- 

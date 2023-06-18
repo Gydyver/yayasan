@@ -24,7 +24,7 @@ class Classes extends Model
         'created_at',
         'updated_at',
     ];
-    
+
     public function teachers()
     {
         return $this->belongsTo(User::class, 'teacher_id', 'id');
@@ -33,7 +33,7 @@ class Classes extends Model
     public function studentClasses()
     {
         // return $this->hasMany('App\Models\Classes');
-        return $this->hasMany(User::class,  'usergroup_id','id');
+        return $this->hasMany(User::class,  'usergroup_id', 'id');
     }
 
     public function chapters()
@@ -49,7 +49,7 @@ class Classes extends Model
     public function sessions()
     {
         // return $this->hasMany('App\Models\Classes');
-        return $this->hasMany(Session::class, 'class_id','id');
+        return $this->hasMany(Session::class, 'class_id', 'id');
     }
 
     // public function sessionWithGeneratedData()
