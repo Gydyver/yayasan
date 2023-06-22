@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title">Grade</h3>
         <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -79,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -122,7 +122,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="grade_id" name="id"> 
+                    <input type="hidden" id="grade_id" name="id">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -147,7 +147,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -156,7 +156,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -178,24 +178,29 @@
 
 @section('script')
 <script>
-    $(document).ready(function(){
-    
+    $(document).ready(function() {
+
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ route('grade.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'name'},
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
                 {
-                    data: 'action', 
-                    name: 'action', 
-                    orderable: false, 
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
                     searchable: false
                 },
             ]
         });
-    
+
     });
     // $(document).ready(function(){
     //     $('#tabel_data').DataTable({

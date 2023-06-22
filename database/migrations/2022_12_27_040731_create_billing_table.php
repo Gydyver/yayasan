@@ -17,11 +17,12 @@ return new class extends Migration
         // QC before re-migrate 29 April 2023
         Schema::create('billing', function (Blueprint $table) {
             $table->id();
-            $table->integer('student_id');//belum ada di classdiagram
+            $table->integer('student_id'); //belum ada di classdiagram
             // $table->foreign('student_id')->references('id')->on('users');
             $table->integer('billing');
             $table->integer('month');
             $table->integer('year');
+            $table->integer('status');
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

@@ -11,6 +11,7 @@ use App\Models\Session_Generated;
 use Carbon\Carbon;
 
 use DataTables;
+
 class SessionController extends Controller
 {
     /**
@@ -20,7 +21,7 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $classes = Classes::orderBy('id','desc')->get();
+        $classes = Classes::orderBy('id', 'desc')->get();
         $days = [
             "Monday",
             "Tuesday",
@@ -30,7 +31,7 @@ class SessionController extends Controller
             "Saturday",
             "Sunday"
         ];
-        return view('master.session.index', compact('classes','days'));
+        return view('master.session.index', compact('classes', 'days'));
     }
 
     public function getDatatable(Request $request)
@@ -41,8 +42,8 @@ class SessionController extends Controller
                 ->addIndexColumn()
                 ->addColumn('class_label', function ($data) {
                     return  $data->classes->name;
-                }) 
-                ->addColumn('action', function($row){
+                })
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     // $actionBtn = "
                     // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
@@ -52,9 +53,9 @@ class SessionController extends Controller
                     // ";
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <a href='session/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                    <a href='session/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
@@ -113,8 +114,8 @@ class SessionController extends Controller
     {
         //
         $class_id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        
-        $session = Classess::where('id',$class_id )->with('sessions')->get();
+
+        $session = Classess::where('id', $class_id)->with('sessions')->get();
         dd($session);
         // dd($decrypted);
     }
@@ -168,13 +169,13 @@ class SessionController extends Controller
      */
     public function destroy($idEncrypted)
     {
-         // delete
+        // delete
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-         $class = SessionData::find($id);
-         $class->delete();
-         return redirect()->route('session.index')->with('success','Class has been deleted successfully');
- 
-         // redirect
+        $class = SessionData::find($id);
+        $class->delete();
+        return redirect()->route('session.index')->with('success', 'Class has been deleted successfully');
+
+        // redirect
         //  SessionData::flash('message', 'Successfully deleted the shark!');
         //  return Redirect::to('sharks');
     }
@@ -184,53 +185,49 @@ class SessionController extends Controller
     {
         $session = SessionData::where('class_id', $request->class_id_gen)->latest()->get();
         $class = Classes::where('id', $request->class_id_gen)->latest()->get();
-        // dd($session);
         $dates = [];
         $day = "MONDAY";
-        foreach($session as $s){
+        foreach ($session as $s) {
             $fromDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
             $toDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
-            
-            if($s->day == 'Sunday'){
+
+            if ($s->day == 'Sunday') {
                 // Get the first Sunday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::SUNDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Sunday');
-            } else if($s->day == 'Monday'){
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Sunday');
+            } else if ($s->day == 'Monday') {
                 // Get the first Monday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::MONDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Monday');
-            }else if($s->day == 'Tuesday'){
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Monday');
+            } else if ($s->day == 'Tuesday') {
                 // Get the first Tuesday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::TUESDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Tuesday');
-            }else if($s->day == 'Wednesday'){
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Tuesday');
+            } else if ($s->day == 'Wednesday') {
                 // Get the first Wednesday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::WEDNESDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Wednesday');
-
-            }else if($s->day == 'Thursday'){
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Wednesday');
+            } else if ($s->day == 'Thursday') {
                 // Get the first Thursday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::THURSDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Thursday');
-
-            }else if($s->day == 'Friday'){
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Thursday');
+            } else if ($s->day == 'Friday') {
                 // Get the first Friday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::MONDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Friday');
-
-            }else if($s->day == 'Saturday'){
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Friday');
+            } else if ($s->day == 'Saturday') {
                 // Get the first Saturday in the date range
                 $date = $fromDate->dayOfWeek == Carbon::SATURDAY
-                ? $fromDate
-                : $fromDate->copy()->modify('next Saturday');
+                    ? $fromDate
+                    : $fromDate->copy()->modify('next Saturday');
             }
-            
+
             // Iterate until you have reached the end date adding a week each time
             while ($date->lt($toDate)) {
                 // dd($date->toDateString());
@@ -251,7 +248,7 @@ class SessionController extends Controller
                 $date->addWeek();
             }
         }
-        
+
         //DAPET NIH DATA Datesnya di array dates
         // dd($dates);
 

@@ -15,21 +15,28 @@ class Payment_Detail extends Model
 
     protected $fillable = [
         'payment_id',
-        'student_id',
+        'billing_id',
         'nominal',
         'created_at',
         'updated_at',
     ];
     protected $dates = ['deleted_at'];
 
-    public function payment_detail() {
-        return $this->belongsTo(Payment::class, 'payment_id','id');
+    public function billings()
+    {
+        return $this->belongsTo(Billing::class, 'billing_id', 'id');
     }
-    
-    public function studentPayment() {
-        return $this->belongsTo(User::class, 'student_id','id');
+
+    public function payment_detail()
+    {
+        return $this->belongsTo(Payment::class, 'payment_id', 'id');
     }
-    
+
+    public function studentPayment()
+    {
+        return $this->belongsTo(User::class, 'student_id', 'id');
+    }
+
     // public function studentBilling() {
     //     return $this->belongsTo(Billing::class, ['student_id', 'month', 'year'], ['id', 'month', 'year']);
     //     // 'student_id','id'  
@@ -38,7 +45,7 @@ class Payment_Detail extends Model
     //  public function studentBilling() {
     //     return $this->belongsTo(User::class, 'student_id','id');
     // }
-    
+
     // public function studentBillingwithPayment() {
     //     return $this->belongsTo(User::class, 'student_id','id');
     // }

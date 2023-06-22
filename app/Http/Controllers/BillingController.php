@@ -9,6 +9,7 @@ use App\Models\Classes;
 use App\Models\Session;
 
 use DataTables;
+
 class BillingController extends Controller
 {
     /**
@@ -18,8 +19,8 @@ class BillingController extends Controller
      */
     public function index()
     {
-        $months = [1,2,3,4,5,6,7,8,9,10,11,12];
-        $years = [2019,2020,2021,2022,2023,2024,2025,2026,2027];
+        $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        $years = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027];
         return view('master.billing.index', compact('months', 'years'));
     }
 
@@ -32,7 +33,7 @@ class BillingController extends Controller
                 ->addColumn('student_label', function ($data) {
                     return  $data->students->name;
                 })
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     // actionBtn standard, billing cuma show aja dulu untuk saat ini
                     // $actionBtn = "
                     // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
@@ -41,7 +42,7 @@ class BillingController extends Controller
                     // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
                     // ";
                     $actionBtn = "
-                    <a href='billing/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    <a href='billing/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
                     ";
                     return $actionBtn;
                 })
@@ -67,25 +68,20 @@ class BillingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-
-    }
+    { }
 
     public function generateMonthlyBilling(Request $request)
     {
         // $dateMin = strtotime('10/{$request-month}/{$request-year}');
-        $dateMin = '01-'.$request->month.'-'.$request->year;
+        $dateMin = '07-' . $request->month . '-' . $request->year; //diganti berdasarkan tanggal perhitungannya
         $dateMinfilter = date($dateMin);
 
+        $students = User::where('usergroup_id', 3)->where('join_date', '<=', $dateMinfilter)->get();
 
-
-        $students = User::where('usergroup_id',3)->where('join_date' , '<=', $dateMinfilter)->get();
-        // dd($students);
-        // 
         $studentNotFound = [];
-        foreach($students as $student){
+        foreach ($students as $student) {
             $billing = Billing::where('month', $request->month)->where('year', $request->year)->where('student_id', $student->id)->get();
-            if(count($billing) ==0){
+            if (count($billing) == 0) {
                 $billingRow = [
                     'student_id'  =>  $student->id,
                     'billing'  =>  $student->monthly_fee,
@@ -98,12 +94,11 @@ class BillingController extends Controller
                 array_push($studentNotFound, $billingRow);
             }
         }
-        // dd($studentNotFound);
 
-        if(count($studentNotFound) > 0){
+        if (count($studentNotFound) > 0) {
             Billing::insert($studentNotFound);
             return redirect()->back()->with(["success" => "Semua billing berhasil dibuat"]);
-        }else{
+        } else {
             return redirect()->back()->with(["error" => "Semua billing sudah terbuat"]);
         }
     }
@@ -140,9 +135,7 @@ class BillingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {
-        
-    }
+    { }
 
     /**
      * Remove the specified resource from storage.
@@ -151,7 +144,5 @@ class BillingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($idEncrypted)
-    {
-
-    }
+    { }
 }

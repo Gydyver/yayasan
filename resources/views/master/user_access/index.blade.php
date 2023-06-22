@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title">User Access</h3>
     </div>
-    
+
     <div class="card-body">
         @if (Session::has('success'))
         <div class="alert alert-success" role="alert">
@@ -23,7 +23,7 @@
             </button>
         </div>
         @endif
-       
+
         <table class="table table-bordered yajra-datatable">
             <thead>
                 <tr>
@@ -53,9 +53,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="usergroup_id" name="usergroup_id"/> 
+                    <input type="hidden" id="usergroup_id" name="usergroup_id" />
                     @foreach($menusWithChildren as $menu_p)
-                        <!-- <div class="row">
+                    <!-- <div class="row">
                             <span style="font-weight: bold;padding: 5px 0px;">{{$menu_p->name}}</spa>
                         </div>
                         <div class="row">
@@ -76,38 +76,38 @@
                                 <label class="form-check-label" for="`accessDelete_{{$menu_p->id}}`">ACT Delete</label>
                             </div>
                         </div> -->
-                        <div class="row">
-                            <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                                <span style="font-weight: bold;padding: 5px 0px;">{{$menu_p->name}}</spa>
-                            </div>
-                            <!-- <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                            <span style="font-weight: bold;padding: 5px 0px;">{{$menu_p->name}}</spa>
+                        </div>
+                        <!-- <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
                                 <input class="form-check-input" name="`form_access_{{$menu_p->id}}`" type="checkbox" id="`access{{$menu_p->id}}`" value="true">
                                 <label class="form-check-label" for="`access{{$menu_p->id}}`">Access</label>
                             </div> -->
-                            <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
-                                <input class="form-check-input" name='access_menu_id_[{{$menu_p->id}}]' type="checkbox" id="access_{{$menu_p->id}}" value="true">
-                                <label class="form-check-label" for="access{{$menu_p->id}}">Active</label>
-                            </div>
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
+                            <input class="form-check-input" name='access_menu_id_[{{$menu_p->id}}]' type="checkbox" id="access_{{$menu_p->id}}" value="true">
+                            <label class="form-check-label" for="access{{$menu_p->id}}">Active</label>
                         </div>
+                    </div>
 
-                            @if ($menu_p->children->count())
-                                @foreach($menu_p->children as $menu_c)
-                                <div class="row" style="padding-left : 50px;">
-                                    <!-- <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
+                    @if ($menu_p->children->count())
+                    @foreach($menu_p->children as $menu_c)
+                    <div class="row" style="padding-left : 50px;">
+                        <!-- <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
                                         <span style="padding: 5px 0px;">{{$menu_c->name}}</span>
                                     </div> -->
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
-                                        <input class="form-check-input" name='access_menu_id_[{{$menu_c->id}}]' type="checkbox" id="access_{{$menu_c->id}}" value="true">
-                                        <label class="form-check-label" for="access_{{$menu_c->id}}">{{$menu_c->name}}</label>
-                                    </div>
-                                </div>
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
+                            <input class="form-check-input" name='access_menu_id_[{{$menu_c->id}}]' type="checkbox" id="access_{{$menu_c->id}}" value="true">
+                            <label class="form-check-label" for="access_{{$menu_c->id}}">{{$menu_c->name}}</label>
+                        </div>
+                    </div>
 
-                                <!-- <div class="row" style="padding-left : 50px;">
+                    <!-- <div class="row" style="padding-left : 50px;">
                                         <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
                                             <span style="padding: 5px 0px;">{{$menu_c->name}}</span>
                                         </div>
                                     </div>-->
-                                <!-- <div class="row" style="padding-left : 50px;">
+                    <!-- <div class="row" style="padding-left : 50px;">
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
                                         <input class="form-check-input" name="`read_{{$menu_c->id}}`" type="checkbox" id="`accessRead_{{$menu_c->id}}`" value="option1">
                                         <label class="form-check-label" for="`accessRead_{{$menu_c->id}}`">ACT Read</label>
@@ -126,9 +126,9 @@
                                     </div>
                                 
                                 </div> -->
-                                @endforeach
-                            @endif
-                            <br>
+                    @endforeach
+                    @endif
+                    <br>
                     @endforeach
                 </div>
                 <div class="modal-footer">
@@ -145,24 +145,29 @@
 
 @section('script')
 <script>
-    $(document).ready(function(){
-    
+    $(document).ready(function() {
+
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ route('useraccess.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'name'},
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
                 {
-                    data: 'action', 
-                    name: 'action', 
-                    orderable: false, 
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
                     searchable: false
                 },
             ]
         });
-    
+
     });
     // $(document).ready(function(){
     //     $('#tabel_data').DataTable({
@@ -204,20 +209,20 @@
         $('#formEdit #usergroup_id').val(item.id);
     }
 
-    function getExistingData(id){
+    function getExistingData(id) {
         console.log();
         $.ajax({
             type: 'GET', //THIS NEEDS TO BE GET
             // url: "{{ route('useraccess.detail', "+id+") }}",
-            url: '/useraccess/detail/'+ id,
-            success: function (data) {
+            url: '/useraccess/detail/' + id,
+            success: function(data) {
                 var menus = JSON.parse(data);
                 menus.forEach(el => {
-                    $('#access_'+ el.menu_id).prop('checked', true);
-                    console.log('#access_'+el.menu_id);
+                    $('#access_' + el.menu_id).prop('checked', true);
+                    console.log('#access_' + el.menu_id);
                 });
             },
-            error: function() { 
+            error: function() {
                 console.log(data);
             }
         });

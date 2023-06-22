@@ -20,13 +20,14 @@ return new class extends Migration
             $table->id();
             $table->string('name', 30);
             $table->integer('usergroup_id');
-            $table->integer('class_id')->nullable();//only for user student//belum ada di classdiagram
+            $table->integer('chapter_id')->nullable(); //only for user student//belum ada di classdiagram
+            $table->integer('class_id')->nullable(); //only for user student//belum ada di classdiagram
             // $table->foreign('usergroup_id')->references('id')->on('usergroup');
             $table->string('phone', 15)->nullable();
             $table->string('username', 30)->unique();;
             $table->string('password');
             $table->integer('monthly_fee')->nullable();
-            $table->string('gender',20);
+            $table->string('gender', 20);
             $table->date('birth_date');
             $table->date('join_date');
             $table->rememberToken();

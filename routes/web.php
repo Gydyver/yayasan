@@ -175,6 +175,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/superadmin/student', 'index')->name('superadmin.student.index');
         Route::get('/superadmin/student/list', 'getDatatable')->name('superadmin.student.list');
         Route::post('/superadmin/student/changeChapter', 'changeChapter')->name('superadmin.student.changeChapter');
+        Route::post('/superadmin/student/setChapter', 'setChapter')->name('superadmin.student.setChapter');
+        Route::post('/superadmin/student/changeClass', 'changeClass')->name('superadmin.student.changeClass');
+        Route::post('/superadmin/student/setClass', 'setClass')->name('superadmin.student.setClass');
         Route::get('/superadmin/student/show/{idEncrypted}', 'show')->name('superadmin.student.show');
     });
 
@@ -230,6 +233,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacherclass.Session.list');
         Route::get('/teacher/class/{idEncryptedClass}/session/point/{idEncrypted}', 'showSessionStudent')->name('teacherclass.session.point');
         Route::get('/teacher/class/session/point/list/{idEncrypted}', 'getDatatableSessionPointHistory')->name('teacherclass.Session.point.list');
+        Route::get('/teacher/class/session/getPointAspectStudent/{id}', 'getPointAspectStudent')->name('teacherclass.session.getPointAspectStudent');
 
         Route::post('/teacher/class/session/history/point/create', 'createHistoryPoint')->name('teacherclass.session.history.store');
     });

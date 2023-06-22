@@ -41,6 +41,12 @@ class UploadPayReceiptController extends Controller
                 ->addColumn('month_year', function ($row) {
                     return $row->month . ' - ' . $row->year;
                 })
+                // ->addColumn('payment_billing', function ($row) {
+                //     if ($row->billings != null) {
+                //         return $row->billings->payment_billing;
+                //     }
+                //     return "-";
+                // })
                 ->addColumn('status', function ($row) {
                     if ($row->status == 1) {
                         return 'Waiting admin confirmation';
@@ -65,20 +71,23 @@ class UploadPayReceiptController extends Controller
                         return '-';
                     }
                 })
-                ->addColumn('total_transfer', function ($row) {
-                    // if($row->studentBilling != null){
-                    //     return $row->studentBilling->created_at;
-                    // }else{
-                    //     return '-';
-                    // }
-                    if (count($row->billings) > 0) {
-                        return $row->billings[0]->payment_billing;
-                        // $payment_detail = Payment_Detail::where('payment_id',$row->billings->id)->latest()->get();
-
-                    } else {
-                        return '-';
-                    }
-                })
+                // ->addColumn('total_transfer', function ($row) {
+                //     // if($row->studentBilling != null){
+                //     //     return $row->studentBilling->created_at;
+                //     // }else{
+                //     //     return '-';
+                //     // }
+                //     // dd($row->billings);
+                //     // if (count($row->billings) > 0) {
+                //     // dd($row);
+                //     if ($row->status != 0) {
+                //         $payment = Payment::where('billing_id', $row->id)->latest()->get();
+                //         dd($payment);
+                //         return $payment->payment_billing;
+                //     } else {
+                //         return '-';
+                //     }
+                // })
                 ->addColumn('action', function ($row) {
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='uploadData(this);'
@@ -198,7 +207,6 @@ class UploadPayReceiptController extends Controller
 
             //Insert Payment
             $dataPayment = [
-                'billing_id' => $request->billing_id,
                 'transfer_time' => $request->transfer_time,
                 'link_prove' =>  $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name,
                 'payment_billing' => $request->nominal,
@@ -211,12 +219,24 @@ class UploadPayReceiptController extends Controller
             //Insert Payment Detail
             $dataPaymentDet = [
                 'payment_id' => $idPayment,
-                'student_id' => $request->student_id,
+                // 'student_id' => $request->student_id,
+                'billing_id' => $request->billing_id,
                 'nominal' => $request->nominal,
                 'created_at' => date('Y-m-d'),
                 'updated_at' => date('Y-m-d')
             ];
             $save = Payment_Detail::insert($dataPaymentDet);
+
+            if ($request->nominal_sedekah != null) { }
+            //Insert Payment Other
+            $dataPaymentOther = [
+                'payment_id' => $idPayment,
+                'notes' => $request->notes_sedekah,
+                'nominal' => $request->nominal_sedekah,
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d')
+            ];
+            $save = Payment_Other::insert($dataPaymentOther);
 
             // redirect
             if ($save) {
@@ -265,7 +285,6 @@ class UploadPayReceiptController extends Controller
 
             //Insert Payment
             $dataPayment = [
-                'billing_id' => $request->billing_id,
                 'transfer_time' => $request->transfer_time,
                 'link_prove' =>  $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name,
                 'payment_billing' => $request->nominal,
@@ -279,7 +298,8 @@ class UploadPayReceiptController extends Controller
                 //Insert Payment Detail
                 $dataPaymentDet = [
                     'payment_id' => $idPayment,
-                    'student_id' => $request->student_id,
+                    // 'student_id' => $request->student_id,
+                    'billing_id' => $request->billing_id,
                     'nominal' => $request->nominal,
                     'created_at' => date('Y-m-d'),
                     'updated_at' => date('Y-m-d')

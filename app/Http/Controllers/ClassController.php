@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Session as SessionData;
 
 use DataTables;
+
 class ClassController extends Controller
 {
     /**
@@ -20,30 +21,27 @@ class ClassController extends Controller
     public function index()
     {
         //Changed into Login Auth
-        $classes = Classes::orderBy('id','desc')->paginate(10);
-        $teachers = User::orderBy('name','asc')->where('usergroup_id',2)->get();
-        $chapters = Chapter::orderBy('name','asc')->get();
-        $class_types = class_type::orderBy('name','asc')->get();
-        return view('master.class.index', compact('classes','teachers','chapters','class_types'));
+        $classes = Classes::orderBy('id', 'desc')->paginate(10);
+        $teachers = User::orderBy('name', 'asc')->where('usergroup_id', 2)->get();
+        $chapters = Chapter::orderBy('name', 'asc')->get();
+        $class_types = class_type::orderBy('name', 'asc')->get();
+        return view('master.class.index', compact('classes', 'teachers', 'chapters', 'class_types'));
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Classes::with('teachers')->with('chapters')->with('classTypes')->latest()->get();
+            $data = Classes::with('teachers')->with('classTypes')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('teacher_label', function ($data) {
                     return  $data->teachers->name;
-                }) 
-                ->addColumn('chapter_label', function ($data) {
-                    return  $data->chapters->name;
                 })
                 ->addColumn('class_type_label', function ($data) {
                     return  $data->classTypes->name;
                 })
 
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     // $actionBtn = "
                     // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
@@ -53,9 +51,9 @@ class ClassController extends Controller
                     // ";
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <a href='class/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                    <a href='class/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
@@ -85,8 +83,8 @@ class ClassController extends Controller
         $data = [
             'name' => $request->name,
             'teacher_id' => $request->teacher_id,
-            'chapter_id' => $request->chapter_id,
-            'chapter_id' => $request->chapter_id,
+            // 'chapter_id' => $request->chapter_id,
+            // 'chapter_id' => $request->chapter_id,
             'class_type_id' => $request->class_type_id,
             'class_start' => $request->class_start,
             'created_at' => date('Y-m-d'),
@@ -142,8 +140,8 @@ class ClassController extends Controller
         $data = [
             'name' => $request->name,
             'teacher_id' => $request->teacher_id,
-            'chapter_id' => $request->chapter_id,
-            'chapter_id' => $request->chapter_id,
+            // 'chapter_id' => $request->chapter_id,
+            // 'chapter_id' => $request->chapter_id,
             'class_type_id' => $request->class_type_id,
             'class_start' => $request->class_start,
             'updated_at' => date('Y-m-d')
@@ -168,13 +166,13 @@ class ClassController extends Controller
      */
     public function destroy($idEncrypted)
     {
-         // delete
+        // delete
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-         $class = Classes::find($id);
-         $class->delete();
-         return redirect()->route('class.index')->with('success','Class has been deleted successfully');
- 
-         // redirect
+        $class = Classes::find($id);
+        $class->delete();
+        return redirect()->route('class.index')->with('success', 'Class has been deleted successfully');
+
+        // redirect
         //  Session::flash('message', 'Successfully deleted the shark!');
         //  return Redirect::to('sharks');
     }

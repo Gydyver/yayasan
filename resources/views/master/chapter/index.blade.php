@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title">Chapter</h3>
         <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
@@ -50,7 +50,8 @@
                     <td>{{ $chapter->id }}</td>
                     <td>{{ $chapter->name }}</td>
                     <td>
-                        <button onclick="confirmData(<? //= $chapter->id ?>)">Delete</button>
+                        <button onclick="confirmData(<? //= $chapter->id 
+                                                        ?>)">Delete</button>
                         <button type="button" class="btn btn-sm btn-icon btn-primary" data-toggle="modal" onclick="updateData(this);"
                         id="btnEdit" data-target="#ModalUpdate" data-item="{{json_encode($chapter)}}">Update</button>
                     </td>
@@ -121,7 +122,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="chapter_id" name="id"> 
+                    <input type="hidden" id="chapter_id" name="id">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -153,12 +154,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="chapter_id_point" name="id"> 
+                    <input type="hidden" id="chapter_id_point" name="id">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Name:</strong>
-                                <input type="text" class="form-control" placeholder="Chapter" disabled>
+                                <input type="text" class="form-control" placeholder="Chapter" id="name" disabled>
                             </div>
                         </div>
                     </div>
@@ -193,28 +194,36 @@
 
 @section('script')
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $('.select2').select2({
             placeholder: "Please select data"
         })
-    
+
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ route('chapter.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'Name'},
-                {data: 'point_aspects', name: 'Point Aspect'},
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
                 {
-                    data: 'action', 
-                    name: 'Action', 
-                    orderable: false, 
+                    data: 'name',
+                    name: 'Name'
+                },
+                {
+                    data: 'point_aspects',
+                    name: 'Point Aspect'
+                },
+                {
+                    data: 'action',
+                    name: 'Action',
+                    orderable: false,
                     searchable: false
                 },
             ]
         });
-    
+
     });
     // $(document).ready(function(){
     //     $('#tabel_data').DataTable({
@@ -270,7 +279,7 @@
         $('#formAddAspect #name').val(item.name);
     }
 
-    
+
 
     // $('#myModal').on('shown.bs.modal', function () {
     //     $('#myInput').trigger('focus')

@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title">User</h3>
-        <div class="pull-right mb-2">
+        <div class="float-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
         </div>
     </div>
-    
+
     <div class="card-body">
         @if (Session::has('success'))
         <div class="alert alert-success" role="alert">
@@ -26,7 +26,7 @@
             </button>
         </div>
         @endif
-    
+
         <table class="table table-bordered yajra-datatable">
             <thead>
                 <tr>
@@ -79,7 +79,7 @@
                                 <strong>UserGroup:</strong>
                                 <select name="usergroup_id" class="form-control">
                                     @foreach ($user_groups as $user_group)
-                                        <option value="{{$user_group->id}}">{{$user_group->name}}</option>
+                                    <option value="{{$user_group->id}}">{{$user_group->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -89,9 +89,9 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Class:</strong>
-                                <select type="number" name="class_id" class="form-control" >
+                                <select type="number" name="class_id" class="form-control">
                                     @foreach ($classes as $class)
-                                        <option value="{{$class->id}}">{{$class->name}}</option>
+                                    <option value="{{$class->id}}">{{$class->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -183,7 +183,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="user_id" name="id"> 
+                    <input type="hidden" id="user_id" name="id">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -206,7 +206,7 @@
                                 <strong>UserGroup:</strong>
                                 <select type="number" name="usergroup_id" id="usergroup_id" class="form-control" placeholder="Lowest Point">
                                     @foreach ($user_groups as $user_group)
-                                        <option value="{{$user_group->id}}">{{$user_group->name}}</option>
+                                    <option value="{{$user_group->id}}">{{$user_group->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -218,7 +218,7 @@
                                 <strong>Class:</strong>
                                 <select type="number" name="class_id" id="class_id" class="form-control" placeholder="Lowest Point">
                                     @foreach ($classes as $class)
-                                        <option value="{{$class->id}}">{{$class->name}}</option>
+                                    <option value="{{$class->id}}">{{$class->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -299,8 +299,8 @@
 
 @section('script')
 <script>
-    $(document).ready(function(){
-    
+    $(document).ready(function() {
+
         $('#birth_date_create').datetimepicker({
             format: 'YYYY-MM-DD'
         });
@@ -313,20 +313,29 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('user.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'Name'},
-                {data:'usergroup_label', name:'User Group'},
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
                 {
-                    data: 'action', 
-                    name: 'action', 
-                    orderable: false, 
+                    data: 'name',
+                    name: 'Name'
+                },
+                {
+                    data: 'usergroup_label',
+                    name: 'User Group'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
                     searchable: false
                 },
             ]
         });
-    
+
     });
+
     function confirmData(id) {
         swal({
             title: "Are you sure?",
@@ -374,6 +383,5 @@
         $('#formEdit #birth_date').val(item.birth_date);
         $('#formEdit #join_date').val(item.join_date);
     }
-
 </script>
 @endsection

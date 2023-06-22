@@ -21,7 +21,8 @@ class Payment_Other extends Model
     ];
     protected $dates = ['deleted_at'];
 
-    public function payment() {
-        return $this->belongsTo('App\Models\Payment');
+    public function payment_others()
+    {
+        return $this->belongsTo(Payment::class, 'payment_id', 'id');
     }
 }

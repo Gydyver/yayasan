@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title ">User G</h3>
         <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
@@ -87,7 +87,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="user_group_id" name="id"> 
+                    <input type="hidden" id="user_group_id" name="id">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -108,68 +108,74 @@
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function(){
-        
-            var table = $('.yajra-datatable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('usergroup.list') }}",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'name', name: 'name'},
-                    {
-                        data: 'action', 
-                        name: 'action', 
-                        orderable: false, 
-                        searchable: false
-                    },
-                ]
-            });
-        
+<script>
+    $(document).ready(function() {
+
+        var table = $('.yajra-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('usergroup.list') }}",
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+            ]
         });
-        function confirmData(id) {
-            swal({
-                title: "Are you sure?",
-                text: "You will not be able to recover this data!",
-                icon: "warning",
-                buttons: [
-                    'No, cancel it!',
-                    'Yes, I am sure!'
-                ],
-                dangerMode: true,
-            }).then(function(isConfirm) {
-                if (isConfirm) {
 
-                    swal({
-                        title: 'Deleted!',
-                        text: 'User Group Deleted successfully!',
-                        icon: 'success'
-                    }).then(function() {
-                        window.location.href = "{{ url('usergroup/destroy/') }}/" + id;
-                    });
-                } else {
-                    swal("Cancelled", "Your data is safe :)", "error");
-                }
-            })
+    });
 
-        }
+    function confirmData(id) {
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this data!",
+            icon: "warning",
+            buttons: [
+                'No, cancel it!',
+                'Yes, I am sure!'
+            ],
+            dangerMode: true,
+        }).then(function(isConfirm) {
+            if (isConfirm) {
 
-        function updateData(button) {
-            // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
-            var item = ($(button).data('item'));
-            console.log(item);
+                swal({
+                    title: 'Deleted!',
+                    text: 'User Group Deleted successfully!',
+                    icon: 'success'
+                }).then(function() {
+                    window.location.href = "{{ url('usergroup/destroy/') }}/" + id;
+                });
+            } else {
+                swal("Cancelled", "Your data is safe :)", "error");
+            }
+        })
 
-            // item = JSON.parse(item)
-            // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
-            // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
-            $('#formEdit #user_group_id').val(item.id);
-            $('#formEdit #name').val(item.name);
-        }
+    }
+
+    function updateData(button) {
+        // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
+        var item = ($(button).data('item'));
+        console.log(item);
+
+        // item = JSON.parse(item)
+        // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
+        // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
+        $('#formEdit #user_group_id').val(item.id);
+        $('#formEdit #name').val(item.name);
+    }
 
 
-        // $('#myModal').on('shown.bs.modal', function () {
-        //     $('#myInput').trigger('focus')
-        // })
-    </script>
+    // $('#myModal').on('shown.bs.modal', function () {
+    //     $('#myInput').trigger('focus')
+    // })
+</script>
 @endsection

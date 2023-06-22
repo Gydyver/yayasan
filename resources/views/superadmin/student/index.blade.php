@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title">Student</h3>
         <!-- <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
@@ -22,6 +22,7 @@
                     <th>S.No</th>
                     <th>Name</th>
                     <th>Class</th>
+                    <th>Chapter</th>
                     <th>Gender</th>
                     <th>Age</th>
                     <th width="280px">Action</th>
@@ -32,10 +33,223 @@
         </table>
     </div>
 
-    <!-- Modal Update Chapter-->
-    <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    <!-- Modal Update Class-->
+    <div class="modal fade" id="ModalUpdateClass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{ route('superadmin.student.changeChapter') }}" id="formEdit" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('superadmin.student.changeClass') }}" id="formChangeClass" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Student Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="student_id" name="student_id">
+                        <input type="hidden" id="prev_class_id" name="prev_class_id">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Name:</strong>
+                                    <input type="text" name="name" id="name" class="form-control" placeholder="User" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Previous Class:</strong>
+                                    <input type="text" name="Previous Class" id="previous_class" class="form-control" placeholder="Current Class" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>New Class:</strong>
+                                    <select class="form-control select2edit" style="width: 100%;" name="class_id" id="class_id">
+                                        <option> --</option>
+                                        @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Chapter:</strong>
+                                    <select class="form-control select2edit" style="width: 100%;" name="chapter_id" id="chapter_id">
+                                        @foreach ($chapters as $chapter)
+                                        <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div> -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Start Date:</strong>
+                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
+                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal Set Class-->
+    <div class="modal fade" id="ModalSetClass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('superadmin.student.setClass') }}" id="formSetClass" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Student Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="student_id" name="student_id">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Name:</strong>
+                                    <input type="text" name="name" id="name" class="form-control" placeholder="User">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>New Class:</strong>
+                                    <select class="form-control select2edit" style="width: 100%;" name="class_id" id="class_id">
+                                        <option> --</option>
+                                        @foreach ($classes as $class)
+                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Start Date:</strong>
+                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
+                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal Update Chapter-->
+    <div class="modal fade" id="ModalUpdateChapter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('superadmin.student.changeChapter') }}" id="formChangeChapter" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Student Chapter</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="student_id" name="student_id">
+                        <input type="hidden" id="prev_chapter_id" name="prev_chapter_id">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Name:</strong>
+                                    <input type="text" name="name" id="name" class="form-control" placeholder="User" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Current Chapter:</strong>
+                                    <input type="text" name="previous_chapter" id="previous_chapter" class="form-control" placeholder="Current Chapter" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>New Chapter:</strong>
+                                    <select class="form-control select2edit" style="width: 100%;" name="chapter_id" id="chapter_id">
+                                        <option> --</option>
+                                        @foreach ($chapters as $chapter)
+                                        <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Start Date:</strong>
+                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
+                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal Set Chapter-->
+    <div class="modal fade" id="ModalSetChapter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('superadmin.student.setChapter') }}" id="formSetChapter" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="modal-content">
@@ -58,20 +272,26 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Current Chapter:</strong>
-                                    <input type="text" name="Previous Chapter" id="previous_chapter" class="form-control" placeholder="Current Chapter">
+                                    <strong>New Chapter:</strong>
+                                    <select class="form-control select2edit" style="width: 100%;" name="chapter_id" id="chapter_id">
+                                        <option> --</option>
+                                        @foreach ($chapters as $chapter)
+                                        <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>New Chapter:</strong>
-                                    <select type="number" name="chapter_id" id="chapter_id" class="form-control" placeholder="New Chapter">
-                                        @foreach ($chapters as $chapter)
-                                        <option value="{{$chapter->id}}">{{$chapter->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <strong>Start Date:</strong>
+                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
+                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -89,6 +309,12 @@
     @section('script')
     <script>
         $(document).ready(function() {
+
+
+            $('.start_date_div').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+
             var table = $('.yajra-datatable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -104,6 +330,10 @@
                     {
                         data: 'class_label',
                         name: 'Class'
+                    },
+                    {
+                        data: 'chapter_label',
+                        name: 'Chapter'
                     },
                     {
                         data: 'gender',
@@ -124,12 +354,38 @@
 
         });
 
-        function updateData(button) {
-            // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
+        function changeClass(button) {
             var item = $(button).data('item');
-            console.log(item)
-            $('#formEdit #student_id').val(item.id);
-            $('#formEdit #previous_chapter').val(item.chapter_id);
+            console.log(item);
+            $('#formChangeClass #student_id').val(item.id);
+            $('#formChangeClass #name').val(item.name);
+            $('#formChangeClass #previous_class').val(item.student_classes.name);
+            // $('#formChangeClass #prev_class_id').val(item.student_classes.id);
+            $('#class_id option[value="' + item.student_classes.id + '"]').attr("disabled", true);
+        }
+
+        function setClass(button) {
+            var item = $(button).data('item');
+            console.log(item);
+            $('#formSetClass #student_id').val(item.id);
+            $('#formSetClass #name').val(item.name);
+        }
+
+        function changeChapter(button) {
+            var item = $(button).data('item');
+            console.log(item);
+            $('#formChangeChapter #student_id').val(item.id);
+            $('#formChangeChapter #name').val(item.name);
+            // $('#formChangeChapter #prev_chapter_id').val(item.student_chapters.id);
+            $('#formChangeChapter #previous_chapter').val(item.student_chapters.name);
+            $('#chapter_id option[value="' + item.student_chapters.id + '"]').attr("disabled", true);
+        }
+
+        function setChapter(button) {
+            var item = $(button).data('item');
+            console.log(item);
+            $('#formSetChapter #student_id').val(item.id);
+            $('#formSetChapter #name').val(item.name);
         }
 
 

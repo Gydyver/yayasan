@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex">
+    <div class="card-header">
         <h3 class="card-title">Menu</h3>
         <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
@@ -25,7 +25,7 @@
             </button>
         </div>
         @endif
-    
+
         <table class="table table-bordered yajra-datatable">
             <thead>
                 <tr>
@@ -39,149 +39,154 @@
         </table>
     </div>
 </div>
-        <!-- Modal Add -->
-        <div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+<!-- Modal Add -->
+<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('menu.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Menu</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Name:</strong>
-                                        <input type="text" name="name" class="form-control" placeholder="Menu">
-                                    </div>
-                                </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Menu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Name:</strong>
+                                <input type="text" name="name" class="form-control" placeholder="Menu">
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Menu Parent:</strong>
-                                        <select name="menuparent_id" class="form-control">
-                                            @foreach ($menu_parents as $menu_parent)
-                                                <option value="{{$menu_parent->id}}">{{$menu_parent->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Url:</strong>
-                                        <input type="text" name="url" class="form-control" placeholder="Menu">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Icon:</strong>
-                                        <input type="text" name="icon" class="form-control" placeholder="Menu">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-
-        
-        <!-- Modal Update -->
-        <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form action="{{ route('menu.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Update Menu</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" id="menu_id" name="id"> 
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Name:</strong>
-                                        <input type="text" name="name" id="name" class="form-control" placeholder="Menu">
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Menu Parent:</strong>
+                                <select name="menuparent_id" class="form-control">
+                                    @foreach ($menu_parents as $menu_parent)
+                                    <option value="{{$menu_parent->id}}">{{$menu_parent->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Menu Parent:</strong>
-                                        <select name="menuparent_id" id="menuparent_id" class="form-control">
-                                            @foreach ($menu_parents as $menu_parent)
-                                                <option value="{{$menu_parent->id}}">{{$menu_parent->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Url:</strong>
-                                        <input type="text" name="url" id="url" class="form-control" placeholder="Menu">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="form-group">
-                                        <strong>Icon:</strong>
-                                        <input type="text" name="icon"  id="icon" class="form-control" placeholder="Menu">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
-                </form>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Url:</strong>
+                                <input type="text" name="url" class="form-control" placeholder="Menu">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Icon:</strong>
+                                <input type="text" name="icon" class="form-control" placeholder="Menu">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+</div>
+
+
+<!-- Modal Update -->
+<div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{{ route('menu.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Menu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="menu_id" name="id">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Name:</strong>
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Menu">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Menu Parent:</strong>
+                                <select name="menuparent_id" id="menuparent_id" class="form-control">
+                                    @foreach ($menu_parents as $menu_parent)
+                                    <option value="{{$menu_parent->id}}">{{$menu_parent->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Url:</strong>
+                                <input type="text" name="url" id="url" class="form-control" placeholder="Menu">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Icon:</strong>
+                                <input type="text" name="icon" id="icon" class="form-control" placeholder="Menu">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
 @endsection
 @section('script')
 <script>
-    $(document).ready(function(){
-    
+    $(document).ready(function() {
+
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ route('menu.list') }}",
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'name'},
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
                 {
-                    data: 'action', 
-                    name: 'action', 
-                    orderable: false, 
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
                     searchable: false
                 },
             ]
         });
-    
+
     });
     // $(document).ready(function(){
     //     $('#tabel_data').DataTable({

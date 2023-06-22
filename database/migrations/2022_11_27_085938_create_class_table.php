@@ -22,7 +22,7 @@ return new class extends Migration
             $table->id();
             $table->integer('class_type_id');
             $table->integer('teacher_id');
-            $table->integer('chapter_id');
+            // $table->integer('chapter_id');//dipindah karna harusnya 1 kelas bisa beda beda chapter
             // $table->unsignedInteger('teacher_id');
             // $table->unsignedInteger('chapter_id');
             // $table->unsignedInteger('class_type_id');
@@ -30,7 +30,7 @@ return new class extends Migration
             // $table->foreign('teacher_id')->references('id')->on('users');
             // $table->foreign('chapter_id')->references('id')->on('chapter');
             // $table->foreign('class_type_id')->references('id')->on('class_type');
-         
+
             $table->boolean('closed')->default(false);
             $table->date('class_start');
             $table->date('class_end')->nullable();

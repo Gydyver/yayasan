@@ -14,12 +14,14 @@ return new class extends Migration
     public function up()
     {
         // QC before re-migrate 29 April 2023
+        // Tambahan kolom billing_id pindahan dari table payment
         Schema::create('payment_detail', function (Blueprint $table) {
             $table->id();
             // $table->foreign('payment_id')->references('id')->on('payment');
             // $table->foreign('student_id')->references('id')->on('users');
             $table->integer('payment_id');
-            $table->integer('student_id');
+            $table->integer('billing_id'); //untuk catatan, pindahan dari table payment
+            // $table->integer('student_id');
             $table->integer('nominal');
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();

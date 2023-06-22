@@ -16,6 +16,7 @@ use App\Models\Point_Aspect;
 use Illuminate\Support\Facades\Auth;
 
 use DataTables;
+
 class ClassController extends Controller
 {
     public function index()
@@ -29,13 +30,13 @@ class ClassController extends Controller
         if ($request->ajax()) {
             //Changed into Login Auth
             // $data = Classes::with('teachers')->with('chapters')->with('classTypes')->where('teacher_id',2)->latest()->get();
-          
-            $data = Classes::where('teacher_id',Auth::user()->id)->latest()->get();
+
+            $data = Classes::where('teacher_id', Auth::user()->id)->latest()->get();
             // dd(Classes::latest()->get());
             // dd($data);
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     // $actionBtn = "
                     // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
@@ -44,7 +45,7 @@ class ClassController extends Controller
                     // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
                     // ";
                     $actionBtn = "
-                    <a href='/teacher/class/session/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    <a href='/teacher/class/session/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
                     ";
                     return $actionBtn;
                 })
@@ -64,22 +65,24 @@ class ClassController extends Controller
     public function showSession($idEncrypted)
     {
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
-     
+
         return view('teacher.class.classSession');
     }
 
-    public function getDatatableSession($id,Request $request)
+    public function getDatatableSession($id, Request $request)
     {
         if ($request->ajax()) {
             //Changed into Login Auth
             $decrypted = \EncryptionHelper::instance()->decrypt($id);
-            $data = Session::with('sessionGenerated')->where('class_id',$decrypted)->latest()->get();
+            $data = Session::with('sessionGenerated')->where('class_id', $decrypted)->latest()->get();
             return Datatables::of($data[0]->sessionGenerated)
                 ->addIndexColumn()
-                ->addColumn('action', function($row)use($data){
+                ->addColumn('action', function ($row) use ($data) {
                     $actionBtn = "
-                    <a href='/teacher/class/".\EncryptionHelper::instance()->encrypt($data[0]->class_id)."/session/point/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    <a href='/teacher/class/" . \EncryptionHelper::instance()->encrypt($data[0]->class_id) . "/session/point/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
                     ";
+                    // <a href='/teacher/class/" . $data[0]->class_id . "/session/point/" . $row->id . "' class='btn btn-sm btn-primary'>Detail</a>
+
                     return $actionBtn;
                 })
 
@@ -95,16 +98,22 @@ class ClassController extends Controller
     {
         $decryptedClass = \EncryptionHelper::instance()->decrypt($idEncryptedClass);
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
-    
-        $students = User::where('usergroup_id',3)->where('class_id', $decryptedClass)->latest()->get();
+
+        $students = User::where('usergroup_id', 3)->where('class_id', $decryptedClass)->latest()->get();
         $class = Classes::where('id', $decryptedClass)->get();
         $class_info = $class[0];
-        $point_aspects = Chapter_Point_Aspect::with('pointAspects')->where('chapter_id', $class_info->chapter_id )->latest()->get();
-       
-        return view('teacher.class.classSessionStudent',compact('students','point_aspects','class_info', 'decrypted'));
+        $student_info = $students[0];
+        if ($student_info != null) {
+            // $point_aspects = Chapter_Point_Aspect::with('pointAspects')->where('chapter_id', $student_info->chapter_id)->latest()->get();
+            return view('teacher.class.classSessionStudent', compact('students', 'class_info', 'decrypted'));
+        } else {
+            return view('teacher.class.classSessionStudent', ['errorMessage' => 'Failed showing data because user chapter is not set yet']);
+        }
     }
 
-    public function getDatatableSessionPointHistory($idSession,Request $request)
+
+
+    public function getDatatableSessionPointHistory($idSession, Request $request)
     {
         // dd($idSession);
         // dd('kok ga masuk ya');
@@ -113,28 +122,32 @@ class ClassController extends Controller
         if ($request->ajax()) {
             //Changed into Login Auth
             $decrypted = \EncryptionHelper::instance()->decrypt($idSession);
-            // dd($decrypted);
             // $data = User::with('studentPointHistory')->where('.session_id',$decrypted)->latest()->get();
-            $data = User::with('studentPointHistory')
-                    ->whereHas('studentPointHistory', function ($query) use ($decrypted) {
-                        $query->where('session_generated_id','=',$decrypted);
-                    })
-                    ->latest()
-                    ->get();
-   
+            $data = User::with(['studentPointHistory' => function ($query) use ($decrypted) {
+                $query->where('session_generated_id', $decrypted);
+            }])
+                // with('studentPointHistory')
+                ->whereHas('studentPointHistory', function ($query) use ($decrypted) {
+                    $query->where('session_generated_id', '=', $decrypted);
+                })
+                ->latest()
+                ->get();
+            // ->toSql();
+
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('point_history', function ($data) {
                     // dd($data);
-                    
+
                     $point_history = '<ul>';
-                    foreach($data->studentPointHistory as $dt){
+                    foreach ($data->studentPointHistory as $dt) {
                         $point_aspect = Point_Aspect::where('id', $dt->chapter_point_aspect_id)->get();
-                        $point_history .= '<li>' . $point_aspect[0]->name .' : '. $dt->point .' ('.$dt->teacher_notes.')' . '</li>';
+                        $point_history .= '<li>' . $point_aspect[0]->name . ' : ' . $dt->point . ' (' . $dt->teacher_notes . ')' . '</li>';
                     }
                     $point_history .= '</ul>';
                     return  $point_history;
-                }) 
+                })
                 // ->addColumn('action', function($row){
                 //     $actionBtn = "
                 //     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
@@ -148,14 +161,15 @@ class ClassController extends Controller
         }
     }
 
-    public function createHistoryPoint(Request $request){
+    public function createHistoryPoint(Request $request)
+    {
         // dd($request);
         $points = [];
 
-        foreach($request->point_aspect_id as $key => $point_aspect){
+        foreach ($request->point_aspect_id as $key => $point_aspect) {
             // dd($request->point[$key]);
             // $request->point[$key] = 90;
-            $grade = Grade::where( 'highest_poin',">=", $request->point[$key] )->where('lowest_poin',"<=", $request->point[$key] )->get();
+            $grade = Grade::where('highest_poin', ">=", $request->point[$key])->where('lowest_poin', "<=", $request->point[$key])->get();
             // ->toSql();
             // dd($grade);
             $point = [
@@ -166,12 +180,12 @@ class ClassController extends Controller
                 'point' => $request->point[$key],
                 'teacher_notes' => $request->notes[$key],
                 'created_at' => date('Y-m-d'),
-                'updated_at'=> date('Y-m-d'),
+                'updated_at' => date('Y-m-d'),
             ];
 
             array_push($points, $point);
         }
-        
+
 
         // dd($points);
 
@@ -184,5 +198,21 @@ class ClassController extends Controller
 
             return redirect()->back()->with(["error" => " Tambah Data Failed"]);
         }
+    }
+
+    public function getPointAspectStudent($student_id)
+    {
+        $user = User::where('id', $student_id)->get();
+
+        $chapter_id = $user[0]->chapter_id;
+        // dd($chapter_id);
+        $chapter_point_aspect = Chapter_Point_Aspect::where('chapter_id', $chapter_id)->with('pointAspects')->get();
+        $point_aspects = [];
+
+        foreach ($chapter_point_aspect as $cpa) {
+            array_push($point_aspects, ['id' => $cpa->pointAspects->id, 'name' => $cpa->pointAspects->name]);
+        }
+
+        return $point_aspects;
     }
 }

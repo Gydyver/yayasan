@@ -16,7 +16,6 @@ class Classes extends Model
     protected $fillable = [
         'name',
         'teacher_id',
-        'chapter_id',
         'class_type_id',
         'closed',
         'class_start',
@@ -34,11 +33,6 @@ class Classes extends Model
     {
         // return $this->hasMany('App\Models\Classes');
         return $this->hasMany(User::class,  'usergroup_id', 'id');
-    }
-
-    public function chapters()
-    {
-        return $this->belongsTo(Chapter::class, 'chapter_id', 'id');
     }
 
     public function classTypes()
