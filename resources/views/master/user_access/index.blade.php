@@ -42,7 +42,7 @@
 
 <!-- Modal Update -->
 <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <form action="{{ route('useraccess.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="modal-content">
@@ -78,7 +78,7 @@
                         </div> -->
                     <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-                            <span style="font-weight: bold;padding: 5px 0px;">{{$menu_p->name}}</spa>
+                            <span style="font-weight: bold;padding: 5px 0px;">{{$menu_p->name}} ({{$menu_p->url}}) </spa>
                         </div>
                         <!-- <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
                                 <input class="form-check-input" name="`form_access_{{$menu_p->id}}`" type="checkbox" id="`access{{$menu_p->id}}`" value="true">
@@ -98,7 +98,7 @@
                                     </div> -->
                         <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
                             <input class="form-check-input" name='access_menu_id_[{{$menu_c->id}}]' type="checkbox" id="access_{{$menu_c->id}}" value="true">
-                            <label class="form-check-label" for="access_{{$menu_c->id}}">{{$menu_c->name}}</label>
+                            <label class="form-check-label" for="access_{{$menu_c->id}}">{{$menu_c->name}} ({{$menu_c->url}})</label>
                         </div>
                     </div>
 

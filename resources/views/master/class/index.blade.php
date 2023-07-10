@@ -172,6 +172,45 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Close -->
+    <div class="modal fade" id="ModalClose" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('class.close') }}" id="formClose" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Close Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="class_id" name="id">
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Class End:</label>
+                                    <div class="input-group date" id="class_end_div" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#class_end_div" name="class_end" id="class_end">
+                                        <div class="input-group-append" data-target="#class_end_div" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     @endsection
 
     @section('script')
@@ -186,6 +225,10 @@
             });
 
             $('#class_start_div').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+
+            $('#class_end_div').datetimepicker({
                 format: 'YYYY-MM-DD'
             });
 
@@ -210,8 +253,8 @@
                         name: 'Class Type'
                     },
                     {
-                        data: 'closed',
-                        name: 'closed'
+                        data: 'status_label',
+                        name: 'Status'
                     },
                     {
                         data: 'class_start',
@@ -273,6 +316,23 @@
             $('#teacher_id').val(item.teacher_id).select2();
             $('#formEdit #class_start').val(item.class_start);
 
+        }
+
+        function closeClass(button) {
+            // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
+            var item = $(button).data('item');
+            console.log(item)
+
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            // today = mm + '/' + dd + '/' + yyyy;
+            today_date = yyyy + '-' + mm + '-' + dd;
+            $('#formClose #class_id').val(item.id);
+            $('#formClose #class_end').val(today_date);
+            $('#class_end_div').val(today_date)
         }
 
 

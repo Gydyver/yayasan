@@ -15,51 +15,59 @@
         Upload Payment
 
 
-        <form action="{{ route('upload_payreceipt.uploadFileBulking') }}" id="formUploadFile" method="POST" enctype="multipart/form-data">
+
+        <form action="{{ route('payment.updateFile',[$idEncrypted]) }}" id="formUploadFile" method="POST" enctype="multipart/form-data">
             @csrf
-            <input name="student_id" id="student_id" type="hidden" value="{{Auth::User()->id}}" />
             <input name="nominal_sedekah" id="nominal_sedekah_hidden" type="hidden" value="0" />
             <textarea name="notes_sedekah" id="notes_sedekah_hidden" style="display: none;"></textarea>
+            <input name="student_id" id="student_id_hidden" type="hidden" value="{{$payment_details[0]->student_id}}" />
+
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Transfer Time:</strong>
-                        <!-- <div class="input-group date" id="transfer_time_create" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#transfer_time_create" name="transfer_time">
-                            <div class="input-group-append" data-target="#transfer_time_create" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Transfer Time:</strong>
+                                <div class="input-group date" id="transfer_time_create" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#transfer_time_create" name="transfer_time" value="{{$payments[0]->transfer_time}}">
+                                    <div class="input-group-append" data-target="#transfer_time_create" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div> -->
-                        <div class="input-group date" id="transfer_time_create" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" name="transfer_time" data-target="#transfer_time_create" />
-                            <div class="input-group-append" data-target="#transfer_time_create" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Nominal:</strong>
+                                <input type="number" name="nominal" id="nominal" class="form-control" placeholder="Nominal Transfer" value="{{$payments[0]->payment_billing}}">
+                                <!--  -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>File:</strong>
+                                <input type="file" name="file" id="file" class="form-control" placeholder="File" accept="application/pdf,image/png, image/gif, image/jpeg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Notes:</strong>
+                                <textarea class="form-control" name="notes" rows="3" class="">{{$payments[0]->notes}}</textarea>
+                                <!-- -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Nominal:</strong>
-                        <input type="number" name="nominal" id="nominal" class="form-control" placeholder="Nominal Transfer">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>File:</strong>
-                        <input type="file" name="file" id="file" class="form-control" placeholder="File" accept="application/pdf,image/png, image/gif, image/jpeg">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <strong>Notes:</strong>
-                        <textarea class="form-control" name="notes" rows="3" class=""></textarea>
+                <div class="col-md-4">
+                    <p><strong> Bukti Transfer Sebelumnya: </strong> </p>
+                    <div class="prove_container">
+                        <img class="img_prove" src="{{ URL::to('/uploads') }}/{{$payments[0]->link_prove}}" />
                     </div>
                 </div>
             </div>
@@ -72,7 +80,7 @@
                         <select name="billing_id" id="billing_id" style="width:100%" class="form-control" placeholder="Tagihan">
                             <option value="">--</option>
                             @foreach ($billings as $billing)
-                            <option value="{{$billing->id}}|{{getMonthName($billing->month)}} {{$billing->year}}|{{$billing->billing}}" data-Biaya="{{$billing->billing}}">{{$billing->month}} {{$billing->year}}</option>
+                            <option value="{{$billing->id}}|{{getMonthName($billing->month)}} {{$billing->year}}|{{$billing->billing}}" data-Biaya="{{$billing->billing}}">{{getMonthName($billing->month)}} {{$billing->year}}</option>
                             @endforeach
                         </select>
 
@@ -84,9 +92,6 @@
                         <input type="text" class="form-control" id="billing_tagihan" readonly />
                     </div>
                 </div>
-                <!-- <div class="col-xs-6 col-sm-6 col-md-6">
-                    <button type="button" id="btn-add" style="width:100%">Tambah Tagihan</button>
-                </div> -->
             </div>
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -95,26 +100,6 @@
             </div>
             <hr>
             <div class="row">
-                <!-- <div class="col-xs-9 col-sm-9 col-md-9">
-                    <div class="form-group">
-                        <strong>Tagihan:</strong>
-                        <select name="billing_id[]" id="billing_id" style="width:100%" class="form-control" placeholder="Tagihan">
-                            @foreach ($billings as $billing)
-                            <option value="{{$billing->id}}">{{$billing->month}} {{$billing->year}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3">
-                    <button type="button" id="btn-remove" style="width:100%">Hapus</button>
-                </div> -->
-                <!-- <div class="col-xs-12 col-sm-12 col-md-12">
-                    <select name="billing_id[]" id="billing_id" style="width:100%" class="form-control" placeholder="Tagihan"  multiple="multiple">
-                        @foreach ($billings as $billing)
-                        <option value="{{$billing->id}}">{{$billing->month}} {{$billing->year}}</option>
-                        @endforeach
-                    </select>
-                </div> -->
                 <table class="table" id="tagihan_table">
                     <thead>
                         <tr>
@@ -124,7 +109,15 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        @foreach ($payment_details as $pd)
+                        <tr>
+                            <td> {{getMonthName($pd->billings->month)}} {{$pd->billings->year}}
+                                <input type="hidden" value="{{$pd->billing_id}}" name="billing_ids[]" /></td>
+                            <td> {{$pd->nominal}}
+                                <input type="hidden" value="{{$pd->nominal}}" name="billing_biayas[]" /></td>
+                            <td> <button class="btn-danger remCF" type="button"> Remove</button> </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -132,7 +125,7 @@
 
 
             <div class="float-right">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick='window.location=`{{ url("/payment") }}`'>Close</button>
                 <button type="button" class="btn btn-primary" onClick="savePayment()">Save changes</button>
             </div>
         </form>
@@ -158,15 +151,15 @@
                         <button type="button" class="btn btn-primary btn-confirm" onClick="showSedekahForm()">Sedekahkan kelebihan</button>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6">
+                        <!-- <button type="button" class="btn btn-primary btn-confirm" onClick="setValuetoBilling()" data-dismiss="modal">Kembali ke form sebelumnya</button> -->
                         <button type="button" class="btn btn-primary btn-confirm" onClick="setSedekahNull()" data-dismiss="modal">Kembali ke form sebelumnya</button>
-                        <!-- <button type="button" class="btn btn-primary btn-confirm" data-dismiss="modal">Kembali ke form sebelumnya</button> -->
-
 
                     </div>
                 </div>
                 <div class="alert alert-danger notif-actionNotChoosen" role="alert">
                     <span id="error-message"></span>
                 </div>
+
 
                 <hr class="form-sedekah">
                 <div class="row form-sedekah">
@@ -263,7 +256,6 @@
             },
             format: 'YYYY-MM-DD HH:mm:ss'
         });
-
     });
 
     // $('input#nominal').on('input', function(e) {
@@ -282,6 +274,7 @@
     //         $(".notif-lessThanBilling").css("display", "none");
     //     }
     // });
+
 
     function setSedekahNull() {
         $('#nominal_sedekah_hidden').val(null);
@@ -320,15 +313,15 @@
         })
     }
 
-    function updateData(button) {
-        // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
-        var item = ($(button).data('item'));
-        // item = JSON.parse(item)
-        // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
-        // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
-        $('#formUploadFile #billing_id').val(item.id);
-        $('#formUploadFile #student_id').val(item.id);
-    }
+    // function updateData(button) {
+    //     // $('#formEdit .form-group .selectpicker option').removeAttr('selected');
+    //     var item = ($(button).data('item'));
+    //     // item = JSON.parse(item)
+    //     // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
+    //     // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
+    //     $('#formUploadFile #billing_id').val(item.id);
+    //     $('#formUploadFile #student_id_hidden').val(item.id);
+    // }
 
     function add() {
         var nominal = $('#nominal').val();
@@ -348,6 +341,14 @@
                 // existingData.push($(this).val());
                 return $(this).val()
             }).get();
+
+        // console.log('existingData');
+        // console.log(existingData);
+        // console.log('id');
+        // console.log(id);
+        // console.log(existingData.includes(8));
+        // console.log(existingData.includes(id));
+
 
         //Untuk perhitungan Billing dan nominal
         var billing_biaya = $("input[name='billing_biayas[]']")
@@ -382,6 +383,7 @@
             $('.notif-actionNotChoosen').css("display", "block");
             return false
         }
+
     }
 
     function savePayment() {
@@ -398,12 +400,17 @@
                 // existingData.push($(this).val());
                 return parseInt($(this).val())
             }).get();
+
         var sum = billing_biaya.reduce((partialSum, a) => parseInt(partialSum) + parseInt(a), 0);
 
         if ($('#nominal_sedekah_hidden').val() != 0) {
             sum = parseInt(sum) + parseInt(sedekah)
         }
 
+        console.log('billing_biaya');
+        console.log(billing_biaya);
+        console.log('sum');
+        console.log(sum);
         if (sum != nominal) {
             if (sum > nominal) {
                 //Nominal dibawah total semua
@@ -433,8 +440,6 @@
         $('.notif-actionNotChoosen').css("display", "none");
         $("#modalConfirmSedekah").toggle()
         $("#formUploadFile").submit();
-
-        //LEMPAR KE LIST PAYMENT
     }
 
     function calculateSedekah() {

@@ -62,6 +62,22 @@ class ClassController extends Controller
         dd($decrypted);
     }
 
+
+    public function updateStatusClass($idEncrypted)
+    {
+        //
+        $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
+
+
+        $data = [
+            'closed' => true,
+            'class_end' => date("Y-m-d")
+        ];
+        Classes::where('id', $decrypted)->update($data);
+
+        return redirect()->route('class.index')->with('success', 'Class has been deleted successfully');
+    }
+
     public function showSession($idEncrypted)
     {
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
@@ -71,18 +87,35 @@ class ClassController extends Controller
 
     public function getDatatableSession($id, Request $request)
     {
+        // dd('ini?');
         if ($request->ajax()) {
             //Changed into Login Auth
             $decrypted = \EncryptionHelper::instance()->decrypt($id);
             $data = Session::with('sessionGenerated')->where('class_id', $decrypted)->latest()->get();
+            // dd($data[0]->sessionGenerated);
             return Datatables::of($data[0]->sessionGenerated)
                 ->addIndexColumn()
+                ->addColumn('day', function ($row) use ($data) {
+                    // if ($data[0]->day == 0) {
+                    return $data[0]->day;
+                    // } else {
+                    //     return '';
+                    // }
+                })
+                ->addColumn('status', function ($row) use ($data) {
+                    if ($row->status == 0) {
+                        $status = 'Terbuka';
+                    } else if ($row->status == 1) {
+                        $status = 'Selesai';
+                    } else {
+                        $status = 'Dibatalkan';
+                    }
+                    return $status;
+                })
                 ->addColumn('action', function ($row) use ($data) {
                     $actionBtn = "
                     <a href='/teacher/class/" . \EncryptionHelper::instance()->encrypt($data[0]->class_id) . "/session/point/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
                     ";
-                    // <a href='/teacher/class/" . $data[0]->class_id . "/session/point/" . $row->id . "' class='btn btn-sm btn-primary'>Detail</a>
-
                     return $actionBtn;
                 })
 
@@ -93,6 +126,9 @@ class ClassController extends Controller
                 ->make(true);
         }
     }
+
+    public function updateStatusSession()
+    { }
 
     public function showSessionStudent($idEncryptedClass, $idEncrypted)
     {

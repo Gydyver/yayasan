@@ -18,7 +18,9 @@ class Payment extends Model
         'link_prove',
         'payment_billing',
         'notes',
+        'notes_admin',
         'verified',
+        'created_by',
         'created_at',
         'updated_at',
     ];
@@ -30,9 +32,9 @@ class Payment extends Model
         return $this->hasMany(Payment_Detail::class, 'payment_id', 'id');
     }
 
-    public function payment_others()
-    {
-        // return $this->hasMany('App\Models\Payment_Others');
-        return $this->hasMany(Payment_Other::class, 'payment_id', 'id');
-    }
+    // public function payment_others()
+    // {
+    //     // return $this->hasMany('App\Models\Payment_Others');
+    //     return $this->hasMany(Payment_Other::class, 'payment_id', 'id');
+    // }
 }

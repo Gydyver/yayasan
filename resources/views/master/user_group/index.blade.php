@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title ">User G</h3>
+        <h3 class="card-title ">User Group</h3>
         <div class="pull-right mb-2">
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
         </div>

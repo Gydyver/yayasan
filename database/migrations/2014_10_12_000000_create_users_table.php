@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('gender', 20);
             $table->date('birth_date');
             $table->date('join_date');
+            $table->string('latest_hapalan')->nullable();
             $table->rememberToken();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();

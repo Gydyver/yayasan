@@ -8,7 +8,7 @@
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Add</button>
         </div> -->
         <div class="pull-right mb-2">
-            <a href='/upload_payreceipt/formUploadBulking' class='btn btn-sm btn-primary'>Upload File Bulking</a>
+
         </div>
     </div>
     <!-- /.card-header -->
@@ -35,7 +35,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Payment</th>
+                    <th>Nama Peserta Didik</th>
                     <th>Tanggal Transfer</th>
                     <th>Status</th>
                     <th width="280px">Action</th>
@@ -54,37 +54,31 @@
     $(document).ready(function() {
         var payment_rest = 0
 
+
         $('#transfer_time_create').datetimepicker({
             format: 'YYYY-MM-DD HH:mm:ss'
         });
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('upload_payreceipt.list') }}",
+            ajax: "{{ route('payment.list') }}",
+
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
                 {
-                    data: 'month_year',
-                    name: 'Bulan Tahun'
-                },
-                {
-                    data: 'billing',
-                    name: 'Total Billing'
-                },
-                {
-                    data: 'status',
-                    name: 'Status'
+                    data: 'student_name',
+                    name: 'Peserta Didik'
                 },
                 {
                     data: 'tanggal_transfer',
                     name: 'Tanggal Transfer'
                 },
-                // {
-                //     data: 'total_transfer',
-                //     name: 'Total Transfer'
-                // },
+                {
+                    data: 'status',
+                    name: 'Status'
+                },
                 {
                     data: 'action',
                     name: 'action',
@@ -112,8 +106,6 @@
             $(".btn-confirm").css("display", "none");
             $(".notif-lessThanBilling").css("display", "none");
         }
-        console.log('payment_rest');
-        console.log(payment_rest);
     });
 
 

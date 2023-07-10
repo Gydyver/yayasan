@@ -2,3 +2,17 @@
     display: flex;
     direction: rtl;
 }
+
+.prove_container {
+    overflow-x: hidden;
+
+    /* other styling */
+    border: solid 2px grey;
+    border-radius: 5px;
+    height: 300px;
+    width: 300px;
+}
+
+.img_prove {
+    height: 500px;
+}

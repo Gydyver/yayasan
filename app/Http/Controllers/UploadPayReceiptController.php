@@ -39,7 +39,7 @@ class UploadPayReceiptController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('month_year', function ($row) {
-                    return $row->month . ' - ' . $row->year;
+                    return getMonthName($row->month) . ' - ' . $row->year;
                 })
                 // ->addColumn('payment_billing', function ($row) {
                 //     if ($row->billings != null) {
@@ -49,7 +49,7 @@ class UploadPayReceiptController extends Controller
                 // })
                 ->addColumn('status', function ($row) {
                     if ($row->status == 1) {
-                        return 'Waiting admin confirmation';
+                        return 'Waiting Admin Confirmation';
                     } else if ($row->status == 2) {
                         return 'Paid and Confirmed';
                     } else if ($row->status == 3) {
@@ -64,7 +64,6 @@ class UploadPayReceiptController extends Controller
                     // }else{
                     //     return '-';
                     // }
-                    // dd(count($row->billings));
                     if (count($row->billings) > 0) {
                         return $row->billings[0]->created_at;
                     } else {
@@ -191,6 +190,10 @@ class UploadPayReceiptController extends Controller
                 $file_name = 'no file!';
             }
 
+            // $imageName = time().'.'.$request->image->extension();
+            // $uploadedImage = $request->image->move(public_path('images'), $imageName);
+            // $imagePath = 'images/' . $imageName;
+
             $billingStatus = [
                 'status' => 1
             ];
@@ -203,12 +206,15 @@ class UploadPayReceiptController extends Controller
             $billing = Billing::where('id', $request->billing_id)->get();
 
             //Upload File
-            $request->file->move(public_path('uploads'), $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name);
+            // $request->file->move(public_path('uploads') . '/' . $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id, $file_name);
+
+            $request->file->move(public_path('uploads'), $billing[0]->month . '_' . $billing[0]->year . '_' . $request->student_id . '_' . $file_name);
 
             //Insert Payment
             $dataPayment = [
                 'transfer_time' => $request->transfer_time,
-                'link_prove' =>  $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name,
+                // 'link_prove' =>  $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name,
+                'link_prove' =>  $billing[0]->month . '_' . $billing[0]->year . '_' . $request->student_id . '_' . $file_name,
                 'payment_billing' => $request->nominal,
                 'notes' => $request->notes,
                 'created_at' => date('Y-m-d'),
@@ -216,30 +222,39 @@ class UploadPayReceiptController extends Controller
             ];
             $idPayment = Payment::insertGetId($dataPayment);
 
+            if ($request->nominal_sedekah != 0) {
+                $nominal = $request->nominal - $request->nominal_sedekah;
+            } else {
+                $nominal = $request->nominal;
+            }
             //Insert Payment Detail
             $dataPaymentDet = [
                 'payment_id' => $idPayment,
-                // 'student_id' => $request->student_id,
+                'student_id' => $request->student_id,
                 'billing_id' => $request->billing_id,
-                'nominal' => $request->nominal,
+                'nominal' => $nominal,
                 'created_at' => date('Y-m-d'),
                 'updated_at' => date('Y-m-d')
             ];
-            $save = Payment_Detail::insert($dataPaymentDet);
+            $save2 = Payment_Detail::insert($dataPaymentDet);
 
-            if ($request->nominal_sedekah != null) { }
-            //Insert Payment Other
-            $dataPaymentOther = [
-                'payment_id' => $idPayment,
-                'notes' => $request->notes_sedekah,
-                'nominal' => $request->nominal_sedekah,
-                'created_at' => date('Y-m-d'),
-                'updated_at' => date('Y-m-d')
-            ];
-            $save = Payment_Other::insert($dataPaymentOther);
+            if ($request->nominal_sedekah != 0) {
+                //Insert Payment Other
+                $dataPaymentOther = [
+                    'payment_id' => $idPayment,
+                    'student_id' => $request->student_id,
+                    // 'billing_id' => null,
+                    'notes' => $request->notes_sedekah,
+                    'nominal' => $request->nominal_sedekah,
+                    'created_at' => date('Y-m-d'),
+                    'updated_at' => date('Y-m-d')
+                ];
+                // $save = Payment_Other::insert($dataPaymentOther);
+                $save3 = Payment_Detail::insert($dataPaymentOther);
+            }
 
             // redirect
-            if ($save) {
+            if ($idPayment && $save2) {
                 return redirect()->back()->with(["success" => "Tambah Data"]);
             } else {
 
@@ -253,14 +268,25 @@ class UploadPayReceiptController extends Controller
     public function formUploadBulking()
     {
         $billings = Billing::whereIn('status', [0, 2])->where('student_id', Auth::user()->id)->latest()->get();
-        // dd($billings);
+
         return view('upload_payreceipt.form', compact('billings'));
+    }
+
+    public function formUploadFileUpdate($idEncrypted)
+    {
+        $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
+        $billings = Billing::whereIn('status', [0, 2])->where('student_id', Auth::user()->id)->latest()->get();
+        $payments = Payment::where('id', $id)->latest()->get();
+        $payment_details = Payment_Detail::where('payment_id', $id)->whereNotNull('billing_id')->latest()->get();
+        $payment_sedekah = Payment_Detail::where('payment_id', $id)->whereNull('billing_id')->latest()->get();
+        return view('upload_payreceipt.formUpdate', compact('billings', 'payments', 'payment_detail', 'payment_sedekah'));
     }
 
     public function uploadFileBulking(Request $request)
     {
         //Masih belum karna dari inputnya perlu di update
         try {
+            // dd($request);
             $file_name = '';
 
             if ($request->hasFile('file')) {
@@ -269,47 +295,63 @@ class UploadPayReceiptController extends Controller
                 $file_name = 'no file!';
             }
 
-            $billingStatus = [
-                'status' => 1
-            ];
-
-            //Update Status
-            Billing::where('id', $request->billing_id)
-                ->update(['status' => 1]);
+            $billing = Billing::where('id', $request->billing_ids[0])->get();
 
 
-            $billing = Billing::where('id', $request->billing_id)->get();
-
+            $formating_datetime1 = strtotime($request->transfer_time);
+            $formating_datetime2 = date("Y_m_d_H:i:s", $formating_datetime1);
+            // dd('Bulking_Payment_' . $formating_datetime2 . '_' . $billing[0]->student_id . '_' . $file_name);
             //Upload File
-            $request->file->move(public_path('uploads'), $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name);
+            $request->file->move(public_path('uploads'),  'Bulking_Payment_' . $formating_datetime2 . '_' . $billing[0]->student_id . '_' . $file_name);
 
+            // dd('Bulking_Payment_' . $formating_datetime2 . '_' . $billing[0]->student_id . '_' . $file_name);
             //Insert Payment
             $dataPayment = [
                 'transfer_time' => $request->transfer_time,
-                'link_prove' =>  $billing[0]->month . ' / ' . $billing[0]->year . ' / ' . $request->student_id . ' / ' . $file_name,
+                'link_prove' =>  'Bulking_Payment_' . $formating_datetime2 . '_' . $billing[0]->student_id . '_' . $file_name,
                 'payment_billing' => $request->nominal,
                 'notes' => $request->notes,
                 'created_at' => date('Y-m-d'),
                 'updated_at' => date('Y-m-d')
             ];
+            // dd($dataPayment);
             $idPayment = Payment::insertGetId($dataPayment);
 
-            foreach ($student_ids as $student_id) {
+            $dataPaymentDet = [];
+            foreach ($request->billing_ids as $key => $billing_id) {
                 //Insert Payment Detail
-                $dataPaymentDet = [
+                array_push($dataPaymentDet, [
                     'payment_id' => $idPayment,
-                    // 'student_id' => $request->student_id,
-                    'billing_id' => $request->billing_id,
-                    'nominal' => $request->nominal,
+                    'student_id' => Auth::user()->id,
+                    'billing_id' => $billing_id,
+                    'nominal' => $request->billing_biayas[$key],
+                    'created_at' => date('Y-m-d'),
+                    'updated_at' => date('Y-m-d')
+                ]);
+
+                //Update Status
+                Billing::where('id', $billing_id)
+                    ->update(['status' => 1]);
+            }
+            $save2 = Payment_Detail::insert($dataPaymentDet);
+
+            if ($request->nominal_sedekah != 0) {
+                $dataPaymentSedekah = [
+                    'payment_id' => $idPayment,
+                    'student_id' => Auth::user()->id,
+                    'nominal' => $request->nominal_sedekah,
+                    'notes' => $request->notes_sedekah,
                     'created_at' => date('Y-m-d'),
                     'updated_at' => date('Y-m-d')
                 ];
-                $save = Payment_Detail::insert($dataPaymentDet);
+
+                $save3 = Payment_Detail::insert($dataPaymentSedekah);
             }
 
 
+
             // redirect
-            if ($save) {
+            if ($idPayment && $save2) {
                 return redirect()->back()->with(["success" => "Tambah Data"]);
             } else {
 

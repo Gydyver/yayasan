@@ -19,10 +19,10 @@ return new class extends Migration
         Schema::create('menu', function (Blueprint $table) {
             $table->id();
             $table->integer('menuparent_id')->nullable();
-            $table->integer('order')->nullable();//belum ada di classdiagram
+            $table->integer('order')->nullable(); //belum ada di classdiagram
             $table->string('name', 50);
             $table->string('url', 50);
-            $table->string('icon', 15);
+            $table->string('icon', 25);
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });

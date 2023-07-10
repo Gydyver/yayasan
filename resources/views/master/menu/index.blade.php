@@ -31,6 +31,7 @@
                 <tr>
                     <th>S.No</th>
                     <th>Name</th>
+                    <th>URL</th>
                     <th width="280px">Action</th>
                 </tr>
             </thead>
@@ -66,6 +67,7 @@
                             <div class="form-group">
                                 <strong>Menu Parent:</strong>
                                 <select name="menuparent_id" class="form-control">
+                                    <option value="">--</option>
                                     @foreach ($menu_parents as $menu_parent)
                                     <option value="{{$menu_parent->id}}">{{$menu_parent->name}}</option>
                                     @endforeach
@@ -176,11 +178,15 @@
                 },
                 {
                     data: 'name',
-                    name: 'name'
+                    name: 'Name'
+                },
+                {
+                    data: 'url',
+                    name: 'URL'
                 },
                 {
                     data: 'action',
-                    name: 'action',
+                    name: 'Action',
                     orderable: false,
                     searchable: false
                 },

@@ -112,7 +112,7 @@
                             <div class="form-group">
                                 <strong>Transfer Time:</strong>
                                 <div class="input-group date" id="transfer_time_create" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#transfer_time_create" name="transfer_time">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#transfer_time_create" name="transfer_time" id="transfer_time">
                                     <div class="input-group-append" data-target="#transfer_time_create" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -173,13 +173,15 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Notes Sedekah:</strong>
-                                <textarea class="form-control" name="notes_sedekah" rows="3" class=""></textarea>
+                                <textarea class="form-control" name="notes_sedekah" id="notes_sedekah" rows="3" class=""></textarea>
                             </div>
                         </div>
                     </div>
+
+                    <button type="button" class="btn btn-secondary btn-cncl-confirm">Ubah aksi</button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onClick="resetForm()" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" onClick="resetForm()">Close</button>
                     <button type="button" onClick="checkForm()" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
@@ -251,8 +253,22 @@
             $(".btn-confirm").css("display", "none");
             $(".notif-lessThanBilling").css("display", "none");
         }
-        console.log('payment_rest');
-        console.log(payment_rest);
+    });
+
+
+    $(".btn-confirm").click(function() {
+        $(".btn-confirm").css("display", "none");
+    });
+    $(".btn-cncl-confirm").click(function() {
+        console.log('btn cancel clicked');
+        $(".btn-confirm").css("display", "block");
+        $(".btn-cncl-confirm").css("display", "none");
+        $(".notif-lessThanBilling").css("display", "none");
+        $(".form-sedekah").css("display", "none");
+        $('#nominal_sedekah').val(null);
+        $('textarea#notes_sedekah').val(null);
+
+
     });
 
 
@@ -305,15 +321,19 @@
         var sedekah = this.calculateSedekah();
         $(".form-sedekah").css("display", "block");
         $('#nominal_sedekah').val(sedekah)
+
+        $(".btn-cncl-confirm").css("display", "block");
     }
 
     function setValuetoBilling() {
+        console.log('kosongin sedekah data');
         // $('.form-sedekah').display('none')
-        $(".form-sedekah").css("display", "none");
-        $('#nominal_sedekah').val(null);
-        $('textarea#notes_sedekah').val(null);
+        // $(".form-sedekah").css("display", "none");
+        // $('#nominal_sedekah').val(null);
+        // $('textarea#notes_sedekah').val(null);
         var total_billing = $('#billing_total').val();
         $('#nominal').val(total_billing);
+        $('.btn-cncl-confirm').css("display", "none");
     }
 
     function checkForm() {
@@ -328,7 +348,9 @@
     }
 
     function resetForm() {
-        $('#transfer_time_create').val(null);
+        // $('#transfer_time_create').val(null);
+        $("#transfer_time_create").datepicker('setDate', '');
+        $("#transfer_time").val(null);
         $('#billing_total').val(null);
         $('#student_id').val(null);
         $('#student_id').val(null);
@@ -340,6 +362,9 @@
 
         $('.btn-confirm').css("display", "none");
         $('.form-sedekah').css("display", "none");
+
+        // $('#ModalUploadFile').toggle();
+        $('#ModalUploadFile').modal('toggle');
     }
 
 
@@ -353,6 +378,10 @@
     }
 
     .btn-confirm {
+        display: none;
+    }
+
+    .btn-cncl-confirm {
         display: none;
     }
 

@@ -19,6 +19,8 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserAccessController;
 use App\Http\Controllers\UploadPayReceiptController;
+use App\Http\Controllers\PaymentController;
+
 
 use App\Http\Controllers\Superadmin\StudentController as SuperadminStudentController;
 use App\Http\Controllers\Superadmin\TeacherController as SuperadminTeacherController;
@@ -105,8 +107,15 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/class/destroy/{id}', 'destroy')->name('class.destroy');
         Route::post('/class/create', 'store')->name('class.store');
         Route::get('/class/show/{idEncrypted}', 'show')->name('class.show');
+        Route::get('/class/getDatatableSession/list/{id}', 'getDatatableSession')->name('class.session.list');
+        Route::get('/class/showSessionGenerated/{idEncrypted}', 'showSessionGenerated')->name('class.showSessionGenerated');
+        Route::post('/class/updateSessionGenerated', 'updateSessionGenerated')->name('class.sessionGenerated.update');
+        Route::post('/class/updateSessionGeneratedStat', 'updateSessionGeneratedStat')->name('class.sessionGenerated.updateStat');
+        Route::get('/class/sessionGenerated/destroy/{id}', 'destroySessionGenerated')->name('class.sessionGenerated.destroy');
+        // Route::get('/class/getDatatableSesGenerated/list/{id}', 'getDatatableSessionGenerated')->name('class.sessionGenerated.list');
         Route::get('/class/edit', 'edit')->name('class.edit');
         Route::post('/class/update', 'update')->name('class.update');
+        Route::post('/class/close', 'close')->name('class.close');
     });
 
 
@@ -171,6 +180,29 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/menu/update', 'update')->name('menu.update');
     });
 
+    Route::controller(SessionController::class)->group(function () {
+        Route::get('/session', 'index')->name('session.index');
+        Route::get('/session/list', 'getDatatable')->name('session.list');
+        Route::get('/session/destroy/{id}', 'destroy')->name('session.destroy');
+        Route::post('/session/create', 'store')->name('session.store');
+        Route::get('/session/showSession/{idEncrypted}', 'showSession')->name('session.show');
+        Route::get('/session/getDatatableSesGenerated/list/{idEncrypted}', 'getDatatableSessionGenerated')->name('session.session_generated.list');
+        Route::get('/session/edit', 'edit')->name('session.edit');
+        Route::post('/session/update', 'update')->name('session.update');
+        Route::post('/session/generate', 'generate')->name('session.generate');
+    });
+
+    Route::controller(BillingController::class)->group(function () {
+        Route::get('/billing', 'index')->name('billing.index');
+        Route::get('/billing/list', 'getDatatable')->name('billing.list');
+        Route::get('/billing/destroy/{id}', 'destroy')->name('billing.destroy');
+        Route::post('/billing/create', 'store')->name('billing.store');
+        Route::get('/billing/show/{idEncrypted}', 'show')->name('billing.show');
+        Route::get('/billing/edit', 'edit')->name('billing.edit');
+        Route::post('/billing/update', 'update')->name('billing.update');
+        Route::post('/billing/generateMonthlyBilling', 'generateMonthlyBilling')->name('billing.generateMonthlyBilling');
+    });
+
     Route::controller(SuperadminStudentController::class)->group(function () {
         Route::get('/superadmin/student', 'index')->name('superadmin.student.index');
         Route::get('/superadmin/student/list', 'getDatatable')->name('superadmin.student.list');
@@ -202,26 +234,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/upload_payreceipt/update', 'update')->name('upload_payreceipt.update');
     });
 
-    Route::controller(SessionController::class)->group(function () {
-        Route::get('/session', 'index')->name('session.index');
-        Route::get('/session/list', 'getDatatable')->name('session.list');
-        Route::get('/session/destroy/{id}', 'destroy')->name('session.destroy');
-        Route::post('/session/create', 'store')->name('session.store');
-        Route::get('/session/showSession/{idEncrypted}', 'showSession')->name('session.show');
-        Route::get('/session/edit', 'edit')->name('session.edit');
-        Route::post('/session/update', 'update')->name('session.update');
-        Route::post('/session/generate', 'generate')->name('session.generate');
-    });
-
-    Route::controller(BillingController::class)->group(function () {
-        Route::get('/billing', 'index')->name('billing.index');
-        Route::get('/billing/list', 'getDatatable')->name('billing.list');
-        Route::get('/billing/destroy/{id}', 'destroy')->name('billing.destroy');
-        Route::post('/billing/create', 'store')->name('billing.store');
-        Route::get('/billing/show/{idEncrypted}', 'show')->name('billing.show');
-        Route::get('/billing/edit', 'edit')->name('billing.edit');
-        Route::post('/billing/update', 'update')->name('billing.update');
-        Route::post('/billing/generateMonthlyBilling', 'generateMonthlyBilling')->name('billing.generateMonthlyBilling');
+    Route::controller(PaymentController::class)->group(function () {
+        Route::get('/payment', 'index')->name('payment.index');
+        Route::get('/payment/list', 'getDatatable')->name('payment.list');
+        Route::get('/payment/show/{idEncrypted}', 'show')->name('payment.show');
+        Route::get('/payment/destroy/{id}', 'destroy')->name('payment.destroy');
+        Route::post('/payment/update/{idEncrypted}', 'update')->name('payment.updateFile');
+        Route::get('/payment/edit/{idEncrypted}', 'edit')->name('payment.edit');
+        Route::get('/payment/detail/list/{idEncrypted}', 'getDatatablePaymentDetail')->name('payment.detail.list');
+        Route::get('/payment/status_update/{idEncrypted}', 'statusUpdate')->name('payment.status_update');
+        Route::get('/payment/edit/{idEncrypted}', 'edit')->name('payment.edit');
     });
 
     Route::controller(TeacherClassController::class)->group(function () {
@@ -234,7 +256,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/teacher/class/{idEncryptedClass}/session/point/{idEncrypted}', 'showSessionStudent')->name('teacherclass.session.point');
         Route::get('/teacher/class/session/point/list/{idEncrypted}', 'getDatatableSessionPointHistory')->name('teacherclass.Session.point.list');
         Route::get('/teacher/class/session/getPointAspectStudent/{id}', 'getPointAspectStudent')->name('teacherclass.session.getPointAspectStudent');
-
         Route::post('/teacher/class/session/history/point/create', 'createHistoryPoint')->name('teacherclass.session.history.store');
     });
 

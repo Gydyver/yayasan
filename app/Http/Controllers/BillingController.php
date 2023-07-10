@@ -19,9 +19,10 @@ class BillingController extends Controller
      */
     public function index()
     {
+        $students = User::where('usergroup_id', 3)->get();
         $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         $years = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027];
-        return view('master.billing.index', compact('months', 'years'));
+        return view('master.billing.index', compact('months', 'years', 'students'));
     }
 
     public function getDatatable(Request $request)
@@ -33,6 +34,11 @@ class BillingController extends Controller
                 ->addColumn('student_label', function ($data) {
                     return  $data->students->name;
                 })
+                ->addColumn('month', function ($data) {
+
+                    $data->monthName = getMonthName($data->month);
+                    return getMonthName($data->month);
+                })
                 ->addColumn('action', function ($row) {
                     // actionBtn standard, billing cuma show aja dulu untuk saat ini
                     // $actionBtn = "
@@ -41,9 +47,22 @@ class BillingController extends Controller
                     // <a href='billing/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
                     // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
                     // ";
+                    // $actionBtn = "
+                    // <a href='billing/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                    // ";
+
+
+                    // $actionBtn = "
+                    // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='detailBilling(this);'
+                    // id='btnDetail' data-target='#ModalDetail' data-item='" . json_encode($row) . "'>Detail Billing</button>
+                    // ";
+
+
                     $actionBtn = "
-                    <a href='billing/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                    <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='detailBilling(this);'
+                    id='btnDetail' data-target='#ModalDetailBilling' data-item='" . json_encode($row) . "'>Detail Billing</button>
                     ";
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -72,19 +91,20 @@ class BillingController extends Controller
 
     public function generateMonthlyBilling(Request $request)
     {
+        // dd($request->student_id == "null");
         // $dateMin = strtotime('10/{$request-month}/{$request-year}');
         $dateMin = '07-' . $request->month . '-' . $request->year; //diganti berdasarkan tanggal perhitungannya
         $dateMinfilter = date($dateMin);
 
-        $students = User::where('usergroup_id', 3)->where('join_date', '<=', $dateMinfilter)->get();
-
         $studentNotFound = [];
-        foreach ($students as $student) {
-            $billing = Billing::where('month', $request->month)->where('year', $request->year)->where('student_id', $student->id)->get();
+
+        if ($request->student_id != "null") {
+            $student_data = User::where('usergroup_id', 3)->where('id', $request->student_id)->get();
+            $billing = Billing::where('month', $request->month)->where('year', $request->year)->where('student_id', $request->student_id)->get();
             if (count($billing) == 0) {
                 $billingRow = [
-                    'student_id'  =>  $student->id,
-                    'billing'  =>  $student->monthly_fee,
+                    'student_id'  =>  $request->student_id,
+                    'billing'  =>  $student_data[0]->monthly_fee,
                     'month'  =>  $request->month,
                     'year'  =>  $request->year,
                     'status'  =>  0,
@@ -92,6 +112,23 @@ class BillingController extends Controller
                     'updated_at' => date('Y-m-d')
                 ];
                 array_push($studentNotFound, $billingRow);
+            }
+        } else {
+            $students = User::where('usergroup_id', 3)->where('join_date', '<=', $dateMinfilter)->get();
+            foreach ($students as $student) {
+                $billing = Billing::where('month', $request->month)->where('year', $request->year)->where('student_id', $student->id)->get();
+                if (count($billing) == 0) {
+                    $billingRow = [
+                        'student_id'  =>  $student->id,
+                        'billing'  =>  $student->monthly_fee,
+                        'month'  =>  $request->month,
+                        'year'  =>  $request->year,
+                        'status'  =>  0,
+                        'created_at' => date('Y-m-d'),
+                        'updated_at' => date('Y-m-d')
+                    ];
+                    array_push($studentNotFound, $billingRow);
+                }
             }
         }
 

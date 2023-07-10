@@ -7,8 +7,10 @@ use App\Models\class_type;
 use Illuminate\Http\Request;
 use App\Models\Classes;
 use App\Models\User;
+use App\Models\Session_Generated;
 use App\Models\Session as SessionData;
 
+use Illuminate\Support\Facades\Auth;
 use DataTables;
 
 class ClassController extends Controller
@@ -31,9 +33,21 @@ class ClassController extends Controller
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            $data = Classes::with('teachers')->with('classTypes')->latest()->get();
+            if (Auth::User()->usergroup_id == 2) {
+                $data = Classes::with('teachers')->with('classTypes')->where('teacher_id', Auth::user()->id)->latest()->get();
+            } else {
+                $data = Classes::with('teachers')->with('classTypes')->latest()->get();
+            }
+
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('status_label', function ($row) {
+                    if ($row->closed) {
+                        return  'Selesai';
+                    } else {
+                        return 'Aktif';
+                    }
+                })
                 ->addColumn('teacher_label', function ($data) {
                     return  $data->teachers->name;
                 })
@@ -49,12 +63,21 @@ class ClassController extends Controller
                     // <a href='user/show/".Crypt::encryptString($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
                     // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
                     // ";
-                    $actionBtn = "
-                    <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
-                    <a href='class/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
-                    ";
+                    // dd($row);
+                    if ($row->closed) {
+                        $actionBtn = " <a href='/class/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>";
+                    } else {
+                        $actionBtn = "
+                        <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                        id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                        <a href='/class/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                        <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
+                        <button type='button' class='btn btn-sm btn-icon btn-danger' data-toggle='modal' onclick='closeClass(this);'
+                        id='btnClose' data-target='#ModalClose' data-item='" . json_encode($row) . "'>Closed Class</button>
+                        ";
+                    }
+
+                    // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmDataClosed(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Closed</button>
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -112,11 +135,75 @@ class ClassController extends Controller
      */
     public function show($idEncrypted)
     {
-        //
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        dd($decrypted);
+        $classes = Classes::where('id', $decrypted)->paginate(10);
+        $days = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thrusday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        ];
+
+        return view('master.class.detail', compact('classes', 'idEncrypted', 'days'));
     }
 
+    public function getDatatableSession($id, Request $request)
+    {
+        // dd('masuk sini?');
+        // dd($id);
+        $decrypted = \EncryptionHelper::instance()->decrypt($id);
+        // dd($decrypted);
+        if ($request->ajax()) {
+            $data = SessionData::with('classes')->where('class_id', $decrypted)->latest()->get();
+            // dd($data);
+            return Datatables::of($data)
+                ->addIndexColumn()
+                // ->addColumn('teacher_label', function ($data) {
+                //     return  $data->teachers->name;
+                // })
+                // ->addColumn('class_type_label', function ($data) {
+                //     return  $data->classTypes->name;
+                // })
+
+                ->addColumn('action', function ($row) use ($data) {
+                    // dd(json_encode($row->name));
+                    // $actionBtn = "
+                    // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                    // id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+                    // <a href='user/show/".Crypt::encryptString($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+                    // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
+                    // ";
+                    // dd($data);
+                    if ($data[0]->classes->closed) {
+                        $actionBtn = " <a href='/class/showSessionGenerated/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>";
+                    } else {
+                        $actionBtn = "
+                        <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+                        id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                        <a href='/class/showSessionGenerated/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                        <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
+                        ";
+                    }
+
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+    public function showSessionGenerated($idEncrypted)
+    {
+        $session_id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+
+        $session = SessionData::with('classes')->where('id', $session_id)->get();
+
+        $teachers = User::where('usergroup_id', 2)->get();
+
+        return view('master.class.detailSesGen', compact('idEncrypted', 'session', 'teachers'));
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -128,6 +215,44 @@ class ClassController extends Controller
         //
     }
 
+    public function updateSessionGenerated(Request $request)
+    {
+        $data = [
+            'teacher_id' => $request->teacher_id,
+            'status' => $request->status,
+            'session_start' => $request->session_start,
+            'session_end' => $request->session_end,
+            'updated_at' => date('Y-m-d')
+        ];
+
+        $save = Session_Generated::where('id', $request->id)->update($data);
+
+        // redirect
+        if ($save) {
+            return redirect()->back()->with(["success" => "Update Data"]);
+        } else {
+
+            return redirect()->back()->with(["error" => " Update Data Failed"]);
+        }
+    }
+
+    public function updateSessionGeneratedStat(Request $request)
+    {
+        $data = [
+            'status' => $request->status
+        ];
+
+        $update = Session_Generated::where('id', $request->id)->update($data);
+
+        // redirect
+        if ($update) {
+            return redirect()->back()->with(["success" => "Update Status Generated Status"]);
+        } else {
+
+            return redirect()->back()->with(["error" => " Update Status Generated Status Failed"]);
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -137,6 +262,13 @@ class ClassController extends Controller
      */
     public function update(Request $request)
     {
+
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        $teacher = Classes::where('id', $request->id)->pluck('teacher_id');
         $data = [
             'name' => $request->name,
             'teacher_id' => $request->teacher_id,
@@ -146,6 +278,12 @@ class ClassController extends Controller
             'class_start' => $request->class_start,
             'updated_at' => date('Y-m-d')
         ];
+
+        // dd($teacher[0]);
+        if ($teacher[0] != $request->teacher_id) {
+            // dd($request->teacher_id);
+            $this->updateTeacherInSesGen($request->teacher_id, $request->id);
+        }
 
         $save = Classes::where('id', $request->id)->update($data);
 
@@ -158,6 +296,71 @@ class ClassController extends Controller
         }
     }
 
+    function updateTeacherInSesGen($teacher_id, $class_id)
+    {
+        // dd('masuk updateTeacherInSesGen');
+        // dd($teacher_id);
+        try {
+            //Disini proses update teacher
+            $session = SessionData::where('class_id', $class_id)->pluck('id')->toArray();
+
+            $session_generated = Session_Generated::whereIn('session_id', $session)->update(['teacher_id' => $teacher_id]);
+            // dd($session_generated);
+            // if ($session_generated) {
+            return true;
+            // }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return false;
+        }
+    }
+
+    public function close(Request $request)
+    {
+        $data = [
+            'class_end' => $request->class_end,
+            'closed' => true
+        ];
+
+        // dd($data);
+
+        $save = Classes::where('id', $request->id)->update($data);
+
+        $this->updateStatusInSesGen($request->class_end, $request->id);
+
+        // redirect
+        if ($save) {
+            return redirect()->back()->with(["success" => "Close Class Success"]);
+        } else {
+
+            return redirect()->back()->with(["error" => " Close Data Failed"]);
+        }
+    }
+
+    function updateStatusInSesGen($class_end, $class_id)
+    {
+        // dd('masuk updateTeacherInSesGen');
+        // dd($teacher_id);
+        try {
+
+            // $today = date("Y-m-d");
+            $today = date($class_end);
+
+
+            //Disini proses update teacher
+            $session = SessionData::where('class_id', $class_id)->pluck('id')->toArray();
+
+            $session_generated_close = Session_Generated::whereIn('session_id', $session)->where('session_end', '<', $today)->update(['status' => 1]);
+            $session_generate_cancel = Session_Generated::whereIn('session_id', $session)->where('session_end', '>', $today)->update(['status' => 2]);
+            // dd($session_generated);
+            // if ($session_generated) {
+            return true;
+            // }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return false;
+        }
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -169,11 +372,36 @@ class ClassController extends Controller
         // delete
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
         $class = Classes::find($id);
+        $session_ids = SessionData::where('class_id', $id)->pluck('id')->toArray();
+        $session_generated = Session_Generated::whereIn('session_id', $session_ids)->delete();
+        $session = SessionData::where('class_id', $id)->delete();
         $class->delete();
         return redirect()->route('class.index')->with('success', 'Class has been deleted successfully');
+    }
 
-        // redirect
-        //  Session::flash('message', 'Successfully deleted the shark!');
-        //  return Redirect::to('sharks');
+    public function destroySessionGenerated($idEncrypted)
+    {
+        // delete
+        $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        $class = Session_Generated::find($id);
+        $class->delete();
+        return redirect()->route('master.class.detailSesGen')->with('success', 'Session Generated has been deleted successfully');
+    }
+
+
+
+    public function updateStatusClass($idEncrypted)
+    {
+        //
+        $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
+
+
+        $data = [
+            'closed' => true,
+            'class_end' => date("Y-m-d")
+        ];
+        Classes::where('id', $decrypted)->update($data);
+
+        return redirect()->route('class.index')->with('success', 'Class has been closed successfully');
     }
 }

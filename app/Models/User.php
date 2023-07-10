@@ -33,6 +33,7 @@ class User extends Authenticatable
         'gender',
         'birth_date',
         'join_date',
+        'latest_hapalan',
         'created_at',
         'updated_at',
     ];
@@ -87,6 +88,11 @@ class User extends Authenticatable
     public function studentPayment()
     {
         return $this->hasMany(Payment_Detail::class, 'student_id', 'id');
+    }
+
+    public function studentSedekah()
+    {
+        return $this->hasMany(Payment_Other::class, 'student_id', 'id');
     }
 
     public function studentChapters()

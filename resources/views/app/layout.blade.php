@@ -54,20 +54,43 @@
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <!-- Left navbar links -->
       <ul class="navbar-nav">
-        <!--   <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>-->
+        <!-- <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="index3.html" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">Contact</a>
+        </li> -->
       </ul>
 
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+
+          <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="far fa-user-circle" style="font-size: 25px;"></i>
+            <!-- <span class="badge badge-warning navbar-badge">15</span> -->
+          </a>
+          <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
+            <!-- <span class="dropdown-item dropdown-header">15 Notifications</span>
+            <div class="dropdown-divider"></div> -->
+            <a href="#" class="dropdown-item">
+
+              <i class="fas fa-user mr-2" style="font-weight: bolder;"></i>
+              <span style="font-weight: bolder;">
+                {{(Auth::user()) ? Auth::user()->name : 'Default User'}}
+              </span>
+              <!-- <span class="float-right text-muted text-sm">3 mins</span> -->
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="dropdown-item dropdown-footer">Logout</a>
+          </div>
+        </li>
+
       </ul>
+
     </nav>
     <!-- /.navbar -->
 
@@ -125,14 +148,21 @@
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
+
               <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.html" class="nav-link active">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dashboard v1</p>
+                @foreach ($menu['child'] as $child)
+                <li class="nav-item" style="margin-left: 30px;">
+                  <a href="{{$child['url']}}" class="nav-link">
+                    <i class="nav-icon "></i>
+                    <p>
+                      {{$child['name']}}
+                    </p>
                   </a>
                 </li>
-                <li class="nav-item">
+                @endforeach
+              </ul>
+
+              <!-- <li class="nav-item">
                   <a href="./index2.html" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Dashboard v2</p>
@@ -143,15 +173,14 @@
                     <i class="far fa-circle nav-icon"></i>
                     <p>Dashboard v3</p>
                   </a>
-                </li>
-              </ul>
+                </li> -->
             </li>
             @else
             <li class="nav-item">
               <a href="{{$menu['url']}}" class="nav-link">
                 <i class="nav-icon {{$menu['icon']}}"></i>
                 <p>
-                  {{$menu->name}}
+                  {{$menu['name']}}
                 </p>
               </a>
             </li>

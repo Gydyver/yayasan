@@ -16,7 +16,10 @@ class Payment_Detail extends Model
     protected $fillable = [
         'payment_id',
         'billing_id',
+        'student_id',
         'nominal',
+        'notes',
+        'created_by',
         'created_at',
         'updated_at',
     ];

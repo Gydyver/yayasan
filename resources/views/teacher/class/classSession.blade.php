@@ -20,6 +20,7 @@
                     <th>Day</th>
                     <th>Start</th>
                     <th>End</th>
+                    <th>Status</th>
                     <th width="280px">Action</th>
                 </tr>
             </thead>
@@ -33,21 +34,18 @@
     <script>
         $(document).ready(function() {
 
-            var id = "{{request('idEncrypted')}}"
-
-            console.log('id');
-            console.log(id);
+            var idEncrypted = "{{request('idEncrypted')}}"
 
             var table = $('.yajra-datatable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('teacher/class/session/list') }}" + '/' + id,
+                ajax: "{{ url('teacher/class/session/list') }}" + '/' + idEncrypted,
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'session_id',
+                        data: 'day',
                         name: 'Day'
                     },
                     {
@@ -57,6 +55,10 @@
                     {
                         data: 'session_end',
                         name: 'End'
+                    },
+                    {
+                        data: 'status',
+                        name: 'Status'
                     },
                     {
                         data: 'action',

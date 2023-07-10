@@ -20,9 +20,10 @@ return new class extends Migration
             // $table->foreign('payment_id')->references('id')->on('payment');
             // $table->foreign('student_id')->references('id')->on('users');
             $table->integer('payment_id');
-            $table->integer('billing_id'); //untuk catatan, pindahan dari table payment
-            // $table->integer('student_id');
+            $table->integer('billing_id')->nullable(); //untuk catatan, pindahan dari table payment
+            $table->integer('student_id');
             $table->integer('nominal');
+            $table->string('notes')->nullable();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });
