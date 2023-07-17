@@ -30,8 +30,13 @@ class Session_Generated extends Model
         return $this->belongsTo(Session::class, 'session_id', 'id');
     }
 
+    public function teacherData()
+    {
+        return $this->belongsTo(User::class, 'teacher_id', 'id');
+    }
+
     public function pointHistory()
     {
-        return $this->hasMany(Point_History::class, 'session_id', 'id');
+        return $this->hasMany(Point_History::class, 'session_generated_id', 'id');
     }
 }

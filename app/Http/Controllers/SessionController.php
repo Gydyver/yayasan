@@ -261,10 +261,15 @@ class SessionController extends Controller
         $session = SessionData::where('class_id', $request->class_id_gen)->whereNull('deleted_at')->latest()->get();
         $class = Classes::where('id', $request->class_id_gen)->latest()->get();
         $dates = [];
-        $day = "MONDAY";
+        $index = 0;
+        // $day = "MONDAY";
+        // dd($session);
         foreach ($session as $s) {
+
+
             $fromDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
             $toDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
+
 
             if ($s->day == 'Sunday') {
                 // Get the first Sunday in the date range
@@ -302,6 +307,9 @@ class SessionController extends Controller
                     ? $fromDate
                     : $fromDate->copy()->modify('next Saturday');
             }
+            // if ($index != 0) {
+            //     dd($date);
+            // }
 
             // Iterate until you have reached the end date adding a week each time
             while ($date->lt($toDate)) {
@@ -323,8 +331,13 @@ class SessionController extends Controller
                 $dates[] = $data;
                 $date->addWeek();
             }
+
+            $date = $fromDate;
+
+            $index++;
         }
 
+        // dd($dates);
         //DAPET NIH DATA Datesnya di array dates
         // dd($dates);
 

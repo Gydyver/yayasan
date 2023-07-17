@@ -20,6 +20,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserAccessController;
 use App\Http\Controllers\UploadPayReceiptController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\HistoryDataController;
 
 
 use App\Http\Controllers\Superadmin\StudentController as SuperadminStudentController;
@@ -234,6 +235,22 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/upload_payreceipt/update', 'update')->name('upload_payreceipt.update');
     });
 
+    Route::controller(HistoryDataController::class)->group(function () {
+        Route::get('/history', 'index')->name('history_student.index');
+        Route::get('/history/list', 'getDatatable')->name('history_student.list');
+        Route::get('/history/show/{idEncrypted}', 'show')->name('history_student.show');
+        Route::get('/history/getDatatableHistory/list/{idEncrypted}', 'getDatatableHistory')->name('history_student.getDatatableHistory');
+        Route::get('/history/getDatasetHistory/{idEncStud}', 'getDatasetHistory')->name('history_student.getDatasetHistory');
+        // Route::get('/upload_payreceipt/destroy/{id}', 'destroy')->name('upload_payreceipt.destroy');
+        // Route::post('/upload_payreceipt/uploadFile', 'uploadFile')->name('upload_payreceipt.uploadFile');
+        // Route::get('/upload_payreceipt/formUploadBulking', 'formUploadBulking')->name('upload_payreceipt.formUploadFile');
+        // Route::post('/upload_payreceipt/uploadFileBulking', 'uploadFileBulking')->name('upload_payreceipt.uploadFileBulking');
+        // Route::get('/upload_payreceipt/show', 'show')->name('upload_payreceipt.show');
+        // Route::get('/upload_payreceipt/edit', 'edit')->name('upload_payreceipt.edit');
+        // Route::post('/upload_payreceipt/update', 'update')->name('upload_payreceipt.update');
+    });
+
+
     Route::controller(PaymentController::class)->group(function () {
         Route::get('/payment', 'index')->name('payment.index');
         Route::get('/payment/list', 'getDatatable')->name('payment.list');
@@ -262,9 +279,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::controller(TeacherStudentController::class)->group(function () {
         Route::get('/teacher/student', 'index')->name('teacher.student.index');
         Route::get('/teacher/student/list', 'getDatatable')->name('teacher.student.list');
-        Route::get('/teacher/class/destroy/{id}', 'destroy')->name('teacherclass.destroy');
-        Route::post('/teacher/class/create', 'store')->name('teacherclass.store');
-        Route::get('/teacher/class/session/{idEncrypted}', 'showSession')->name('teacherclass.session');
+        Route::get('/teacher/student/show/{idEncrypted}', 'showStudentDet')->name('teacherStudent.detail');
+        Route::get('/teacher/student/show/list/{idEncrypted}', 'getDatatableStudentDet')->name('teacherStudent.list');
         // Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacher.classSession.list');
 
         Route::get('/teacher/class/show/{idEncrypted}', 'show')->name('teacherclass.show');

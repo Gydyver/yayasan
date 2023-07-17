@@ -93,6 +93,7 @@ class ClassController extends Controller
             $decrypted = \EncryptionHelper::instance()->decrypt($id);
             $data = Session::with('sessionGenerated')->where('class_id', $decrypted)->latest()->get();
             // dd($data[0]->sessionGenerated);
+            // dd($decrypted);
             return Datatables::of($data[0]->sessionGenerated)
                 ->addIndexColumn()
                 ->addColumn('day', function ($row) use ($data) {

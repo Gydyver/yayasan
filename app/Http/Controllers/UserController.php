@@ -11,7 +11,7 @@ use DataTables;
 
 class UserController extends Controller
 {
-      /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -21,8 +21,8 @@ class UserController extends Controller
         $user_groups = UserGroup::orderBy('id', 'asc')->paginate(10);
         $classes = Classes::orderBy('id', 'asc')->paginate(10);
 
-        
-        return view('master.user.index', compact('user_groups','classes'));
+
+        return view('master.user.index', compact('user_groups', 'classes'));
     }
 
     public function getDatatable(Request $request)
@@ -33,8 +33,8 @@ class UserController extends Controller
                 ->addIndexColumn()
                 ->addColumn('usergroup_label', function ($data) {
                     return  $data->usergroups->name;
-                }) 
-                ->addColumn('action', function($row){
+                })
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     // $actionBtn = "
                     // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
@@ -44,10 +44,10 @@ class UserController extends Controller
                     // ";
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <a href='user/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
+                    // <a href='user/show/".\EncryptionHelper::instance()->encrypt($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -80,7 +80,7 @@ class UserController extends Controller
             'username' => $request->username,
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
-            'join_date'=> $request->join_date,
+            'join_date' => $request->join_date,
             'password' => $request->password,
             'monthly_fee' => $request->monthly_fee
         ];
@@ -107,7 +107,7 @@ class UserController extends Controller
     {
         // $decrypted = Crypt::decryptString($idEncrypted);
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        
+
         dd($decrypted);
     }
 
@@ -131,7 +131,7 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        if($request->password == ""){
+        if ($request->password == "") {
             $data = [
                 'name' => $request->name,
                 'usergroup_id' => $request->usergroup_id,
@@ -140,9 +140,9 @@ class UserController extends Controller
                 'username' => $request->username,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
-                'join_date'=> $request->join_date,
+                'join_date' => $request->join_date,
             ];
-        }else {
+        } else {
             $data = [
                 'name' => $request->name,
                 'usergroup_id' => $request->usergroup_id,
@@ -151,7 +151,7 @@ class UserController extends Controller
                 'username' => $request->username,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
-                'join_date'=> $request->join_date,
+                'join_date' => $request->join_date,
                 'password' =>  bcrypt($request->password)
             ];
         }
@@ -170,15 +170,15 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-    * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($idEncrypted)
     {
         // dd('masuk delete',$id);
         // dd($id);
-        
+
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = User::where('id', $id)->Delete(); 
+        $delete = User::where('id', $id)->Delete();
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);

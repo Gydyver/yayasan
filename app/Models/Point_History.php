@@ -38,6 +38,6 @@ class Point_History extends Model
 
     public function chapterPointAspectHistory()
     {
-        return $this->belongsTo(Chapter_Point_Aspect::class, 'chapter_point_aspect_id', 'id');
+        return $this->belongsTo(Chapter_Point_Aspect::class, 'chapter_point_aspect_id', 'id')->with('pointAspects');
     }
 }
