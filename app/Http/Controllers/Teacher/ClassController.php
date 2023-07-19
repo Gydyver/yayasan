@@ -203,6 +203,8 @@ class ClassController extends Controller
         // dd($request);
         $points = [];
 
+        $updateUser = User::where('id', $request->student_id)->update(['latest_hapalan' => $request->latest_hapalan, 'latest_halaman' => $request->latest_halaman]);
+
         foreach ($request->point_aspect_id as $key => $point_aspect) {
             // dd($request->point[$key]);
             // $request->point[$key] = 90;

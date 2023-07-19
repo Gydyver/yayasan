@@ -78,28 +78,15 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <!-- <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <strong>Chapter:</strong>
-                                    <select class="form-control select2edit" style="width: 100%;" name="chapter_id" id="chapter_id">
-                                        @foreach ($chapters as $chapter)
-                                        <option value="{{ $chapter->id }}">{{ $chapter->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div> -->
                         </div>
 
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <strong>Start Date:</strong>
-                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
-                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
-                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                    <div class="input-group date" class="start_date_div" id="start_date_div_1" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div_1">
+                                        <div class="input-group-append" data-target="#start_date_div_1" data-toggle="datetimepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
@@ -157,9 +144,9 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <strong>Start Date:</strong>
-                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
-                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
-                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                    <div class="input-group date" class="start_date_div" id="start_date_div_2" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div_2">
+                                        <div class="input-group-append" data-target="#start_date_div_2" data-toggle="datetimepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
@@ -226,9 +213,9 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <strong>Start Date:</strong>
-                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
-                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
-                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                    <div class="input-group date" class="start_date_div" id="start_date_div_3" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div_3">
+                                        <div class="input-group-append" data-target="#start_date_div_3" data-toggle="datetimepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
@@ -286,9 +273,9 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <strong>Start Date:</strong>
-                                    <div class="input-group date" class="start_date_div" id="start_date_div" data-target-input="nearest">
-                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div">
-                                        <div class="input-group-append" data-target="#start_date_div" data-toggle="datetimepicker">
+                                    <div class="input-group date" class="start_date_div" id="start_date_div_4" data-target-input="nearest">
+                                        <input name="start_date" type="text" class="form-control datetimepicker-input" data-target="#start_date_div_4">
+                                        <div class="input-group-append" data-target="#start_date_div_4" data-toggle="datetimepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
                                     </div>
@@ -310,8 +297,24 @@
     <script>
         $(document).ready(function() {
 
+            // $('#birth_date_create').datetimepicker({
+            //     format: 'YYYY-MM-DD'
+            // });
 
-            $('.start_date_div').datetimepicker({
+            // $('#join_date_div').datetimepicker({
+            //     format: 'YYYY-MM-DD'
+            // });
+
+            $('#start_date_div_1').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#start_date_div_2').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#start_date_div_3').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#start_date_div_4').datetimepicker({
                 format: 'YYYY-MM-DD'
             });
 

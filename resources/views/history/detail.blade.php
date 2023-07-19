@@ -56,11 +56,9 @@
             <thead>
                 <tr>
                     <th>S.No</th>
-                    <th>Day</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Status</th>
-                    <th width="280px">Action</th>
+                    <th>Grade</th>
+                    <th>Point</th>
+                    <th>Notes</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,27 +82,17 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'day',
-                        name: 'Day'
+                        data: 'grade_label',
+                        name: 'Grade'
                     },
                     {
-                        data: 'session_start',
-                        name: 'Start'
+                        data: 'point',
+                        name: 'Point'
                     },
                     {
-                        data: 'session_end',
-                        name: 'End'
-                    },
-                    {
-                        data: 'status',
-                        name: 'Status'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
+                        data: 'teacher_notes',
+                        name: 'Catatan Guru'
+                    }
                 ]
             });
 

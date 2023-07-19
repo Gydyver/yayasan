@@ -36,14 +36,19 @@ class HistoryDataController extends Controller
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
+
+
+            $from = "2021-01-01";
+            $to = "2021-06-01";
             // ->where('status', "!=", 2)
             $user = User::where('id', Auth::User()->id)->get();
             $data = Session_Generated::with('teacherData', 'sessionGenerated', 'pointHistory')
-                ->whereHas('sessionGenerated', function ($query) use ($user) {
-                    $query->where('class_id', '=', $user[0]->class_id);
+                ->whereHas('sessionGenerated', function ($query) use ($user, $from, $to) {
+                    $query->where('class_id', '=', $user[0]->class_id)->whereBetween('session_start', [$from, $to])->whereBetween('session_end', [$from, $to]);
                 })
+
                 // ->where('')
-                ->latest()->get();
+                ->orderBy('session_start', 'desc')->get();
             // dd($data);
             // dd($data[4]->sessionGenerated);
             return Datatables::of($data)
@@ -144,7 +149,7 @@ class HistoryDataController extends Controller
     public function show($idEncrypted)
     {
         $session_generated_id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-
+        // dd($session_generated_id);
         $session_generated = Session_Generated::where('id', $session_generated_id)->get();
         $session = Session_Data::where('id', $session_generated[0]->session_id)->get();
         $class = Classes::where('id', $session[0]->class_id)->get();
@@ -153,59 +158,84 @@ class HistoryDataController extends Controller
         return view('history.detail', compact('class', 'session', 'session_generated', 'pointHistory', 'idEncrypted'));
     }
 
+    // public function getDatatableHistory($idEncrypted, Request $request)
+    // {
+    //     // dd($idEncrypted);
+    //     $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
+    //     // dd($decrypted);
+    //     if ($request->ajax()) {
+    //         $data = Session_Generated::with('sessionGenerated')->where('id', $decrypted)->latest()->get();
+    //         // dd($data);
+    //         return Datatables::of($data)
+    //             ->addIndexColumn()
+    //             ->addColumn('day_label', function ($row) {
+    //                 // dd($row);
+    //                 if ($row->session_start) {
+    //                     return date('l', strtotime($row->session_start));
+    //                 }
+    //                 // return  $row->start_time;
+    //             })
+    //             ->addColumn('status_label', function ($row) {
+    //                 // dd($row);
+    //                 if ($row->status == 0) {
+    //                     return 'Aktif';
+    //                 } else  if ($row->status == 1) {
+    //                     return 'Selesai';
+    //                 } else  if ($row->status == 2) {
+    //                     return 'Di Batalkan';
+    //                 }
+    //                 // return  $row->start_time;
+    //             })
+    //             ->addColumn('action', function ($row) use ($data) {
+
+    //                 $class_id = $data[0]->sessionGenerated->class_id;
+    //                 $class_info = Classes::where('id', $class_id)->get();
+    //                 // dd($class_info);
+    //                 // dd(json_encode($row->name));
+    //                 // $actionBtn = "
+    //                 // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+    //                 // id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+    //                 // <a href='user/show/".Crypt::encryptString($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
+    //                 // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
+    //                 // ";
+
+    //                 if ($class_info[0]->closed) {
+    //                     $actionBtn = "<div class='alert alert-primary'><center>Kelas Sudah ditutup</center></div>";
+    //                 } else {
+    //                     $actionBtn = "
+    //                 <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
+    //                 id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+    //                 <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
+    //                 ";
+    //                 }
+    //                 return $actionBtn;
+    //             })
+    //             ->rawColumns(['action'])
+    //             ->make(true);
+    //     }
+    // }
+
+
     public function getDatatableHistory($idEncrypted, Request $request)
     {
         // dd($idEncrypted);
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
         // dd($decrypted);
         if ($request->ajax()) {
-            $data = Session_Generated::with('sessionGenerated')->where('session_id', $decrypted)->latest()->get();
+            $data = Point_History::with('grades')->where('session_generated_id', $decrypted)->latest()->get();
             // dd($data);
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('day_label', function ($row) {
+                ->addColumn('grade_label', function ($row) {
                     // dd($row);
-                    if ($row->session_start) {
-                        return date('l', strtotime($row->session_start));
+                    if ($row->grades) {
+                        return $row->grades->name . "(" . $row->grades->description . ")";
                     }
                     // return  $row->start_time;
                 })
-                ->addColumn('status_label', function ($row) {
-                    // dd($row);
-                    if ($row->status == 0) {
-                        return 'Aktif';
-                    } else  if ($row->status == 1) {
-                        return 'Selesai';
-                    } else  if ($row->status == 2) {
-                        return 'Di Batalkan';
-                    }
-                    // return  $row->start_time;
+                ->addColumn('point', function ($row) {
+                    return  $row->point;
                 })
-                ->addColumn('action', function ($row) use ($data) {
-
-                    $class_id = $data[0]->sessionGenerated->class_id;
-                    $class_info = Classes::where('id', $class_id)->get();
-                    // dd($class_info);
-                    // dd(json_encode($row->name));
-                    // $actionBtn = "
-                    // <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    // id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    // <a href='user/show/".Crypt::encryptString($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
-                    // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
-                    // ";
-
-                    if ($class_info[0]->closed) {
-                        $actionBtn = "<div class='alert alert-primary'><center>Kelas Sudah ditutup</center></div>";
-                    } else {
-                        $actionBtn = "
-                    <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
-                    ";
-                    }
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
                 ->make(true);
         }
     }
@@ -218,58 +248,120 @@ class HistoryDataController extends Controller
         // $decryptedSesGen = \EncryptionHelper::instance()->decrypt($idEncSesGen);
         // dd($decrypted);
 
-        $from = "2021-01-01";
-        $to = "2021-06-01";
+        $from = "2023-07-01";
+        $to = "2023-12-31";
         if ($request->ajax()) {
-            $datas = Point_History::with('studentPointHistory', 'chapterPointAspectHistory', 'pointHistory')
-                // with(['chapterPointAspectHistory.pointAspects' => function ($query) {
-                //         $query->select('name');
-                // }, 'pointHistory'])
-                // ->selectRaw('point', )
-                // ->select(DB::raw('point','chapterPointAspectHistory','chapterPointAspectHistory.pointAspects.name as label'))
-                ->whereHas('pointHistory', function ($query) use ($from, $to) {
-                    return $query->whereBetween('session_start', [$from, $to])->whereBetween('session_end', [$from, $to]);
-                })
-                ->where('student_id', $decryptedStudent)->latest()->get();
+            //Raw Query
+            // $datas = DB::table('point_history')
+            //     ->selectRaw('point_history.point, point_aspect.name')
+            //     ->join('users', 'users.id', '=', 'point_history.student_id')
+            //     ->join('chapter_point_aspect', 'chapter_point_aspect.id', '=', 'point_history.chapter_point_aspect_id')
+            //     ->join('session_generated', 'session_generated.id', '=', 'point_history.chapter_point_aspect_id')
+            //     ->rightjoin('point_aspect', 'point_aspect.id', '=', 'chapter_point_aspect.point_aspect_id')
+            //     ->tosql();
             // dd($datas);
 
-            $points = [];
-            $labels = [];
+            // Query sekali tapi belum kegabung dan ribet getting datanya
+            // $datas = Point_History::with('studentPointHistory', 'chapterPointAspectHistory', 'pointHistory')
+            //     // with(['chapterPointAspectHistory.pointAspects' => function ($query) {
+            //     //         $query->select('name');
+            //     // }, 'pointHistory'])
+            //     // ->selectRaw('point', )
+            //     // ->groupByRaw('label')
+            //     ->select(DB::raw('point', 'chapterPointAspectHistory.pointAspects.name as label'))
+            //     ->whereHas('pointHistory', function ($query) use ($from, $to) {
+            //         return $query->whereBetween('session_start', [$from, $to])->whereBetween('session_end', [$from, $to]);
+            //     })
+            //     ->where('student_id', $decryptedStudent)->latest()->get();
+
+
+            //Jauh dari kata sukses
+            // $datas = Point_History::with('studentPointHistory', 'chapterPointAspectHistory', 'pointHistory')
+            //     ->select(DB::raw('point', 'chapterPointAspectHistory.pointAspects.name as label'))
+            //     ->whereHas('pointHistory', function ($query) use ($from, $to) {
+            //         return $query->whereBetween('session_start', [$from, $to])->whereBetween('session_end', [$from, $to]);
+            //     })
+            //     ->where('student_id', $decryptedStudent)->latest()->get();
+            // dd($datas);
+
 
 
             // foreach ($datas as $key => $value) {
-            //     array_push($points,(int)$value->point);
-            //     array_push($labels,$value->chapterPointAspectHistory->pointAspects->name);
+            //     array_push($points, (int) $value->point);
+            //     array_push($labels, $value->chapterPointAspectHistory->pointAspects->name);
             // }
 
+            // $filtered_collection = $labels->filter(function ($item) {
+            //     return $item->isDog();
+            // })->values();
+            // dd($points);
+            // dd($labels);
+
+
+            //ini nih start
+            $labels = [];
+            $datas = [];
+            $varbaru = [];
+            $varlabel = [];
             $student = User::with('studentChapters')->where('id', $decryptedStudent)->get();
             $point_aspects = Chapter_Point_Aspect::with('pointAspects')->where('chapter_id', $student[0]->chapter_id)->get();
-            $point_history = Point_History::with('pointAspects')->where('chapter_id', $student[0]->chapter_id)->get();
+            $point_history = Point_History::
+                // with(['pointHistory' => function ($query) {
+                //     $query->groupBy('session_start');
+                // }])
+                with('pointHistory')
+                ->whereHas('pointHistory', function ($query) use ($from, $to) {
+                    return $query->whereBetween('session_start', [$from, $to])->whereBetween('session_end', [$from, $to]);
+                })
+                // ->groupby('pointHistory.session_start')
+                ->where('student_id', $decryptedStudent)
+                ->get();
+            // dd($point_history);
+            // dd($point_history[0]->chapter_point_aspect_id);
 
-            $datanya = [];
-            $arraytest = [];
             foreach ($point_aspects as $key => $value) {
+                // dd($value->pointAspects->name);
                 array_push($labels, $value->pointAspects->name);
-
-                // $dataset_ .  = [];
-                // ${'dataset_' . $key} = [];
-                // dd($value->pointAspects->id);
-
+                array_push($datas, ['id' => $value->pointAspects->id, 'name' =>  $value->pointAspects->name]);
             }
 
+            // dd($labels);
+
             foreach ($datas as $key2 => $value2) {
-                // dd($value->pointAspects->id);
-                // dd($value2->chapter_point_aspect_id);
-                if ($value2->chapter_point_aspect_id == $value->pointAspects->id) {
-                    // dd('sempet masuk if');
-                    dd($value);
-                    array_push($datanya[$key], $value->point);
-                    dd($datanya);
+                // dd($value2['id']);
+                $varbaru[(string) $labels[$key2]] = [];
+                // $varlabel[(string) $labels[$key2]] = [];
+                foreach ($point_history as $key3 => $value3) {
+                    if ($value2['id'] == $value3->chapter_point_aspect_id) {
+                        array_push($varbaru[(string) $labels[$key2]], $value3->point);
+                        if (!in_array($value3->pointHistory->session_start, $varlabel, TRUE)) {
+                            array_push($varlabel, $value3->pointHistory->session_start);
+                        }
+                    }
                 }
             }
 
-            array_push($arraytest, $datanya);
-            dd($arraytest);
+            // dd($varlabel);
+            // dd($varbaru);
+            return json_encode(['varbaru' => $varbaru, 'varlabel' => $varlabel]);
+
+            //ini nih end
+
+
+
+            // foreach ($datas as $key2 => $value2) {
+            //     // dd($value->pointAspects->id);
+            //     // dd($value2->chapter_point_aspect_id);
+            //     if ($value2->chapter_point_aspect_id == $value->pointAspects->id) {
+            //         // dd('sempet masuk if');
+            //         dd($value);
+            //         array_push($datanya[$key], $value->point);
+            //         dd($datanya);
+            //     }
+            // }
+
+            // array_push($arraytest, $datanya);
+            // dd($arraytest);
             // dd($arraytes
 
             // $datas =  DB::select('select * from point_history ph JOIN with user u on ph.student_id = u.id JOIN chapter_point_history cph on cph.session_generated_id =   where id = ?', [1

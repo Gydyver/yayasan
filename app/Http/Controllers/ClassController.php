@@ -383,9 +383,14 @@ class ClassController extends Controller
     {
         // delete
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $class = Session_Generated::find($id);
-        $class->delete();
-        return redirect()->route('master.class.detailSesGen')->with('success', 'Session Generated has been deleted successfully');
+        $sesGen = Session_Generated::find($id);
+        $idSes = $sesGen->session_id;
+        // dd($idSes);
+        $idSesEncrypted = \EncryptionHelper::instance()->encrypt($idSes);
+        // dd($idSesEncrypted);
+        $sesGen->delete();
+        // \Redirect::route('regions', $id)->with('message', 'State saved correctly!!!');
+        return redirect()->route('class.showSessionGenerated', $idSesEncrypted)->with('success', 'Session Generated has been deleted successfully');
     }
 
 

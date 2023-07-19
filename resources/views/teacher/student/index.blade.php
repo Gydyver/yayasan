@@ -4,9 +4,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Student</h3>
-        <div class="pull-right mb-2">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalAdd">Create</button>
-        </div>
+
     </div>
     <div class="card-body">
         @if ($message = Session::get('success'))
@@ -36,6 +34,7 @@
     @section('script')
     <script>
         $(document).ready(function() {
+
             var table = $('.yajra-datatable').DataTable({
                 processing: true,
                 serverSide: true,

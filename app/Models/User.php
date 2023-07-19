@@ -34,6 +34,7 @@ class User extends Authenticatable
         'birth_date',
         'join_date',
         'latest_hapalan',
+        'latest_halaman',
         'created_at',
         'updated_at',
     ];

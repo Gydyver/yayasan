@@ -31,6 +31,7 @@ return new class extends Migration
             $table->date('birth_date');
             $table->date('join_date');
             $table->string('latest_hapalan')->nullable();
+            $table->string('latest_halaman')->nullable();
             $table->rememberToken();
             $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();

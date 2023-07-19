@@ -31,6 +31,12 @@ class Point_History extends Model
         return $this->belongsTo(User::class, 'student_id', 'id');
     }
 
+
+    public function grades()
+    {
+        return $this->belongsTo(Grade::class, 'grade_id', 'id');
+    }
+
     public function pointHistory()
     {
         return $this->belongsTo(Session_Generated::class, 'session_generated_id', 'id');

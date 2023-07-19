@@ -73,6 +73,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Hapalan Terakhir:</strong>
+                                    <input id="latest_hapalan" class="form-control" name="latest_hapalan" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Halaman Terakhir:</strong>
+                                    <input id="latest_halaman" class="form-control" name="latest_halaman" />
+                                </div>
+                            </div>
+                        </div>
 
                         <div style="padding:20px;">
                             <div class="row">

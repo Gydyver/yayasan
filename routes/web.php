@@ -101,6 +101,12 @@ Route::controller(UserGroupController::class)->group(function () {
 
 Route::group(['middleware' => ['auth']], function () {
 
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/dashboard/getDatasetStudGen', 'getDatasetStudGen')->name('dashboard.getDatasetStudGen');
+        Route::get('/dashboard/getDataSetSesGenCanceled', 'getDataSetSesGenCanceled')->name('dashboard.getDataSetSesGenCanceled');
+        Route::get('/dashboard/getStudHighestAbsent', 'getStudHighestAbsent')->name('dashboard.getStudHighestAbsent');
+    });
+
 
     Route::controller(ClassController::class)->group(function () {
         Route::get('/class', 'index')->name('class.index');

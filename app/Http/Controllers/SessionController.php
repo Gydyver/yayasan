@@ -265,8 +265,6 @@ class SessionController extends Controller
         // $day = "MONDAY";
         // dd($session);
         foreach ($session as $s) {
-
-
             $fromDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
             $toDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
 
@@ -319,16 +317,24 @@ class SessionController extends Controller
                 $endDatetime = Carbon::parse($date->toDateString() . $s->time_end);
 
                 // $dates[] = $date->toDateString(); //nanti ditaro disini nih harusnya yang $data.
-                $data = [
-                    'teacher_id' => $class[0]->teacher_id,
-                    'session_id' => $s->id,
-                    'session_start' => $startDatetime->format("Y-m-d H:i:s"),
-                    'session_end' => $endDatetime->format("Y-m-d H:i:s"),
-                    'status' => 0,
-                    'created_at' => date('Y-m-d'),
-                    'updated_at' => date('Y-m-d')
-                ];
-                $dates[] = $data;
+                // if()
+                $checkSesGen = Session_Generated::where('session_start', $startDatetime->format("Y-m-d H:i:s"))
+                    ->where('session_end', $endDatetime->format("Y-m-d H:i:s"))
+                    ->where('session_id',  $s->id)
+                    ->get();
+                if (count($checkSesGen) == 0) {
+                    $data = [
+                        'teacher_id' => $class[0]->teacher_id,
+                        'session_id' => $s->id,
+                        'session_start' => $startDatetime->format("Y-m-d H:i:s"),
+                        'session_end' => $endDatetime->format("Y-m-d H:i:s"),
+                        'status' => 0,
+                        'created_at' => date('Y-m-d'),
+                        'updated_at' => date('Y-m-d')
+                    ];
+                    $dates[] = $data;
+                }
+
                 $date->addWeek();
             }
 

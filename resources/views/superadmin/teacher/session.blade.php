@@ -20,7 +20,7 @@
                     <th>S.No</th>
                     <th>Name</th>
                     <th>Session List</th>
-                    <th width="280px">Action</th>
+                    <!-- <th width="280px">Action</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -51,12 +51,12 @@
                         data: 'session_list',
                         name: 'session'
                     },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
+                    // {
+                    //     data: 'action',
+                    //     name: 'action',
+                    //     orderable: false,
+                    //     searchable: false
+                    // },
                 ]
             });
 

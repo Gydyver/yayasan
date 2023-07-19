@@ -29,7 +29,11 @@ if (!function_exists('getMenus')) {
         $auth = Auth::user()->usergroup_id;
         // dd($auth);
         $permissions = UserAccess::where('usergroup_id', $auth)->latest()->get();
-        // dd($permissions);
+        $permission_ids = $permissions->map(function ($item) {
+            return $item->menu_id;
+        })->toArray();
+
+        // dd($permission_ids);
         $menus = array();
         $array_test = array();
         if ($permissions) {
@@ -54,14 +58,18 @@ if (!function_exists('getMenus')) {
                     $menu_childs = Menu::where('menuparent_id', $menu_id)->latest()->get();
                     if ($menu_childs) {
                         foreach ($menu_childs as $menu_child) {
-                            $child =
-                                [
-                                    'id' => $menu_child->id,
-                                    'name' => $menu_child->name,
-                                    'icon' => $menu_child->icon,
-                                    'url' => $menu_child->url,
-                                ];
-                            array_push($childs, $child);
+                            // dd($permission_ids);
+                            if (in_array($menu_child->id, $permission_ids)) {
+
+                                $child =
+                                    [
+                                        'id' => $menu_child->id,
+                                        'name' => $menu_child->name,
+                                        'icon' => $menu_child->icon,
+                                        'url' => $menu_child->url,
+                                    ];
+                                array_push($childs, $child);
+                            }
                         }
                         $menu['child'] = $childs;
                     }
@@ -89,7 +97,7 @@ if (!function_exists('getMenus')) {
             //     'children' => $system
             // ];
         }
-        return $menus;
+        return ($menus);
     }
 }
 
