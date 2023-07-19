@@ -284,7 +284,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::controller(TeacherStudentController::class)->group(function () {
         Route::get('/teacher/student', 'index')->name('teacher.student.index');
+        Route::get('/teacher/otherStudent', 'indexOther')->name('teacher.otherStudent.index');
         Route::get('/teacher/student/list', 'getDatatable')->name('teacher.student.list');
+        Route::get('/teacher/otherStudent/list', 'getDatatableOther')->name('teacher.otherStudent.list');
         Route::get('/teacher/student/show/{idEncrypted}', 'showStudentDet')->name('teacherStudent.detail');
         Route::get('/teacher/student/show/list/{idEncrypted}', 'getDatatableStudentDet')->name('teacherStudent.list');
         // Route::get('/teacher/class/session/list/{idEncrypted}', 'getDatatableSession')->name('teacher.classSession.list');

@@ -5,7 +5,7 @@
 <!-- <div> -->
 <!-- Superadmin -->
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="info-box">
             <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
@@ -18,11 +18,23 @@
             <!-- /.info-box-content -->
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="info-box">
             <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
             <div class="info-box-content">
-                <span class="info-box-text">Class</span>
+                <span class="info-box-text">Kelas</span>
+                <span class="info-box-number">
+                    {{count($totalClass)}}
+                </span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="info-box">
+            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Peserta Didik</span>
                 <span class="info-box-number">
                     {{count($totalStudent)}}
                 </span>
@@ -53,7 +65,7 @@
 <div>
     <!-- Teacher -->
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
 
@@ -66,11 +78,23 @@
                 <!-- /.info-box-content -->
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Class</span>
+                    <span class="info-box-text">Kelas</span>
+                    <span class="info-box-number">
+                        {{count($totalClass)}}
+                    </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Peserta Didik</span>
                     <span class="info-box-number">
                         {{count($totalStudent)}}
                     </span>

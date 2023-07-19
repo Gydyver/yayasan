@@ -61,9 +61,10 @@ class StudentController extends Controller
                     return  $age;
                 })
                 ->addColumn('action', function ($row) {
-                    $actionBtn = "<a href='/superadmin/student/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>";
+                    $actionBtn = "<div><a href='/teacher/student/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>";
+                    // $actionBtn = "<a href='/superadmin/student/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>";
                     if ($row->studentClasses != null) {
-                        $actionBtn .= "<button type='button' class='btn btn-sm btn-icon btn-success' data-toggle='modal' onclick='changeClass(this);'
+                        $actionBtn .= " <button type='button' class='btn btn-sm btn-icon btn-success' data-toggle='modal' onclick='changeClass(this);'
                         id='btnChangeClass' data-target='#ModalUpdateClass' data-target='#ModalUpdate'  data-item='" . json_encode($row) . "'>Change Class</button> ";
                     } else {
                         $actionBtn .= "
@@ -81,6 +82,7 @@ class StudentController extends Controller
                         id='btnSetChapter' data-target='#ModalSetChapter' data-item='" . json_encode($row) . "'>Set Chapter</button>
                         ";
                     }
+                    $actionBtn .= "</div>";
 
                     return $actionBtn;
                 })

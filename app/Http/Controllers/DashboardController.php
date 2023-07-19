@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\UserAccess;
 use App\Models\Menu;
+use App\Models\Classes;
 use Carbon\Carbon;
 use DB;
 
@@ -53,9 +54,11 @@ class DashboardController extends Controller
                 $totalStudent = User::whereHas('studentClasses', function ($query) use ($teacher_id) {
                     $query->where('teacher_id', '=', $teacher_id);
                 })->where('usergroup_id', 3)->get();
+                $totalClass = Classes::where('closed', false)->where('teacher_id', $teacher_id)->get();
                 // dd($totalStudent);
             } else {
                 $totalStudent = User::where('usergroup_id', 3)->get();
+                $totalClass = Classes::where('closed', false)->get();
             }
         }
         // dd($totalStudent);
@@ -84,7 +87,7 @@ class DashboardController extends Controller
         // $data['menus'] = $this->getMenus();
         // compact('data')
         $menus = $this->getMenus();
-        return view('dashboard', compact('menus', 'user_info', 'next_class', 'currMonthBill', 'studentLatestData', 'idEncrypted', 'totalStudent'));
+        return view('dashboard', compact('menus', 'user_info', 'next_class', 'currMonthBill', 'studentLatestData', 'idEncrypted', 'totalStudent', 'totalClass'));
     }
 
     function getDataFromVar($var, $key)

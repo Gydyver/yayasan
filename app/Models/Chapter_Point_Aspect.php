@@ -14,7 +14,7 @@ class Chapter_Point_Aspect extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'name',
+        // 'name',
         'chapter_id',
         'point_aspect_id',
         'created_at',

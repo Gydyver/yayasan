@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <p>Student</p>
+        <p>Other Student</p>
     </div>
     <div class="card-body">
         @if ($message = Session::get('success'))
@@ -26,8 +26,8 @@
             <tbody>
             </tbody>
         </table>
-
     </div>
+
 </div>
 @endsection
 
@@ -38,7 +38,7 @@
         var table = $('.yajra-datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('teacher.student.list') }}",
+            ajax: "{{ route('teacher.otherStudent.list') }}",
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
@@ -67,7 +67,6 @@
                 },
             ]
         });
-
     });
 
     function updateData(button) {

@@ -29,6 +29,15 @@
             </div>
 
         </div>
+        <div class="row">
+            <div class="col-md-2">
+                <p>Halaman Terakhir : </p>
+            </div>
+            <div class="col-md-10">
+                <p>{{$data_user[0]->latest_halaman}}</p>
+            </div>
+
+        </div>
         <div>
             <canvas id="studentHistoryChart" width="600" height="400"></canvas>
         </div>
