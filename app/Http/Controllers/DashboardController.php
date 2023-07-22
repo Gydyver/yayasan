@@ -24,6 +24,7 @@ class DashboardController extends Controller
         }
         $data = [];
         $totalStudent = [];
+        $totalClass = [];
 
         //bisa untuk data div card
         $user_info = User::where('id', Auth::User()->id)->get();

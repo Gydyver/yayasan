@@ -143,7 +143,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Class</span>
                     <span class="info-box-number">
-                        {{$next_class[0]->class_name}}
+                        {{(count($next_class) > 0) ? $next_class[0]->class_name : "_"}}
                     </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -184,9 +184,10 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Kelas Berikutnya</span>
                     <span class="info-box-number">
-                        {{date('d-m-Y H:i', strtotime($next_class[0]->session_start))}} -
-                        {{date('H:i', strtotime($next_class[0]->session_end))}}
+                        {{(count($next_class) >0) ? date('d-m-Y H:i', strtotime($next_class[0]->session_start )): "_"}} -
+                        {{(count($next_class) >0) ?date('H:i', strtotime($next_class[0]->session_end)): "_"}}
                     </span>
+
 
                 </div>
                 <!-- /.info-box-content -->

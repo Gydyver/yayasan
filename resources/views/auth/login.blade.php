@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,6 +6,9 @@
     <title>Add Company Form - Laravel 9 CRUD</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
+
+
 
 <body>
     <main class="login-form">
@@ -29,6 +31,24 @@
                                     @if ($errors->has('password'))
                                     <span class="text-danger">{{ $errors->first('password') }}</span>
                                     @endif
+                                </div>
+                                @if ($errors->has('username'))
+                                <span class="text-danger">{{ $errors->first('username') }}</span>
+                                @endif
+
+                                <!-- @if (Session::has('error')) -->
+                                <!-- <div class="alert alert-success" role="alert">
+                                    <strong>Error</strong> {{ Session::get('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @endif -->
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Error</strong> {{ Session::get('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                                 <div class="form-group mb-3">
                                     <div class="checkbox">

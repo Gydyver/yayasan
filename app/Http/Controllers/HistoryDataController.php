@@ -66,7 +66,7 @@ class HistoryDataController extends Controller
                 ->addColumn('teacher_label', function ($row) {
                     // dd($row->teacherData->name);
 
-                    return  $row->teacherData->name;
+                    return $row->teacherData->name;
                 })
                 ->addColumn('class_label', function ($row) {
                     // dd($row->sessionGenerated->class_id);

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    
+
     /**
      * Display login page.
      * 
@@ -29,8 +29,9 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->getCredentials();
-
-        if(!Auth::validate($credentials)):
+        // dd($credentials);
+        if (!Auth::validate($credentials)) :
+            // dd(trans('auth.failed'));
             return redirect()->to('login')
                 ->withErrors(trans('auth.failed'));
         endif;
@@ -50,7 +51,7 @@ class LoginController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    protected function authenticated(Request $request, $user) 
+    protected function authenticated(Request $request, $user)
     {
         $user_authenticated = [
             'name' => $user->name,
