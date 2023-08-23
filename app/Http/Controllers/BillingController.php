@@ -17,6 +17,11 @@ class BillingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
         $students = User::where('usergroup_id', 3)->get();

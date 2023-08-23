@@ -16,7 +16,7 @@
                 <p>Class : </p>
             </div>
             <div class="col-md-10">
-                <p>{{$class[0]->name}}</p>
+                <p>{{isset($class[0]) ? $class[0]->name : 'Belum di Atur'}}</p>
             </div>
 
         </div>
@@ -88,9 +88,6 @@
                 url: "{{ url('history/getDatasetHistory') }}" + '/' + idEncrypted,
                 success: function(response) {
                     var datas = JSON.parse(response)
-                    console.log(datas);
-                    console.log(datas.varbaru);
-                    console.log(datas.varlabel);
                     var labels = datas.varlabel;
                     var color = ["#152358", "#176AA1", "#19AADE", "#19C9E5", "#1AD5D3", "#1CE3BD", "#280573", "#B149D3"]
 

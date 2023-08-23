@@ -19,10 +19,30 @@ use DataTables;
 
 class ClassController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
         //Changed into Login Auth
-        return view('teacher.class.index');
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        }
+
+        if ($permission) {
+            return view('teacher.class.index');
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     public function getDatatable(Request $request)
@@ -30,8 +50,7 @@ class ClassController extends Controller
         if ($request->ajax()) {
             //Changed into Login Auth
             // $data = Classes::with('teachers')->with('chapters')->with('classTypes')->where('teacher_id',2)->latest()->get();
-
-            $data = Classes::where('teacher_id', Auth::user()->id)->latest()->get();
+            $data = Classes::where('teacher_id', $_SESSION["data"]->id)->latest()->get();
             // dd(Classes::latest()->get());
             // dd($data);
             return Datatables::of($data)
@@ -56,10 +75,8 @@ class ClassController extends Controller
 
     public function show($idEncrypted)
     {
-        //
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
         Session::where('class_id', $decrypted)->get();
-        dd($decrypted);
     }
 
 
@@ -80,9 +97,31 @@ class ClassController extends Controller
 
     public function showSession($idEncrypted)
     {
+        //User Teacher
+        //Menu Kelas Detail(isinya list session dari sebuah kelas)
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
 
-        return view('teacher.class.classSession');
+        $session = Session::where('class_id', $decrypted)->get();
+        $classes = Classes::where('id', $decrypted)->get();
+        //Pengecekan Session Data
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $classes[0]->teacher_id);
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        } else {
+            $permission = false;
+        }
+
+        if ($permission) {
+            return view('teacher.class.classSession');
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     public function getDatatableSession($id, Request $request)
@@ -136,15 +175,35 @@ class ClassController extends Controller
         $decryptedClass = \EncryptionHelper::instance()->decrypt($idEncryptedClass);
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
 
+
         $students = User::where('usergroup_id', 3)->where('class_id', $decryptedClass)->latest()->get();
-        $class = Classes::where('id', $decryptedClass)->get();
-        $class_info = $class[0];
+        $classes = Classes::where('id', $decryptedClass)->get();
+        $class_info = $classes[0];
         $student_info = $students[0];
-        if ($student_info != null) {
-            // $point_aspects = Chapter_Point_Aspect::with('pointAspects')->where('chapter_id', $student_info->chapter_id)->latest()->get();
-            return view('teacher.class.classSessionStudent', compact('students', 'class_info', 'decrypted'));
+
+        //Pengecekan Session Data
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $classes[0]->teacher_id);
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
         } else {
-            return view('teacher.class.classSessionStudent', ['errorMessage' => 'Failed showing data because user chapter is not set yet']);
+            $permission = false;
+        }
+
+        if ($permission) {
+            if ($student_info != null) {
+                // $point_aspects = Chapter_Point_Aspect::with('pointAspects')->where('chapter_id', $student_info->chapter_id)->latest()->get();
+                return view('teacher.class.classSessionStudent', compact('students', 'class_info', 'decrypted'));
+            } else {
+                return view('teacher.class.classSessionStudent', ['errorMessage' => 'Failed showing data because user chapter is not set yet']);
+            }
+        } else {
+            return redirect()->route('notAllowed');
         }
     }
 
@@ -152,10 +211,6 @@ class ClassController extends Controller
 
     public function getDatatableSessionPointHistory($idSession, Request $request)
     {
-        // dd($idSession);
-        // dd('kok ga masuk ya');
-        //lagi bingung disini kenapa ga bisa ya?
-        // dd('masuk ga sih?');
         if ($request->ajax()) {
             //Changed into Login Auth
             $decrypted = \EncryptionHelper::instance()->decrypt($idSession);
@@ -244,7 +299,6 @@ class ClassController extends Controller
         $user = User::where('id', $student_id)->get();
 
         $chapter_id = $user[0]->chapter_id;
-        // dd($chapter_id);
         $chapter_point_aspect = Chapter_Point_Aspect::where('chapter_id', $chapter_id)->with('pointAspects')->get();
         $point_aspects = [];
 

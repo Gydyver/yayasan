@@ -8,6 +8,11 @@ use DataTables;
 
 class MenuController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     /**
      * Display a listing of the resource.
      *

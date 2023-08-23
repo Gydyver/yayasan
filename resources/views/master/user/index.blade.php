@@ -46,7 +46,7 @@
 <!-- Modal Add -->
 <div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="add_user_form" action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="modal-content">
@@ -172,7 +172,7 @@
 <!-- Modal Update -->
 <div class="modal fade" id="ModalUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form action="{{ route('user.update') }}" id="formEdit" method="POST" enctype="multipart/form-data">
+        <form id="update_user_form" action="{{ route('user.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="modal-content">
@@ -189,6 +189,14 @@
                             <div class="form-group">
                                 <strong>Name:</strong>
                                 <input type="text" name="name" id="name" class="form-control" placeholder="User">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Previous Username:</strong>
+                                <input type="text" name="username_old" id="username_old" class="form-control" placeholder="Username Previous" disabled>
                             </div>
                         </div>
                     </div>
@@ -298,6 +306,7 @@
 @endsection
 
 @section('script')
+<script src="{{asset('js/jquery.md5.min.js')}}"></script>
 <script>
     $(document).ready(function() {
 
@@ -332,6 +341,91 @@
                     searchable: false
                 },
             ]
+        });
+
+        $('#ModalAdd').on('submit', e => {
+            e.preventDefault();
+            var b_username = $('#add_user_form input[name="username"]').val()
+            var b_password = $('#add_user_form input[name="password"]').val()
+            // var data = $('#add_user_form').serialize();
+            $.ajax({
+                type: "POST",
+                url: "{{ route('user.store') }}",
+                data: {
+                    name: $('#add_user_form input[name="name"]').val(),
+                    username: username,
+                    password: password,
+                    phone: $('#add_user_form input[name="phone"]').val(),
+                    monthly_fee: $('#add_user_form input[name="monthly_fee"]').val(),
+                    gender: $('#add_user_form input[name="gender"]').val(),
+                    birth_date: $('#add_user_form input[name="birth_date"]').val(),
+                    join_date: $('#add_user_form input[name="join_date"]').val(),
+                    usergroup_id: $('#add_user_form select[name="usergroup_id"]').find(":selected").val(),
+                    gender: $('#add_user_form select[name="gender"]').find(":selected").val(),
+                    // usergroup_id: $('#add_user_form #aioConceptName').find(":selected").val();
+                    '_token': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        e.target.submit(); // rule met, allow form submission
+                    } else {
+                        console.log('Denied...');
+                        // show message to user here...
+                    }
+                }
+            });
+        });
+
+
+        $('#ModalUpdate').on('submit', e => {
+            e.preventDefault();
+            var b_username = $('#update_user_form input[name="username"]').val()
+            var b_password = $('#update_user_form input[name="password"]').val()
+
+
+            var datas = {
+                name: $('#update_user_form input[name="name"]').val(),
+                id: $('#update_user_form input[name="id"]').val(),
+                // username: username,
+                // password: password,
+                phone: $('#update_user_form input[name="phone"]').val(),
+                monthly_fee: $('#update_user_form input[name="monthly_fee"]').val(),
+                gender: $('#update_user_form input[name="gender"]').val(),
+                birth_date: $('#update_user_form input[name="birth_date"]').val(),
+                join_date: $('#update_user_form input[name="join_date"]').val(),
+                usergroup_id: $('#update_user_form select[name="usergroup_id"]').find(":selected").val(),
+                gender: $('#update_user_form select[name="gender"]').find(":selected").val(),
+                // usergroup_id: $('#add_user_form #aioConceptName').find(":selected").val();
+                '_token': $('meta[name="csrf-token"]').attr('content')
+            }
+
+
+            if (b_username != null) {
+                datas.username = $.MD5(b_username);
+            }
+
+            if (b_password != null) {
+                datas.password = $.MD5(b_password);
+            }
+            console.log('datas');
+            console.log(datas);
+
+            // var data = $('#update_user_form').serialize();
+            $.ajax({
+                type: "POST",
+                url: "{{ route('user.update') }}",
+                data: datas,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        e.target.submit(); // rule met, allow form submission
+                    } else {
+                        console.log('Denied...');
+                        // show message to user here...
+                    }
+                }
+            });
         });
 
     });
@@ -371,17 +465,17 @@
         // item = JSON.parse(item)
         // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
         // $('#formEdit').attr('action', '{{ route('usergroup.edit') }}');
-        $('#formEdit #user_id').val(item.id);
-        $('#formEdit #name').val(item.name);
-        $('#formEdit #username').val(item.username);
-        $('#formEdit #class_id').val(item.class_id);
-        $('#formEdit #usergroup_id').val(item.usergroup_id);
-        $('#formEdit #phone').val(item.phone);
-        // $('#formEdit #password').val(item.password);
-        $('#formEdit #monthly_fee').val(item.monthly_fee);
-        $('#formEdit #gender').val(item.gender);
-        $('#formEdit #birth_date').val(item.birth_date);
-        $('#formEdit #join_date').val(item.join_date);
+        $('#update_user_form #user_id').val(item.id);
+        $('#update_user_form #name').val(item.name);
+        $('#update_user_form #username_old').val(item.username);
+        $('#update_user_form #class_id').val(item.class_id);
+        $('#update_user_form #usergroup_id').val(item.usergroup_id);
+        $('#update_user_form #phone').val(item.phone);
+        // $('#update_user_form #password').val(item.password);
+        $('#update_user_form #monthly_fee').val(item.monthly_fee);
+        $('#update_user_form #gender').val(item.gender);
+        $('#update_user_form #birth_date').val(item.birth_date);
+        $('#update_user_form #join_date').val(item.join_date);
     }
 </script>
 @endsection

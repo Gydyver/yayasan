@@ -15,10 +15,33 @@ use DataTables;
 
 class StudentController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
+        //Pengecekan Session Data
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        } else {
+            $permission = false;
+        }
+
         //Changed into Login Auth
-        return view('teacher.student.index');
+        if ($permission) {
+            return view('teacher.student.index');
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     public function indexOther()
@@ -33,7 +56,7 @@ class StudentController extends Controller
             //Changed into Login Auth
             $data = User::with('studentClasses')
                 ->whereHas('studentClasses', function ($query) {
-                    return $query->where('teacher_id', '=', Auth::user()->id);
+                    return $query->where('teacher_id', '=', $_SESSION["data"]->id);
                 })
                 ->where('usergroup_id', 3)
                 ->latest()
@@ -65,7 +88,7 @@ class StudentController extends Controller
             //Changed into Login Auth
             $data = User::with('studentClasses')
                 ->whereHas('studentClasses', function ($query) {
-                    return $query->where('teacher_id', '!=', Auth::user()->id);
+                    return $query->where('teacher_id', '!=', $_SESSION["data"]->id);
                 })
                 ->where('usergroup_id', 3)
                 ->latest()
@@ -100,11 +123,31 @@ class StudentController extends Controller
 
     public function showStudentDet($idEncrypted)
     {
+
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
         $data_user = User::where('id', $decrypted)->get();
-        $class = Classes::where('id', $data_user[0]->class_id)->get();
+        $classes = Classes::where('id', $data_user[0]->class_id)->get();
+        $class = $classes;
+        // dd($class);
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher    
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $classes[0]->teacher_id);
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        } else {
+            $permission = false;
+        }
 
-        return view('teacher.student.detail', compact('data_user', 'class', 'decrypted'));
+        //Changed into Login Auth
+        if ($permission) {
+            return view('teacher.student.detail', compact('data_user', 'class', 'decrypted'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     // public function getDatatableStudentDet(Request $request)

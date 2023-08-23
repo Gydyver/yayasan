@@ -17,7 +17,7 @@
 
         <form action="{{ route('upload_payreceipt.uploadFileBulking') }}" id="formUploadFile" method="POST" enctype="multipart/form-data">
             @csrf
-            <input name="student_id" id="student_id" type="hidden" value="{{Auth::User()->id}}" />
+            <input name="student_id" id="student_id" type="hidden" value="{{$_SESSION["data"]->id}}" />
             <input name="nominal_sedekah" id="nominal_sedekah_hidden" type="hidden" value="0" />
             <textarea name="notes_sedekah" id="notes_sedekah_hidden" style="display: none;"></textarea>
             <div class="row">

@@ -18,6 +18,11 @@ use Carbon\Carbon;
 
 class UploadPayReceiptController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,11 +35,11 @@ class UploadPayReceiptController extends Controller
 
     public function getDatatable(Request $request)
     {
-        // dd(Auth::user()->id);
+        // dd($_SESSION["data"]->id);
         if ($request->ajax()) {
             // with('billings')->
-            // dd(Auth::user()->id);
-            $data = Billing::with('billings')->where('student_id', Auth::user()->id)->latest()->get();
+            // dd($_SESSION["data"]->id);
+            $data = Billing::with('billings')->where('student_id', $_SESSION["data"]->id)->latest()->get();
             // dd($data);
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -267,7 +272,7 @@ class UploadPayReceiptController extends Controller
 
     public function formUploadBulking()
     {
-        $billings = Billing::whereIn('status', [0, 2])->where('student_id', Auth::user()->id)->latest()->get();
+        $billings = Billing::whereIn('status', [0, 2])->where('student_id', $_SESSION["data"]->id)->latest()->get();
 
         return view('upload_payreceipt.form', compact('billings'));
     }
@@ -275,7 +280,7 @@ class UploadPayReceiptController extends Controller
     public function formUploadFileUpdate($idEncrypted)
     {
         $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $billings = Billing::whereIn('status', [0, 2])->where('student_id', Auth::user()->id)->latest()->get();
+        $billings = Billing::whereIn('status', [0, 2])->where('student_id', $_SESSION["data"]->id)->latest()->get();
         $payments = Payment::where('id', $id)->latest()->get();
         $payment_details = Payment_Detail::where('payment_id', $id)->whereNotNull('billing_id')->latest()->get();
         $payment_sedekah = Payment_Detail::where('payment_id', $id)->whereNull('billing_id')->latest()->get();
@@ -322,7 +327,7 @@ class UploadPayReceiptController extends Controller
                 //Insert Payment Detail
                 array_push($dataPaymentDet, [
                     'payment_id' => $idPayment,
-                    'student_id' => Auth::user()->id,
+                    'student_id' => $_SESSION["data"]->id,
                     'billing_id' => $billing_id,
                     'nominal' => $request->billing_biayas[$key],
                     'created_at' => date('Y-m-d'),
@@ -338,7 +343,7 @@ class UploadPayReceiptController extends Controller
             if ($request->nominal_sedekah != 0) {
                 $dataPaymentSedekah = [
                     'payment_id' => $idPayment,
-                    'student_id' => Auth::user()->id,
+                    'student_id' => $_SESSION["data"]->id,
                     'nominal' => $request->nominal_sedekah,
                     'notes' => $request->notes_sedekah,
                     'created_at' => date('Y-m-d'),

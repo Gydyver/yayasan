@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Session;
 
 class LogoutController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     /**
      * Log out account user.
      *
@@ -15,9 +20,11 @@ class LogoutController extends Controller
      */
     public function perform()
     {
-        Session::flush();
-        
-        Auth::logout();
+        unset($_SESSION['data']);
+        session_destroy();
+        // Session::flush();
+
+        // Auth::logout();
 
         return redirect('login');
     }

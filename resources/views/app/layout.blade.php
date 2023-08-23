@@ -39,7 +39,8 @@
   <!-- <script src="/path/to/cdn/jquery.slim.min.js"></script> ini diganti sama garis dibawah ini-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- <script src="yearpicker.js" async></script> -->
-
+  <script src="{{asset('js/jquery.md5.min.js')}}"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -77,10 +78,16 @@
             <!-- <span class="dropdown-item dropdown-header">15 Notifications</span>
             <div class="dropdown-divider"></div> -->
             <a href="#" class="dropdown-item">
+              <?php
+              if (!isset($_SESSION["data"])) {
+                session_start();
+              }
+              ?>
 
               <i class="fas fa-user mr-2" style="font-weight: bolder;"></i>
               <span style="font-weight: bolder;">
-                {{(Auth::user()) ? Auth::user()->name : 'Default User'}}
+
+                {{isset($_SESSION["data"]) ? $_SESSION["data"]->name : 'Default User'}}
               </span>
               <!-- <span class="float-right text-muted text-sm">3 mins</span> -->
             </a>
@@ -110,7 +117,7 @@
             <img src="{{asset('templates/adminlte-3.2.0/dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">{{(Auth::user()) ? Auth::user()->name : 'Default User'}}</a>
+            <a href="#" class="d-block">{{isset($_SESSION["data"]) ? $_SESSION["data"]->name : 'Default User'}}</a>
           </div>
         </div>
 
@@ -141,11 +148,11 @@
               </a>
             </li>
             @php
-            if(Auth::user()){
+            if(isset($_SESSION["data"])){
             $menus = getMenus();
             }
             @endphp
-            @if(Auth::user())
+            @if(isset($_SESSION["data"]))
             @foreach ($menus as $menu)
             @if($menu['child'])
             <li class="nav-item">

@@ -16,6 +16,11 @@ use DataTables;
 
 class StudentController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
         //Changed into Login Auth
@@ -32,7 +37,7 @@ class StudentController extends Controller
             //Changed into Login Auth
             $data = User::with('studentClasses', 'studentChapters')
                 // ->whereHas('studentClasses', function ($query) {
-                //     return $query->where('student_id', '=', Auth::user()->id);
+                //     return $query->where('student_id', '=', $_SESSION["data"]->id);
                 // })
                 ->where('usergroup_id', 3)
                 ->latest()

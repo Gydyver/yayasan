@@ -21,6 +21,11 @@ use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,16 +41,16 @@ class PaymentController extends Controller
         // dd('getDatatable');
         if ($request->ajax()) {
             // with('billings')->
-            // dd(Auth::user()->id);
-            if (Auth::user()->usergroup_id == 3) {
+            // dd($_SESSION["data"]->id);
+            if ($_SESSION["data"]->usergroup_id == 3) {
                 $data = Payment::whereHas('payment_detail', function ($query) {
-                    $query->where('student_id', Auth::user()->id);
+                    $query->where('student_id', $_SESSION["data"]->id);
                 })->latest()->get();
                 // dd($data);
 
-                // ->where("payment_detail->student_id",  Auth::user()->id)->latest()->get();
+                // ->where("payment_detail->student_id",  $_SESSION["data"]->id)->latest()->get();
                 // with(['payment_detail' => function ($query) {
-                //     $query->where('student_id', Auth::user()->id);
+                //     $query->where('student_id', $_SESSION["data"]->id);
                 // }])
                 // with('payment_detail')
 
@@ -158,13 +163,28 @@ class PaymentController extends Controller
     public function show($idEncrypted)
     {
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-
         $payment = Payment::where('id', $id)->get();
         $paymentDetail = Payment_Detail::where('payment_id', $id)->get();
         $sedekah = Payment_Detail::where('payment_id', $id)->whereNull('billing_id')->get();
-        // dd($paymentDetail);
 
-        return view('payment.detail', compact('payment', 'paymentDetail', 'idEncrypted', 'sedekah'));
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = false;
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $paymentDetail[0]->student_id);
+        } else {
+            $permission = false;
+        }
+
+        if ($permission) {
+            return view('payment.detail', compact('payment', 'paymentDetail', 'idEncrypted', 'sedekah'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     /**
@@ -178,9 +198,7 @@ class PaymentController extends Controller
         $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
         $payments = Payment::where('id', $id)->latest()->get();
         $payment_details = Payment_Detail::with('billings')->where('payment_id', $id)->whereNotNull('billing_id')->latest()->get();
-        // dd($payment_details);
-        // dd($payments[0]);
-        // dd($payments[0]->nominal);
+
         $existing_billing_id = [];
         foreach ($payment_details as $key => $value) {
             array_push($existing_billing_id, $value->billing_id);
@@ -190,14 +208,30 @@ class PaymentController extends Controller
 
         $billings = Billing::where(function ($query) {
             $query->whereIn('status', [0, 2]);
-            $query->where('student_id', Auth::user()->id);
+            $query->where('student_id', $_SESSION["data"]->id);
         })
             ->orWhereIn('id', $existing_billing_id)
             ->latest()->get();
-        // dd($existing_billing_id);
-        $billings = Billing::whereIn('status', [0, 2])->where('student_id', Auth::user()->id)->orWhereIn('id', $existing_billing_id)->latest()->get();
-        // dd($payment_details);
-        return view('upload_payreceipt.formUpdate', compact('billings', 'payments', 'payment_details', 'payment_sedekah', 'idEncrypted'));
+        $billings = Billing::whereIn('status', [0, 2])->where('student_id', $_SESSION["data"]->id)->orWhereIn('id', $existing_billing_id)->latest()->get();
+
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = false;
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $payment_details[0]->student_id);
+        } else {
+            $permission = false;
+        }
+
+        if ($permission) {
+            return view('upload_payreceipt.formUpdate', compact('billings', 'payments', 'payment_details', 'payment_sedekah', 'idEncrypted'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     /**

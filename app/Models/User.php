@@ -19,6 +19,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'users'; //setelah ganti table
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -35,6 +36,7 @@ class User extends Authenticatable
         'join_date',
         'latest_hapalan',
         'latest_halaman',
+        'salt',
         'created_at',
         'updated_at',
     ];
@@ -44,10 +46,10 @@ class User extends Authenticatable
     //     'password',
     // ];
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
+    // public function setPasswordAttribute($value)
+    // {
+    //     $this->attributes['password'] = bcrypt($value);
+    // }
 
     // /**
     //  * The attributes that should be hidden for serialization.

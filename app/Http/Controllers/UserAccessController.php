@@ -10,7 +10,12 @@ use DataTables;
 
 class UserAccessController extends Controller
 {
-      /**
+    public function __construct()
+    {
+        session_start();
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -22,7 +27,7 @@ class UserAccessController extends Controller
 
         $menusWithChildren = Menu::with('children')->whereNull('menuparent_id')->orderBy('name', 'asc')->get();
         // dd($menusWithChildren);
-        return view('master.user_access.index', compact('menus','usergroups','menusWithChildren'));
+        return view('master.user_access.index', compact('menus', 'usergroups', 'menusWithChildren'));
     }
 
     // function settingMenuandChild($usergroup_id == null){
@@ -37,12 +42,12 @@ class UserAccessController extends Controller
             $data = UserGroup::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                    <button class='btn btn-sm btn-icon btn-danger'  onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
@@ -67,7 +72,8 @@ class UserAccessController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail($id){
+    public function detail($id)
+    {
         // dd($id);
         $access_existing = UserAccess::where('usergroup_id', $id)->get();
         // dd($access_existing);
@@ -100,19 +106,19 @@ class UserAccessController extends Controller
         $delete = UserAccess::where('usergroup_id',  $request->usergroup_id)->Delete();
         // $data = UserAccess::where()
         // dd($delete);
-        if(count($request->access_menu_id_) > 0){
+        if (count($request->access_menu_id_) > 0) {
 
             foreach ($request->access_menu_id_ as $key => $value) {
                 $data = [
                     'usergroup_id' => $request->usergroup_id,
                     'menu_id' => $key,
-                    'created_at'=>date('Y-m-d H:i:s'),
-                    'updated_at'=> date('Y-m-d H:i:s')
-                ];  
-                array_push($menu_set,$data);
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+                array_push($menu_set, $data);
             }
         }
-        
+
         // Bulking data
         // $data = [
         //     ['name'=>'Coder 1', 'rep'=>'4096'],
@@ -135,14 +141,14 @@ class UserAccessController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-    * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($idEncrypted)
     {
         // dd('masuk delete',$id);
         // dd($id);
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = UserAccess::where('id', $id)->Delete(); 
+        $delete = UserAccess::where('id', $id)->Delete();
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);

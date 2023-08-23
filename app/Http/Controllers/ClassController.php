@@ -20,6 +20,11 @@ class ClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
         //Changed into Login Auth
@@ -27,14 +32,33 @@ class ClassController extends Controller
         $teachers = User::orderBy('name', 'asc')->where('usergroup_id', 2)->get();
         $chapters = Chapter::orderBy('name', 'asc')->get();
         $class_types = class_type::orderBy('name', 'asc')->get();
-        return view('master.class.index', compact('classes', 'teachers', 'chapters', 'class_types'));
+
+        //Pengecekan Session Data
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        } else {
+            $permission = false;
+        }
+
+        if ($permission) {
+            return view('master.class.index', compact('classes', 'teachers', 'chapters', 'class_types'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     public function getDatatable(Request $request)
     {
         if ($request->ajax()) {
-            if (Auth::User()->usergroup_id == 2) {
-                $data = Classes::with('teachers')->with('classTypes')->where('teacher_id', Auth::user()->id)->latest()->get();
+            if ($_SESSION["data"]->usergroup_id == 2) {
+                $data = Classes::with('teachers')->with('classTypes')->where('teacher_id', $_SESSION["data"]->id)->latest()->get();
             } else {
                 $data = Classes::with('teachers')->with('classTypes')->latest()->get();
             }
@@ -137,25 +161,41 @@ class ClassController extends Controller
     {
         $decrypted = \EncryptionHelper::instance()->decrypt($idEncrypted);
         $classes = Classes::where('id', $decrypted)->paginate(10);
-        $days = [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thrusday",
-            "Friday",
-            "Saturday",
-            "Sunday"
-        ];
 
-        return view('master.class.detail', compact('classes', 'idEncrypted', 'days'));
+        //Pengecekan Session Data
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $classes[0]->teacher_id);
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        } else {
+            $permission = false;
+        }
+
+        if ($permission) {
+            $days = [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thrusday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+            ];
+
+            return view('master.class.detail', compact('classes', 'idEncrypted', 'days'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     public function getDatatableSession($id, Request $request)
     {
-        // dd('masuk sini?');
-        // dd($id);
         $decrypted = \EncryptionHelper::instance()->decrypt($id);
-        // dd($decrypted);
         if ($request->ajax()) {
             $data = SessionData::with('classes')->where('class_id', $decrypted)->latest()->get();
             // dd($data);
@@ -196,13 +236,34 @@ class ClassController extends Controller
     }
     public function showSessionGenerated($idEncrypted)
     {
+        // dd('showSessionGenerated');
         $session_id = \EncryptionHelper::instance()->decrypt($idEncrypted);
 
         $session = SessionData::with('classes')->where('id', $session_id)->get();
 
+        $classes = Classes::where('id', $session[0]->class_id)->get();
+        // dd($classes);
         $teachers = User::where('usergroup_id', 2)->get();
 
-        return view('master.class.detailSesGen', compact('idEncrypted', 'session', 'teachers'));
+        //Pengecekan Session Data
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $classes[0]->teacher_id);
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = false;
+        } else {
+            $permission = false;
+        }
+
+        if ($permission) {
+            return view('master.class.detailSesGen', compact('idEncrypted', 'session', 'teachers'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
     /**
      * Show the form for editing the specified resource.
@@ -262,12 +323,11 @@ class ClassController extends Controller
      */
     public function update(Request $request)
     {
-
-        try {
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+        // try {
+        //     //code...
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
         $teacher = Classes::where('id', $request->id)->pluck('teacher_id');
         $data = [
             'name' => $request->name,
@@ -338,8 +398,6 @@ class ClassController extends Controller
 
     function updateStatusInSesGen($class_end, $class_id)
     {
-        // dd('masuk updateTeacherInSesGen');
-        // dd($teacher_id);
         try {
 
             // $today = date("Y-m-d");
@@ -359,7 +417,6 @@ class ClassController extends Controller
             return false;
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -392,8 +449,6 @@ class ClassController extends Controller
         // \Redirect::route('regions', $id)->with('message', 'State saved correctly!!!');
         return redirect()->route('class.showSessionGenerated', $idSesEncrypted)->with('success', 'Session Generated has been deleted successfully');
     }
-
-
 
     public function updateStatusClass($idEncrypted)
     {

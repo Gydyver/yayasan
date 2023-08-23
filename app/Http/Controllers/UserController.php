@@ -11,6 +11,11 @@ use DataTables;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        session_start();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -73,6 +78,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // $options = [
+        //     'cost' => 11
+        // ];
+        // $password = password_hash($request->password, PASSWORD_BCRYPT, $options) . "\n";
+
+        $salt = getRandomString();
+        // $username = hash('sha256', $request->username . $salt);
+        $password = hash('sha256', $request->password . $salt);
+        // dd($salt);
+
+        // $username = \ShaHelper::instance()->sha256WithSalt($request->username, bin2hex('test'));
+        // $password = \ShaHelper::instance()->sha256WithSalt($request->password, bin2hex('test'));
         $data = [
             'name' => $request->name,
             'usergroup_id' => $request->usergroup_id,
@@ -81,8 +98,9 @@ class UserController extends Controller
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
             'join_date' => $request->join_date,
-            'password' => $request->password,
-            'monthly_fee' => $request->monthly_fee
+            'password' => $password,
+            'monthly_fee' => $request->monthly_fee,
+            'salt' => $salt
         ];
         // dd($data);
 
@@ -131,6 +149,9 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
+        // dd($request->id);
+        $previous_data =  User::where('id', $request->id)->get();
+        // dd($previous_data);
         if ($request->password == "") {
             $data = [
                 'name' => $request->name,
@@ -140,9 +161,11 @@ class UserController extends Controller
                 'username' => $request->username,
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
+                'monthly_fee' => $request->monthly_fee,
                 'join_date' => $request->join_date,
             ];
         } else {
+            $password = hash('sha256', $request->password . $previous_data[0]->salt);
             $data = [
                 'name' => $request->name,
                 'usergroup_id' => $request->usergroup_id,
@@ -152,10 +175,11 @@ class UserController extends Controller
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'join_date' => $request->join_date,
-                'password' =>  bcrypt($request->password)
+                'monthly_fee' => $request->monthly_fee,
+                'password' =>  $password
             ];
         }
-
+        // dd($data);
         $save = User::where('id', $request->id)->update($data);
         // redirect
         if ($save) {

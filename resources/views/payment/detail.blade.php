@@ -97,7 +97,7 @@
             </div>
         </div>
         <div class="float-right">
-            @if(!$payment[0]->verified && Auth::user()->usergroup_id != 3)
+            @if(!$payment[0]->verified && $_SESSION["data"]->usergroup_id != 3)
             <button type="button" class="btn btn-secondary" onclick='window.location=`{{ url("/payment") }}`'>Close</button>
             <button type="button" class="btn btn-primary" onClick="verify()">Verifikasi</button>
             @endif

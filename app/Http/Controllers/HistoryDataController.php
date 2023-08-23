@@ -26,6 +26,11 @@ class HistoryDataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
         // $classes = Classes::orderBy('id', 'desc')->get();
@@ -41,7 +46,7 @@ class HistoryDataController extends Controller
             $from = "2021-01-01";
             $to = "2021-06-01";
             // ->where('status', "!=", 2)
-            $user = User::where('id', Auth::User()->id)->get();
+            $user = User::where('id', $_SESSION["data"]->id)->get();
             $data = Session_Generated::with('teacherData', 'sessionGenerated', 'pointHistory')
                 ->whereHas('sessionGenerated', function ($query) use ($user, $from, $to) {
                     $query->where('class_id', '=', $user[0]->class_id)->whereBetween('session_start', [$from, $to])->whereBetween('session_end', [$from, $to]);
@@ -84,12 +89,19 @@ class HistoryDataController extends Controller
                     // <a href='user/show/".Crypt::encryptString($row->id)."' class='btn btn-sm btn-primary'>Detail</a>
                     // <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(".$row->id .")'>Delete</button>
                     // ";
-
                     // if ($row->classes->status != 2) {
-
-                    $actionBtn = "
+                    $pointHistoryExisted = Point_History::where('student_id', $_SESSION["data"]->id)->where('session_generated_id', $row->id)->get();
+                    // dd($pointHistoryExisted);
+                    if (count($pointHistoryExisted) > 0) {
+                        $actionBtn = "
                     <a href='history/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
                     ";
+                    } else {
+                        $actionBtn = "
+                       <button class='btn-sm btn-outline-primary'> Point History Tidak Tersedia</button>
+                        ";
+                    }
+
                     // } else {
                     //     $actionBtn = "<a href='session/showSession/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>";
                     // }
@@ -149,13 +161,29 @@ class HistoryDataController extends Controller
     public function show($idEncrypted)
     {
         $session_generated_id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        // dd($session_generated_id);
         $session_generated = Session_Generated::where('id', $session_generated_id)->get();
         $session = Session_Data::where('id', $session_generated[0]->session_id)->get();
         $class = Classes::where('id', $session[0]->class_id)->get();
         $pointHistory = Point_History::with('chapterPointAspectHistory', 'studentPointHistory', 'pointHistory')->where('session_generated_id', $session_generated_id)->get();
+        // dd($pointHistory);
+        if (\SessionCheckingHelper::instance()->checkSuperadmin($_SESSION["data"]->usergroup_id)) {
+            //Superadmin
+            $permission = true;
+        } else if (\SessionCheckingHelper::instance()->checkTeacher($_SESSION["data"]->usergroup_id)) {
+            //Teacher
+            $permission = false;
+        } else if (\SessionCheckingHelper::instance()->checkStudent($_SESSION["data"]->usergroup_id)) {
+            //Student
+            $permission = \SessionCheckingHelper::instance()->checkSession($_SESSION["data"]->usergroup_id, $_SESSION["data"]->id, $pointHistory[0]->student_id);
+        } else {
+            $permission = false;
+        }
 
-        return view('history.detail', compact('class', 'session', 'session_generated', 'pointHistory', 'idEncrypted'));
+        if ($permission) {
+            return view('history.detail', compact('class', 'session', 'session_generated', 'pointHistory', 'idEncrypted'));
+        } else {
+            return redirect()->route('notAllowed');
+        }
     }
 
     // public function getDatatableHistory($idEncrypted, Request $request)

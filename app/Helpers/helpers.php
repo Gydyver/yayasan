@@ -22,11 +22,26 @@ use App\Models\Menu;
 // }
 
 
+if (!function_exists('getRandomString')) {
+    function getRandomString($length = 5)
+    {
+        //IV generator
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $string = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $string .= $characters[mt_rand(0, strlen($characters) - 1)];
+        }
+
+        return $string;
+    }
+}
+
 if (!function_exists('getMenus')) {
     function getMenus()
     {
         // dd('masuk getMenus');
-        $auth = Auth::user()->usergroup_id;
+        $auth = $_SESSION["data"]->usergroup_id;
         // dd($auth);
         $permissions = UserAccess::where('usergroup_id', $auth)->latest()->get();
         $permission_ids = $permissions->map(function ($item) {

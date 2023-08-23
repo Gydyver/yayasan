@@ -212,7 +212,9 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'EncryptionHelper' => App\Helpers\EncryptionHelper::class
+        'EncryptionHelper' => App\Helpers\EncryptionHelper::class,
+        'ShaHelper' => App\Helpers\ShaHelper::class,
+        'SessionCheckingHelper' => App\Helpers\SessionCheckingHelper::class
     ])->toArray(),
 
 ];

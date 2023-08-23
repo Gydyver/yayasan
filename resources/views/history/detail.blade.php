@@ -17,7 +17,7 @@
                 <p>Class : </p>
             </div>
             <div class="col-md-11">
-                <p>{{$class[0]->name}}</p>
+                <p>{{isset($class[0]) ? $class[0]->name :'Belum di Atur'}}</p>
             </div>
         </div>
         <div class="row">

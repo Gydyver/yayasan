@@ -1,7 +1,7 @@
 @extends('app/layout')
 
 @section('content')
-@if(Auth::User()->usergroup_id == 1)
+@if($_SESSION["data"]->usergroup_id == 1)
 <!-- <div> -->
 <!-- Superadmin -->
 <div class="row">
@@ -61,7 +61,7 @@
 
 <!-- </div> -->
 
-@elseif(Auth::User()->usergroup_id == 2)
+@elseif($_SESSION["data"]->usergroup_id == 2)
 <div>
     <!-- Teacher -->
     <div class="row">
@@ -120,7 +120,7 @@
     </div>
 </div>
 
-@elseif(Auth::User()->usergroup_id == 3)
+@elseif($_SESSION["data"]->usergroup_id == 3)
 <div>
     <!-- Student -->
     <div class="row">
@@ -211,7 +211,7 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        var usergroup_id = `{{Auth::User()->usergroup_id}}`;
+        var usergroup_id = `{{$_SESSION["data"]->usergroup_id}}`;
         var idEncrypted = "{{$idEncrypted}}"
 
         if (usergroup_id == 1) {

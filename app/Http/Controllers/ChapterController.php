@@ -17,12 +17,17 @@ class ChapterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
         $chapters = Chapter::orderBy('id', 'desc')->paginate(10);
         $point_aspects = Point_Aspect::get();
         // dd($point_aspects);
-        return view('master.chapter.index', compact('chapters','point_aspects'));
+        return view('master.chapter.index', compact('chapters', 'point_aspects'));
     }
 
     public function getDatatable(Request $request)
@@ -33,24 +38,24 @@ class ChapterController extends Controller
                 ->addIndexColumn()
                 ->addColumn('point_aspects', function ($data) {
                     $point_aspects = '<ul>';
-                    foreach($data->chapterPointAspects as $dt){
+                    foreach ($data->chapterPointAspects as $dt) {
                         $point_aspects .= '<li>' . $dt->name . '</li>';
                     }
                     $point_aspects .= '</ul>';
                     return  $point_aspects;
-                }) 
-                ->addColumn('action', function($row){
+                })
+                ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='addPointAspect(this)'
-                    id='btnEdit' data-target='#ModalAddPointAspect' data-item='".json_encode($row)."'>Add Point Aspect</button>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalAddPointAspect' data-item='" . json_encode($row) . "'>Add Point Aspect</button>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
                     return $actionBtn;
                 })
-                ->rawColumns(['action','point_aspects'])
+                ->rawColumns(['action', 'point_aspects'])
                 ->make(true);
         }
     }
@@ -108,7 +113,7 @@ class ChapterController extends Controller
             return redirect()->back()->with(["error" => " Tambah Data Failed"]);
         }
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -162,14 +167,14 @@ class ChapterController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-    * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($idEncrypted)
     {
         // dd('masuk delete',$id);
         // dd($id);
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = Chapter::where('id', $id)->Delete(); 
+        $delete = Chapter::where('id', $id)->Delete();
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);

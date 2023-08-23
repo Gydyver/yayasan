@@ -16,20 +16,30 @@ use DB;
 
 class DashboardController extends Controller
 {
+
     use MenuTrait;
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
-        if (Auth::user() ==  null) {
+        // if ($_SESSION["data"] ==  null) {
+
+        if (!isset($_SESSION["data"])) {
             return redirect()->route('login.view');
         }
+
         $data = [];
         $totalStudent = [];
         $totalClass = [];
 
         //bisa untuk data div card
-        $user_info = User::where('id', Auth::User()->id)->get();
+        // dd($_SESSION["data"]->id);
+        $user_info = User::where('id', $_SESSION["data"]->id)->get();
 
-        $idEncrypted = \EncryptionHelper::instance()->encrypt(Auth::User()->id);
+        $idEncrypted = \EncryptionHelper::instance()->encrypt($_SESSION["data"]->id);
         // dd($idEncrypted);
         if ($user_info[0]->usergroup_id == 3) {
             $next_class = DB::select("select sg.*, c.name as class_name, u.name as user_name
@@ -37,14 +47,14 @@ class DashboardController extends Controller
             join session s on s.id = sg.session_id 
             join  class c on c.id = s.class_id 
             join users u on u.class_id = c.id 
-            where sg.status = 0 and u.id = " . Auth::User()->id . " and sg.session_start > NOW()::timestamp limit 1");
+            where sg.status = 0 and u.id = " . $_SESSION["data"]->id . " and sg.session_start > NOW()::timestamp limit 1");
             // dd($next_class);
 
             $currMonthBill = DB::select("
-            select b.month, b.year, b.billing, p.nominal from billing b LEFT JOIN payment_detail p ON p.billing_id = b.id  where b.student_id = " . Auth::User()->id . "  and b.month =  date_part('month', (SELECT current_timestamp))
+            select b.month, b.year, b.billing, p.nominal from billing b LEFT JOIN payment_detail p ON p.billing_id = b.id  where b.student_id = " . $_SESSION["data"]->id . "  and b.month =  date_part('month', (SELECT current_timestamp))
             ");
 
-            $studentLatestData = DB::select("select * from users where id = " . Auth::User()->id . "");
+            $studentLatestData = DB::select("select * from users where id = " . $_SESSION["data"]->id . "");
             // dd($studentLatestData);
         } else {
             $next_class = [];
@@ -62,9 +72,6 @@ class DashboardController extends Controller
                 $totalClass = Classes::where('closed', false)->get();
             }
         }
-        // dd($totalStudent);
-        // dd($totalStudent);
-
 
         // $student = DB::select("select * from users where id = 10");
 
@@ -82,7 +89,8 @@ class DashboardController extends Controller
 
         // dd("Number of weeks: " . $weeks);
         // dd('masuk getMenus');
-        $auth = Auth::user()->usergroup_id;
+        // $auth = $_SESSION["data"]->usergroup_id;
+        $auth = $_SESSION["data"]->usergroup_id;
         // dd($auth);
 
         // $data['menus'] = $this->getMenus();
@@ -105,10 +113,10 @@ class DashboardController extends Controller
     {
         //Teacher
         //Pie Chart
-        $usergroup_id = Auth::user()->usergroup_id;
+        $usergroup_id = $_SESSION["data"]->usergroup_id;
         // dd($usergroup_id);
         if ($usergroup_id == 2) {
-            $teacher_id = Auth::User()->id;
+            $teacher_id = $_SESSION["data"]->id;
             // dd($teacher_id);
             $pieGenderStudData = User::whereHas('studentClasses', function ($query) use ($teacher_id) {
                 $query->where('teacher_id', $teacher_id);
@@ -150,7 +158,7 @@ class DashboardController extends Controller
     function getStudHighestAbsent()
     {
         //Teacher
-        $teacher_id = Auth::User()->id;
+        $teacher_id = $_SESSION["data"]->id;
         $from = strtotime('2021-01-01');
         $to = strtotime('2023-07-31');
         // (select count(sg.*) as total

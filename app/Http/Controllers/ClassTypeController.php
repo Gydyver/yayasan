@@ -15,6 +15,11 @@ class ClassTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        session_start();
+    }
+
     public function index()
     {
 
@@ -29,14 +34,14 @@ class ClassTypeController extends Controller
             $data = Class_Type::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $dataForUpdate = $row;
                     // $dataForUpdate['id'] = \EncryptionHelper::instance()->encrypt($row->id);
                     $dataForUpdate['id_encrypted'] = \EncryptionHelper::instance()->encrypt($row->id);
                     $actionBtn = "
                     <button type='button' class='btn btn-sm btn-icon btn-primary' data-toggle='modal' onclick='updateData(this);'
-                    id='btnEdit' data-target='#ModalUpdate' data-item='".json_encode($row)."'>Update</button>
-                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"".\EncryptionHelper::instance()->encrypt($row->id) ."\")'>Delete</button>
+                    id='btnEdit' data-target='#ModalUpdate' data-item='" . json_encode($row) . "'>Update</button>
+                    <button class='btn btn-sm btn-icon btn-danger' onclick='confirmData(\"" . \EncryptionHelper::instance()->encrypt($row->id) . "\")'>Delete</button>
                     ";
 
                     return $actionBtn;
@@ -132,14 +137,14 @@ class ClassTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-    * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($idEncrypted)
     {
         // dd('masuk delete',$id);
         // dd($id);
         $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
-        $delete = Class_Type::where('id', $id)->Delete(); 
+        $delete = Class_Type::where('id', $id)->Delete();
         // redirect
         if ($delete) {
             return redirect()->back()->with(["success" => "Delete Data"]);
