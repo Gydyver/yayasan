@@ -106,20 +106,6 @@
     // var data = $('#form-login').serialize();
     var username = $('#username').val()
     var password = $('#password').val()
-    // var md5 = require('md5');
-    // const bcrypt = require('bcryptjs');
-    console.log('username');
-    console.log('password');
-    // $.MD5(string); ?
-
-    // console.log($.MD5(username));
-    // console.log($.MD5(password));
-
-
-    // console.log({
-    //   username: $('#username').val(),
-    //   password: $('#password').val()
-    // });
 
     $.ajax({
       type: 'post',
@@ -144,35 +130,6 @@
       }
     });
   });
-  // $(document).ready(function() {
-
-  //   var form = '#form-login';
-
-  //   $('#form-login').on('submit', function(event) {
-  //     console.log();
-  //     event.preventDefault();
-
-  //     var url = $(this).attr('data-action');
-  //     console.log('url');
-  //     console.log(url);
-
-  //     $.ajax({
-  //       url: url,
-  //       method: 'POST',
-  //       data: new FormData(this),
-  //       dataType: 'JSON',
-  //       contentType: false,
-  //       cache: false,
-  //       processData: false,
-  //       success: function(response) {
-  //         $(form).trigger("reset");
-  //         alert(response.success)
-  //       },
-  //       error: function(response) {}
-  //     });
-  //   });
-
-  // });
 </script>
 
 </html>

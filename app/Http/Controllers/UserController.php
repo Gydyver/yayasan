@@ -76,31 +76,57 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+    //     // $options = [
+    //     //     'cost' => 11
+    //     // ];
+    //     // $password = password_hash($request->password, PASSWORD_BCRYPT, $options) . "\n";
+
+    //     $salt = getRandomString();
+    //     // $username = hash('sha256', $request->username . $salt);
+    //     $password = hash('sha256', $request->password . $salt);
+    //     // dd($salt);
+
+    //     // $username = \ShaHelper::instance()->sha256WithSalt($request->username, bin2hex('test'));
+    //     // $password = \ShaHelper::instance()->sha256WithSalt($request->password, bin2hex('test'));
+    //     $data = [
+    //         'name' => $request->name,
+    //         'usergroup_id' => $request->usergroup_id,
+    //         'phone' => $request->phone,
+    //         'username' => $request->username,
+    //         'gender' => $request->gender,
+    //         'birth_date' => $request->birth_date,
+    //         'join_date' => $request->join_date,
+    //         'password' => $password,
+    //         'monthly_fee' => $request->monthly_fee,
+    //         'salt' => $salt
+    //     ];
+    //     // dd($data);
+
+    //     $save = User::create($data);
+
+    //     // redirect
+    //     if ($save) {
+    //         return redirect()->back()->with(["success" => "Tambah Data"]);
+    //     } else {
+
+    //         return redirect()->back()->with(["error" => " Tambah Data Failed"]);
+    //     }
+    // }
+
     public function store(Request $request)
     {
-        // $options = [
-        //     'cost' => 11
-        // ];
-        // $password = password_hash($request->password, PASSWORD_BCRYPT, $options) . "\n";
-
-        $salt = getRandomString();
-        // $username = hash('sha256', $request->username . $salt);
-        $password = hash('sha256', $request->password . $salt);
-        // dd($salt);
-
-        // $username = \ShaHelper::instance()->sha256WithSalt($request->username, bin2hex('test'));
-        // $password = \ShaHelper::instance()->sha256WithSalt($request->password, bin2hex('test'));
         $data = [
             'name' => $request->name,
             'usergroup_id' => $request->usergroup_id,
             'phone' => $request->phone,
-            'username' => $request->username,
+            'username' => $username,
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
             'join_date' => $request->join_date,
             'password' => $password,
             'monthly_fee' => $request->monthly_fee,
-            'salt' => $salt
         ];
         // dd($data);
 
