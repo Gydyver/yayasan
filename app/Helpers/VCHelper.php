@@ -7,10 +7,11 @@ use Symfony\Component\Process\Process;
 
 class VCHelper
 {
-    function vigenereEncrypt($plaintext, $key)
+    public function vigenereEncrypt($plaintext)
     {
+        $key_var = 'mindysecretkey';
         $plaintext = strtoupper($plaintext);
-        $key = strtoupper($key);
+        $key = strtoupper($key_var);
         $ciphertext = '';
 
         $plaintextLength = strlen($plaintext);
@@ -35,10 +36,11 @@ class VCHelper
     }
 
 
-    function vigenereDecrypt($ciphertext, $key)
+    public function vigenereDecrypt($ciphertext)
     {
+        $key_var = 'mindysecretkey';
         $ciphertext = strtoupper($ciphertext);
-        $key = strtoupper($key);
+        $key = strtoupper($key_var);
         $plaintext = '';
 
         $ciphertextLength = strlen($ciphertext);
@@ -60,5 +62,9 @@ class VCHelper
         }
 
         return $plaintext;
+    }
+    public static function instance()
+    {
+          return new VCHelper();
     }
 }

@@ -141,7 +141,7 @@
             <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Class</span>
+                    <span class="info-box-text">Kelas</span>
                     <span class="info-box-number">
                         {{(count($next_class) > 0) ? $next_class[0]->class_name : "_"}}
                     </span>

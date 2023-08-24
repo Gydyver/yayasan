@@ -215,7 +215,7 @@ return [
         'EncryptionHelper' => App\Helpers\EncryptionHelper::class,
         // 'ShaHelper' => App\Helpers\ShaHelper::class,
         'SessionCheckingHelper' => App\Helpers\SessionCheckingHelper::class,
-        'VigenereHelper' => App\Helpers\VCHelper::class,
+        'VCHelper' => App\Helpers\VCHelper::class,
     ])->toArray(),
 
 ];

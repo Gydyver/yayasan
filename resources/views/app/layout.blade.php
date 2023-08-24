@@ -80,7 +80,7 @@
             <a href="#" class="dropdown-item">
               <?php
               if (!isset($_SESSION["data"])) {
-                session_start();
+                // session_start();
               }
               ?>
 

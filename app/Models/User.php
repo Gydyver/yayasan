@@ -19,7 +19,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $table = 'users'; //setelah ganti table
+    protected $table = 'users';
+    // protected $table = 'users_new'; //setelah ganti table
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -36,7 +37,7 @@ class User extends Authenticatable
         'join_date',
         'latest_hapalan',
         'latest_halaman',
-        'salt',
+        // 'salt',
         'created_at',
         'updated_at',
     ];

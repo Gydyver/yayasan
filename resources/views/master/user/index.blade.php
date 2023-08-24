@@ -33,6 +33,7 @@
                     <th>S.No</th>
                     <th>Name</th>
                     <th>User Group</th>
+                    <th>Username</th>
                     <th width="280px">Action</th>
                 </tr>
             </thead>
@@ -69,7 +70,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Username:</strong>
-                                <input type="text" name="username" class="form-control" placeholder="Username">
+                                <input type="text" onkeydown="return /[a-z]/i.test(event.key)" name="username" class="form-control" placeholder="Username">
                             </div>
                         </div>
                     </div>
@@ -109,7 +110,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Password:</strong>
-                                <input type="password" name="password" class="form-control" placeholder="User" required="required">
+                                <input type="password" onkeydown="return /[a-z]/i.test(event.key)" name="password" class="form-control" placeholder="User" required="required">
                             </div>
                         </div>
                     </div>
@@ -204,7 +205,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Username:</strong>
-                                <input type="text" name="username" id="username" class="form-control" placeholder="Username">
+                                <input type="text" onkeydown="return /[a-z]/i.test(event.key)" name="username" id="username" class="form-control" placeholder="Username">
                             </div>
                         </div>
                     </div>
@@ -244,7 +245,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Password:</strong>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="User">
+                                <input type="password" onkeydown="return /[a-z]/i.test(event.key)" name="password" id="password" class="form-control" placeholder="User">
                             </div>
                         </div>
                     </div>
@@ -335,6 +336,10 @@
                     name: 'User Group'
                 },
                 {
+                    data: 'username_freetext',
+                    name: 'Username'
+                },
+                {
                     data: 'action',
                     name: 'action',
                     orderable: false,
@@ -353,8 +358,8 @@
                 url: "{{ route('user.store') }}",
                 data: {
                     name: $('#add_user_form input[name="name"]').val(),
-                    username: username,
-                    password: password,
+                    username: b_username,
+                    password: b_password,
                     phone: $('#add_user_form input[name="phone"]').val(),
                     monthly_fee: $('#add_user_form input[name="monthly_fee"]').val(),
                     gender: $('#add_user_form input[name="gender"]').val(),
@@ -402,15 +407,12 @@
 
 
             if (b_username != null) {
-                datas.username = $.MD5(b_username);
+                datas.username = b_username;
             }
 
             if (b_password != null) {
-                datas.password = $.MD5(b_password);
+                datas.password = b_password;
             }
-            console.log('datas');
-            console.log(datas);
-
             // var data = $('#update_user_form').serialize();
             $.ajax({
                 type: "POST",

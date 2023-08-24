@@ -24,6 +24,7 @@ class PaymentController extends Controller
     public function __construct()
     {
         session_start();
+        \SessionCheckingHelper::instance()->checkAuthenticated();
     }
 
     /**
@@ -87,10 +88,11 @@ class PaymentController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $actionBtn = "
-                    <a href='payment/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                    <a href='payment/show/" . $row->id . "' class='btn btn-sm btn-primary'>Detail</a>
                     ";
-                    // <a href='payment/edit/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Update</a>
-
+                    // $actionBtn = "
+                    // <a href='payment/show/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Detail</a>
+                    // ";
                     if ($row->verified != true) {
                         $actionBtn .= "<a href='payment/edit/" . \EncryptionHelper::instance()->encrypt($row->id) . "' class='btn btn-sm btn-primary'>Update</a>";
                     }
@@ -106,7 +108,8 @@ class PaymentController extends Controller
     {
 
         if ($request->ajax()) {
-            $decrypted = \EncryptionHelper::instance()->decrypt($id);
+            // $decrypted = \EncryptionHelper::instance()->decrypt($id);
+            $decrypted = $id;
             // $data = Payment::with(['payment_detail' => function ($query) use ($decrypted) {
             //     $query->where('payment_id', $decrypted);
             // }])->whereNotNull('student_id')->latest()->get();
@@ -114,7 +117,7 @@ class PaymentController extends Controller
             // dd($data);
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('bilings', function ($row) {
+                ->addColumn('month_tagihan', function ($row) {
                     // if ($row->billings) {
                     $studentDetail = User::where('id', $row->billings->student_id)->get();
 
@@ -131,8 +134,8 @@ class PaymentController extends Controller
                 //     // }
                 //     // return 'Billing Not Found';
                 // })
-                ->addColumn('tanggal_transfer', function ($row) {
-                    return $row->transfert;
+                ->addColumn('bilings', function ($row) {
+                    return $row->nominal;
                 })
                 ->addColumn('action', function ($row) {
                     // $actionBtn = "
@@ -162,7 +165,8 @@ class PaymentController extends Controller
      */
     public function show($idEncrypted)
     {
-        $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        // $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        $id = $idEncrypted;
         $payment = Payment::where('id', $id)->get();
         $paymentDetail = Payment_Detail::where('payment_id', $id)->get();
         $sedekah = Payment_Detail::where('payment_id', $id)->whereNull('billing_id')->get();
@@ -195,7 +199,8 @@ class PaymentController extends Controller
      */
     public function edit($idEncrypted)
     {
-        $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
+        // $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
+        $id = $idEncrypted;
         $payments = Payment::where('id', $id)->latest()->get();
         $payment_details = Payment_Detail::with('billings')->where('payment_id', $id)->whereNotNull('billing_id')->latest()->get();
 
@@ -247,7 +252,9 @@ class PaymentController extends Controller
 
             // dd($request);
 
-            $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
+            // $id =  \EncryptionHelper::instance()->decrypt($idEncrypted);
+
+            $id =  $idEncrypted;
             $previous_data = Payment::where('id', $id)->get();
 
             File::delete($previous_data[0]->link_prove);
@@ -356,7 +363,8 @@ class PaymentController extends Controller
     {
         // dd('masuk delete',$id);
         // dd($id);
-        $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        // $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        $id = $idEncrypted;
         $delete = Point_Aspect::where('id', $id)->Delete();
         // redirect
         if ($delete) {
@@ -368,7 +376,8 @@ class PaymentController extends Controller
 
     public function statusUpdate($idEncrypted)
     {
-        $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        // $id = \EncryptionHelper::instance()->decrypt($idEncrypted);
+        $id = $idEncrypted;
 
         $update = Payment::where('id', $id)->update(['verified' => true]);
 

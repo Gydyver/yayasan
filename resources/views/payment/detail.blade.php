@@ -50,7 +50,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Tanggal Transfer</th>
+                            <th>Bulan Tagihan</th>
                             <th>Billing</th>
                             <th width="280px">Action</th>
                         </tr>
@@ -75,12 +75,9 @@
                     </div>
                     <div class="col-md-10">
                         @if($sedekah[0]->notes != null)
-
                         <textarea class="form-control" readonly name="notes_sedekah" rows="3" class="">{{$sedekah[0]->notes}}</textarea>
-
                         @else
                         <textarea class="form-control" readonly name="notes_sedekah" rows="3" class="">-</textarea>
-                        <!-- <p> - </p> -->
                         @endif
                     </div>
                 </div>
@@ -171,8 +168,8 @@
                     name: 'DT_RowIndex'
                 },
                 {
-                    data: 'tanggal_transfer',
-                    name: 'Tanggal Transfer'
+                    data: 'month_tagihan',
+                    name: 'Bulan Tagihan'
                 },
                 {
                     data: 'bilings',

@@ -25,7 +25,7 @@ class LoginManualVCController extends Controller
     public function login(Request $request)
     {
         $search = User::where('username', $request->username)->get();
-        // dd($search);
+       
         if (isset($search[0])) {
             $password_inputed = hash('sha256', $request->password . $search[0]->salt);
             $password_existing = $search[0]->password;

@@ -13,6 +13,7 @@ class GradeController extends Controller
     public function __construct()
     {
         session_start();
+        \SessionCheckingHelper::instance()->checkAuthenticated();
     }
 
     /**

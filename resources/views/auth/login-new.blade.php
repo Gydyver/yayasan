@@ -29,7 +29,7 @@
 
         <form action="{{ route('login.perform') }}" id="form-login" method="POST">
           <div class="input-group mb-3">
-            <input type="text" name="username" id="username" class="form-control" placeholder="Username">
+            <input type="text" name="username" id="username" onkeydown="return /[a-z]/i.test(event.key)" class="form-control" placeholder="Username">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -41,7 +41,7 @@
           <span class="text-danger">{{ $errors->first('username') }}</span>
           @endif
           <div class="input-group mb-3">
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+            <input type="password" name="password" id="password" onkeydown="return /[a-z]/i.test(event.key)" class="form-control" placeholder="Password">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -52,15 +52,13 @@
           <span class="text-danger">{{ $errors->first('password') }}</span>
           @endif
           <!--  -->
-          @if($errors->any())
-          <div class="alert alert-danger" role="alert">
+          <div class="alert alert-danger alert-usernotfound" style="display:none;" role="alert">
             <strong>Error</strong><br>
-            {{$errors->first()}}
+            These credentials do not match our records
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          @endif
 
 
 
@@ -106,13 +104,13 @@
     // var data = $('#form-login').serialize();
     var username = $('#username').val()
     var password = $('#password').val()
-
+    $(".alert-usernotfound").hide()
     $.ajax({
       type: 'post',
       url: "/login_perform",
       data: {
-        username: $.MD5(username),
-        password: $.MD5(password),
+        username: username,
+        password: password,
         '_token': $('meta[name="csrf-token"]').attr('content')
       },
       headers: {
@@ -122,11 +120,15 @@
         $('#login_button').html('....Please wait');
       },
       success: function(response) {
-        // alert(response.success);
-        window.location.href = "{{URL::to('/')}}"
+        if (response == false) {
+          $('.alert-usernotfound').show();
+        } else {
+          window.location.href = "{{URL::to('/')}}"
+        }
+
       },
       complete: function(response) {
-        $('#login_button').html('Create New');
+        // $('#login_button').html('Create New');
       }
     });
   });

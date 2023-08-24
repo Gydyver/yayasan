@@ -22,6 +22,7 @@ class ClassController extends Controller
     public function __construct()
     {
         session_start();
+        \SessionCheckingHelper::instance()->checkAuthenticated();
     }
 
     public function index()

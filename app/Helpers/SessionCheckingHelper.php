@@ -7,6 +7,15 @@ use Symfony\Component\Process\Process;
 
 class SessionCheckingHelper
 {
+    function checkAuthenticated()
+    {
+        // dd('masuk checkAuthenticated');
+        if (!isset($_SESSION["data"])) {
+            abort(redirect('/login'));
+        }
+        return true;
+    }
+
     function checkSession($auth_group, $auth_id, $user_in_data)
     {
         if ($auth_group != 1) {
@@ -57,19 +66,9 @@ class SessionCheckingHelper
         }
     }
 
-
-    function padMessage($message, $blockSize)
-    {
-        $messageLength = strlen($message) * 8; // Message length in bits
-        $paddingSize = $blockSize - (($messageLength + 8) % $blockSize); // Calculate padding size
-        $padding = "\x80"; // Append 1 bit followed by zeros
-        $padding .= str_repeat("\x00", $paddingSize); // Pad with zeros
-        $padding .= pack('N2', 0);
-        // phpinfo();
-    }
-
     public static function instance()
     {
         return new SessionCheckingHelper();
+        session_start();
     }
 }

@@ -29,6 +29,8 @@ class HistoryDataController extends Controller
     public function __construct()
     {
         session_start();
+        // dd('masuk contruct dulu');
+        \SessionCheckingHelper::instance()->checkAuthenticated();
     }
 
     public function index()

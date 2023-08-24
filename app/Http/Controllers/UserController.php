@@ -39,6 +39,10 @@ class UserController extends Controller
                 ->addColumn('usergroup_label', function ($data) {
                     return  $data->usergroups->name;
                 })
+                ->addColumn('username_freetext', function ($data) {
+                    $username = \VCHelper::instance()->vigenereDecrypt($data->username);
+                    return $username;
+                })
                 ->addColumn('action', function ($row) {
                     // dd(json_encode($row->name));
                     // $actionBtn = "
@@ -121,23 +125,24 @@ class UserController extends Controller
             'name' => $request->name,
             'usergroup_id' => $request->usergroup_id,
             'phone' => $request->phone,
-            'username' => $username,
+            'username' => \VCHelper::instance()->VigenereEncrypt($request->username),
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
             'join_date' => $request->join_date,
-            'password' => $password,
+            'password' => \VCHelper::instance()->VigenereEncrypt($request->password),
             'monthly_fee' => $request->monthly_fee,
         ];
-        // dd($data);
 
         $save = User::create($data);
 
         // redirect
         if ($save) {
-            return redirect()->back()->with(["success" => "Tambah Data"]);
+            // return redirect()->back()->with(["success" => "Tambah Data"]);
+            return true;
         } else {
 
-            return redirect()->back()->with(["error" => " Tambah Data Failed"]);
+            return false;
+            // return redirect()->back()->with(["error" => " Tambah Data Failed"]);
         }
     }
 
@@ -197,22 +202,20 @@ class UserController extends Controller
                 'usergroup_id' => $request->usergroup_id,
                 'class_id' => $request->class_id,
                 'phone' => $request->phone,
-                'username' => $request->username,
+                'username' => \VCHelper::instance()->VigenereEncrypt($request->username),
                 'gender' => $request->gender,
                 'birth_date' => $request->birth_date,
                 'join_date' => $request->join_date,
                 'monthly_fee' => $request->monthly_fee,
-                'password' =>  $password
+                'password' =>  \VCHelper::instance()->VigenereEncrypt($password)
             ];
         }
-        // dd($data);
         $save = User::where('id', $request->id)->update($data);
         // redirect
         if ($save) {
-            return redirect()->back()->with(["success" => "Update Data"]);
+            return true;
         } else {
-
-            return redirect()->back()->with(["error" => " Update Data Failed"]);
+            return false;
         }
     }
 
